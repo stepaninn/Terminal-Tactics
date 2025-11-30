@@ -15,9 +15,9 @@ public:
     SystemManager()
         : event_bus_(std::make_shared<EventBus>()) {}
 
-    EventBus& get_event_bus() { return *event_bus_; }
+    [[nodiscard]] EventBus& get_event_bus() { return *event_bus_; }
 
-    const std::vector<std::shared_ptr<ISystem>>& get_systems() const noexcept { return systems_; }
+    [[nodiscard]] const std::vector<std::shared_ptr<ISystem>>& get_systems() const noexcept { return systems_; }
 
     void set_systems(const std::vector<std::shared_ptr<ISystem>>& sys);
 

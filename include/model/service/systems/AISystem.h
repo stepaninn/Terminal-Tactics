@@ -1,7 +1,7 @@
 #ifndef INC_3_AISYSTEM_H
 #define INC_3_AISYSTEM_H
 
-#include "DefaultSystem.h"
+#include "ISystem.h"
 
 namespace game {
 

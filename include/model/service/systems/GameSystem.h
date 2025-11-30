@@ -13,7 +13,7 @@ public:
     GameSystem() = default;
     explicit GameSystem(std::shared_ptr<SystemManager> mgr);
 
-    EventBus& get_event_bus() override;
+    [[nodiscard]] EventBus& get_event_bus() override;
 
     std::shared_ptr<Level> get_level() const noexcept { return game_; }
     void set_level(std::shared_ptr<Level> lvl) { game_ = std::move(lvl); }
