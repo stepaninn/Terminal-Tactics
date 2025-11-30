@@ -8,9 +8,8 @@ namespace game {
 
 class PositionComponent : public IComponent {
 public:
-    using Ptr = std::shared_ptr<PositionComponent>;
-    virtual Position get_position() const = 0;
-    virtual ActionResult set_position(const Position& pos) = 0;
+    [[nodiscard]] virtual Position get_position() const = 0;
+    virtual void set_position(const Position& pos) = 0;
     virtual ~PositionComponent() = default;
 };
 
@@ -19,8 +18,8 @@ public:
     DefaultPositionComp() = default;
     explicit DefaultPositionComp(const Position& pos) : pos_(p) {}
 
-    Position get_position() const override { return pos_; }
-    ActionResult set_position(const Position& pos) override;
+    [[nodiscard]] Position get_position() const override { return pos_; }
+    void set_position(const Position& pos) override { pos_ = pos; }
 
 protected:
     Position pos_{0, 0};

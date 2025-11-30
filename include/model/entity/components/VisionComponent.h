@@ -8,10 +8,10 @@ namespace game {
 class VisionComponent : public IComponent {
 public:
     using Ptr = std::shared_ptr<VisionComponent>;
-    virtual int get_vision_radius() const = 0;
+    [[nodiscard]] virtual int get_vision_radius() const = 0;
     virtual void set_vision_radius(int r) = 0;
 
-    virtual bool sees(const Entity& target) const = 0;
+    [[nodiscard]] virtual bool is_sees_creatures() const = 0;
 
     virtual ~VisionComponent() = default;
 };
@@ -20,8 +20,11 @@ class DefaultVisionComp : public VisionComponent {
 public:
     DefaultVisionComp() = default;
     explicit DefaultVisionComp(int r, bool sees_items_only = false) : radius_(r) {}
-    int get_vision_radius() const override { return radius_; }
-    void set_vision_radius(int r) override { radius_ = r; }
+    [[nodiscard]] int get_vision_radius() const override { return radius_; }
+    // возвращают исключение
+    void set_vision_radius(int r) override;
+
+    [[nodiscard]] bool is_sees_creatures() { return !sees_items_only_; }
 
 protected:
     int radius_ = 0;

@@ -2,16 +2,16 @@
 #define INC_3_HEALTHCOMPONENT_H
 
 #include "IComponent.h"
-#include "types.h"
+#include "../types.h"
 
 namespace game {
 
 class HealthComponent : public IComponent {
 public:
-    using Ptr = std::shared_ptr<HealthComponent>;
-    virtual int get_current_hp() const noexcept = 0;
-    virtual int get_max_hp() const noexcept = 0;
-    virtual void set_current_hp(int new_hp) noexcept = 0;
+    [[nodiscard]] virtual int get_current_hp() const noexcept = 0;
+    [[nodiscard]] virtual int get_max_hp() const noexcept = 0;
+    virtual int add_hp(int amount) = 0;
+    virtual int reduce_hp(int amount) = 0;
     ~HealthComponent() override = default;
 };
 
@@ -20,9 +20,12 @@ public:
     DefaultHealthComp() = default;
     DefaultHealthComp(int cur, int maxv) : current_hp_(cur), max_hp_(maxv) {}
 
-    int get_current_hp() const noexcept override { return current_hp_; }
-    int get_max_hp() const noexcept override { return max_hp_; }
-    void set_current_hp(int new_hp) noexcept override { current_hp_ = new_hp; }
+    [[nodiscard]] int get_current_hp() const noexcept override { return current_hp_; }
+    [[nodiscard]] int get_max_hp() const noexcept override { return max_hp_; }
+
+    // возвращает полученное hp
+    [[nodiscard]] int add_hp(int amount) override;
+    [[nodiscard]] int reduce_hp(int amount) override;
 
 protected:
     int current_hp_ = 0;
