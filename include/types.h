@@ -27,8 +27,8 @@ enum class CellType {
 };
 
 struct Position {
-    int x = 0;
-    int y = 0;
+    size_t x = 0;
+    size_t y = 0;
 };
 
 enum class EnemyType {

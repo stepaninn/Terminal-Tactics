@@ -9,7 +9,6 @@ namespace game {
 
 class Weapon : public Item {
 public:
-    using Ptr = std::shared_ptr<Weapon>;
     Weapon() = default;
     Weapon(Damage dmg, int range, int attack_cost, int reload_cost,
            AmmoType type, int cur_ammo, int max_ammo, int weight = 0) :
@@ -23,19 +22,21 @@ public:
             max_ammo_(max_ammo)
     {}
 
-    Damage get_dmg() const noexcept { return dmg_; }
+    [[nodiscard]] Damage get_dmg() const noexcept { return dmg_; }
     void set_dmg(Damage d) noexcept { dmg_ = d; }
 
-    int get_range() const noexcept { return range_; }
+    [[nodiscard]] int get_range() const noexcept { return range_; }
     void set_range(int r) noexcept { range_ = r; }
 
-    int get_attack_cost() const noexcept { return attack_cost_; }
-    int get_reload_cost() const noexcept { return reload_cost_; }
+    [[nodiscard]] int get_attack_cost() const noexcept { return attack_cost_; }
+    [[nodiscard]] int get_reload_cost() const noexcept { return reload_cost_; }
 
-    int get_current_ammo() const noexcept { return current_ammo_; }
-    void set_current_ammo(int ammo) noexcept { current_ammo_ = ammo; }
+    [[nodiscard]] int get_current_ammo() const noexcept { return current_ammo_; }
 
-    int get_max_ammo() const noexcept { return max_ammo_; }
+    [[nodiscard]] int add_ammo(int amount);
+    [[nodiscard]] int reduce_ammo(int amount);
+
+    [[nodiscard]] int get_max_ammo() const noexcept { return max_ammo_; }
 
     AmmoType get_ammo_type() const noexcept { return ammo_type_; }
 

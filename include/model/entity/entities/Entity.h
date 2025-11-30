@@ -15,14 +15,12 @@ namespace game {
 
 class Entity {
 public:
-    using Ptr = std::shared_ptr<Entity>;
-
     Entity() = default;
     explicit Entity(id_t id, std::string name = {}) : id_(id), name_(std::move(name)) {}
     virtual ~Entity() = default;
 
-    id_t get_id() const noexcept { return id_; }
-    const std::string& get_name() const noexcept { return name_; }
+    [[nodiscard]] id_t get_id() const noexcept { return id_; }
+    [[nodiscard]] const std::string& get_name() const noexcept { return name_; }
     void set_name(std::string new_name) { name_ = std::move(new_name); }
 
     void add_component(std::shared_ptr<IComponent> comp);
@@ -31,7 +29,7 @@ public:
     std::shared_ptr<IComponent> remove_component(std::shared_ptr<IComponent> comp);
 
     template<typename T>
-    std::shared_ptr<T> get_component() const {
+    [[nodiscard]] std::shared_ptr<T> get_component() const {
         std::type_index idx(typeid(T));
         auto it = components_.find(idx);
         if (it == components_.end()) {
@@ -44,7 +42,7 @@ public:
         return std::dynamic_pointer_cast<T>(it->second);
     }
 
-    std::vector<std::shared_ptr<IComponent>> get_components() const;
+    [[nodiscard]] std::vector<std::shared_ptr<IComponent>> get_components() const;
 
 protected:
     id_t id_ = 0;
