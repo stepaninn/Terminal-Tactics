@@ -15,7 +15,7 @@ private:
 
     element_ptr_t ptr_ = nullptr;
 
-    MatrixIterator(element_ptr_t ptr) noexcept : ptr_(ptr) {}
+    explicit MatrixIterator(element_ptr_t ptr) noexcept : ptr_(ptr) {}
 
     friend Matrix<T>;
     friend MatrixIterator<T, !is_const>;
@@ -51,26 +51,26 @@ public:
     typedef std::random_access_iterator_tag iterator_category;
 
     /*!
-     * @brief Пустой конструктор, разименование созданного итератора приведёт к UB
+     * @brief Пустой конструктор, разыменование созданного итератора приведёт к UB
      * @note Реализует default_initializable из regular
      */
     MatrixIterator() noexcept = default;
 
     /*!
-     * @brief Копирующий крнструктор
-     * @tparam other_const Константность копируемого иетратора
+     * @brief Копирующий конструктор
+     * @tparam other_const Константность копируемого итератора
      * @note Допускает копирование итератора иной константности
      * @note Реализует std::move_constructible и std::copy_constructible
      */
     template<bool other_const>
-    MatrixIterator(const MatrixIterator<T, other_const>& o) noexcept
+    explicit MatrixIterator(const MatrixIterator<T, other_const>& o) noexcept
       // нельзя из неконстантного в константный
       requires (is_const >= other_const) : ptr_(o.ptr_) {}
 
     /*!
      * @brief Копирующее перемещение
      * @returns Ссылка на переданный итератор
-     * @tparam other_const Константность копируемого иетратора
+     * @tparam other_const Константность копируемого итератора
      * @note Допускает копирование итератора иной константности
      * @note Реализует std::assignable_from<T&, T>, std::copyable и std::swappable
      */
@@ -90,18 +90,18 @@ public:
     reference operator * () const noexcept { return *ptr_; }
 
     /*!
-     * @brief Обрщение к полям элемента
+     * @brief Обращение к полям элемента
      * @returns Указатель на адресуемый элемент списка
      */
     pointer operator -> () const noexcept { return ptr_; }
 
     /*!
      * @brief Сравнение итераторов
-     * @tparam other_const Константность копируемого иетратора
+     * @tparam other_const Константность копируемого итератора
      * @returns true если итераторы ссылаются на один и тот же элемент,
      *          иначе false
      * @note Реализует equality_comparable из regular
-     * @note Опрератор != получаем автоматически
+     * @note Оператор != получаем автоматически
      */
     template<bool other_const>
     bool operator == (const MatrixIterator<T, other_const>& o) const noexcept {
@@ -121,7 +121,6 @@ public:
     /*!
      * @brief Передвигает итератор на следующий элемент списка
      * @returns Состояние итератора до модификации
-     * @note Реализует `{ i++ } -> std::same_as<I>` из incrementable
      */
     MatrixIterator operator ++ (int) noexcept {
         auto tmp = *this;
@@ -132,7 +131,6 @@ public:
     /*!
      * @brief Передвигает итератор на предыдущий элемент списка
      * @returns Ссылка на переданный итератор
-     * @note Реализует `{ --i } -> std::same_as<I&>` из bidirectional_iterator
      */
     MatrixIterator& operator -- () noexcept {
         --ptr_;
@@ -142,7 +140,6 @@ public:
     /*!
      * @brief Передвигает итератор на предыдущий элемент списка
      * @returns Состояние итератора до модификации
-     * @note Реализует `{ i-- } -> std::same_as<I>` из bidirectional_iterator
      */
     MatrixIterator operator -- (int) noexcept {
         auto tmp = *this;
@@ -272,12 +269,12 @@ public:
 
     /*!
      * @brief Копирующий конструктор
-     * @param o Копируемая матрица
+     * @param other Копируемая матрица
      */
     Matrix(const Matrix& other) requires std::copy_constructible<T> : rows_(other.rows_), cols_(other.cols_),
         data_( (other.size() == 0) ? nullptr : std::make_unique<T[]>(other.size()) )
     {
-        if (data_) std::copy_n(other.data_.get(), size(), data_.get());
+        std::copy_n(other.data_.get(), size(), data_.get());
     }
 
     /*!
@@ -325,13 +322,13 @@ public:
     }
 
     /// @brief Получение количества строк матрицы
-    size_type rows() const noexcept { return rows_; }
+    [[nodiscard]] size_type rows() const noexcept { return rows_; }
     /// @brief Получение количества столбцов матрицы
-    size_type cols() const noexcept { return cols_; }
+    [[nodiscard]] size_type cols() const noexcept { return cols_; }
     /// @brief Получение размера матрицы
-    size_type size() const noexcept { return rows_ * cols_; }
+    [[nodiscard]] size_type size() const noexcept { return rows_ * cols_; }
     /// @brief Проверка на пустоту
-    bool empty() const noexcept { return size() == 0; }
+    [[nodiscard]] bool empty() const noexcept { return size() == 0; }
     /// @brief Получение указателя на данные матрицы
     T* data() noexcept { return data_.get(); }
     /// @brief Получение указателя на константные данные матрицы
@@ -339,7 +336,7 @@ public:
 
     /*!
      * @brief Получения итератора на начало матрицы
-     * @returns Итаратор, адресующий начало матрицы
+     * @returns Итератор, адресующий начало матрицы
      */
     iterator begin() noexcept {
         return iterator(data_.get());
@@ -347,7 +344,7 @@ public:
 
     /*!
      * @brief Получения итератора на конец матрицы
-     * @returns Итаратор, адресующий конец матрицы
+     * @returns Итератор, адресующий конец матрицы
      */
     iterator end() noexcept {
         return iterator(data_.get() + size());
@@ -355,7 +352,7 @@ public:
 
     /*!
      * @brief Получения константного итератора на начало матрицы
-     * @returns Итаратор, адресующий начало матрицы
+     * @returns Итератор, адресующий начало матрицы
      */
     const_iterator begin() const noexcept {
         return const_iterator(data_.get());
@@ -363,7 +360,7 @@ public:
 
     /*!
      * @brief Получения константного итератора на конец матрицы
-     * @returns Итаратор, адресующий конец матрицы
+     * @returns Итератор, адресующий конец матрицы
      */
     const_iterator end() const noexcept {
         return iterator(data_.get() + size());
@@ -371,7 +368,7 @@ public:
 
     /*!
      * @brief Получения константного итератора на начало матрицы
-     * @returns Итаратор, адресующий начало матрицы
+     * @returns Итератор, адресующий начало матрицы
      */
     const_iterator cbegin() const noexcept {
         return const_iterator(data_.get());
@@ -379,7 +376,7 @@ public:
 
     /*!
      * @brief Получения константного итератора на конец матрицы
-     * @returns Итаратор, адресующий конец матрицы
+     * @returns Итератор, адресующий конец матрицы
      */
     const_iterator cend() const noexcept {
         return iterator(data_.get() + size());
