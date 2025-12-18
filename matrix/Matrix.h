@@ -20,6 +20,9 @@ private:
     friend Matrix<T>;
     friend MatrixIterator<T, !is_const>;
 
+    size_t rows_ = 0;
+    size_t cols_ = 0;
+
 public:
 
     /*!
@@ -51,6 +54,11 @@ public:
     typedef std::random_access_iterator_tag iterator_category;
 
     /*!
+     * @brief Тип, используемый для преставления размера контейнера
+     */
+    typedef size_t size_type;
+
+    /*!
      * @brief Пустой конструктор, разыменование созданного итератора приведёт к UB
      * @note Реализует default_initializable из regular
      */
@@ -63,12 +71,12 @@ public:
      * @note Реализует std::move_constructible и std::copy_constructible
      */
     template<bool other_const>
-    explicit MatrixIterator(const MatrixIterator<T, other_const>& o) noexcept
+    explicit MatrixIterator(const MatrixIterator<T, other_const>& o, size_type rows, size_type cols) noexcept
       // нельзя из неконстантного в константный
-      requires (is_const >= other_const) : ptr_(o.ptr_) {}
+      requires (is_const >= other_const) : ptr_(o.ptr_), rows_(rows), cols_(cols) {}
 
     /*!
-     * @brief Копирующее перемещение
+     * @brief Копирующее перемещениеo,
      * @returns Ссылка на переданный итератор
      * @tparam other_const Константность копируемого итератора
      * @note Допускает копирование итератора иной константности
@@ -145,6 +153,26 @@ public:
         auto tmp = *this;
         --ptr_;
         return tmp;
+    }
+
+    MatrixIterator& move_north(difference_type n) noexcept {
+        ptr_ -= cols_ * n;
+        return *this;
+    }
+
+    MatrixIterator& move_south(difference_type n) noexcept {
+        ptr_ += cols_ * n;
+        return *this;
+    }
+
+    MatrixIterator& move_east(difference_type n) noexcept {
+        ptr_ += n;
+        return *this;
+    }
+
+    MatrixIterator& move_west(difference_type n) noexcept {
+        ptr_ -= n;
+        return *this;
     }
 
     MatrixIterator& operator += (difference_type n) noexcept {
@@ -355,7 +383,7 @@ public:
      * @returns Итератор, адресующий начало матрицы
      */
     const_iterator begin() const noexcept {
-        return const_iterator(data_.get());
+        return const_iterator(data_.get(), rows_, cols_);
     }
 
     /*!
@@ -363,7 +391,7 @@ public:
      * @returns Итератор, адресующий конец матрицы
      */
     const_iterator end() const noexcept {
-        return const_iterator(data_.get() + size());
+        return const_iterator(data_.get() + size(), rows_, cols_);
     }
 
     /*!
@@ -371,7 +399,7 @@ public:
      * @returns Итератор, адресующий начало матрицы
      */
     const_iterator cbegin() const noexcept {
-        return const_iterator(data_.get());
+        return const_iterator(data_.get(), rows_, cols_);
     }
 
     /*!
@@ -379,7 +407,7 @@ public:
      * @returns Итератор, адресующий конец матрицы
      */
     const_iterator cend() const noexcept {
-        return const_iterator(data_.get() + size());
+        return const_iterator(data_.get() + size(), rows_, cols_);
     }
 
     T& operator()(size_type r, size_type c) noexcept {
