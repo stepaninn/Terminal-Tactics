@@ -363,7 +363,7 @@ public:
      * @returns Итератор, адресующий конец матрицы
      */
     const_iterator end() const noexcept {
-        return iterator(data_.get() + size());
+        return const_iterator(data_.get() + size());
     }
 
     /*!
@@ -379,7 +379,7 @@ public:
      * @returns Итератор, адресующий конец матрицы
      */
     const_iterator cend() const noexcept {
-        return iterator(data_.get() + size());
+        return const_iterator(data_.get() + size());
     }
 
     T& operator()(size_type r, size_type c) noexcept {

@@ -2,7 +2,6 @@
 #define INC_3_HEALTHCOMPONENT_H
 
 #include "IComponent.h"
-#include "../types.h"
 
 namespace game {
 

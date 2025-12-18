@@ -1,8 +1,6 @@
 #ifndef INC_3_ICOMPONENT_H
 #define INC_3_ICOMPONENT_H
 
-#include <memory>
-
 namespace game {
 
 class IComponent {

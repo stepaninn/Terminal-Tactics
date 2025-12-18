@@ -2,14 +2,15 @@
 #define INC_3_AICOMPONENT_H
 
 #include "IComponent.h"
+#include "../../../types.h"
 
 namespace game {
 
 class AIComponent : public IComponent {
 public:
     [[nodiscard]] virtual AIState get_state() const = 0;
-    virtual set_state(AIState s) = 0;
-    virtual ~AIComponent() = default;
+    virtual void set_state(AIState s) = 0;
+    ~AIComponent() override = default;
 };
 
 class DefaultAIComp : public AIComponent {
