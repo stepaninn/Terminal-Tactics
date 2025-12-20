@@ -43,4 +43,11 @@ std::vector<const Item*> DefaultInventoryComp::get_items() const {
     return res;
 }
 
+const Item* DefaultInventoryComp::get_item(id_t id) const noexcept {
+    auto it = items_.find(id);
+    if (it == items_.end()) return nullptr;
+
+    return it->second.get();
+}
+
 }

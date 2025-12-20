@@ -16,7 +16,7 @@ public:
     virtual std::unique_ptr<Item> remove_by_id(id_t id) = 0;
 
     [[nodiscard]] virtual size_t size() const noexcept = 0;
-    [[nodiscard]] virtual Item* get_item(id_t id) noexcept = 0;
+    [[nodiscard]] virtual const Item* get_item(id_t id) const noexcept = 0;
 
     [[nodiscard]] virtual int get_weight() const noexcept = 0;
     [[nodiscard]] virtual int get_capacity() const noexcept = 0;
@@ -36,7 +36,7 @@ public:
     std::unique_ptr<Item> remove_by_id(id_t id) override;
 
     [[nodiscard]] size_t size() const noexcept override { return items_.size(); }
-    [[nodiscard]] Item* get_item(id_t id) noexcept override { return items_[id].get(); }
+    [[nodiscard]] const Item* get_item(id_t id) const noexcept override;
 
     [[nodiscard]] int get_weight() const noexcept override { return weight_; }
     [[nodiscard]] int get_capacity() const noexcept override { return capacity_; }
