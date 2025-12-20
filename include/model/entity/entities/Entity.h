@@ -1,12 +1,13 @@
 #ifndef INC_3_ENTITY_H
 #define INC_3_ENTITY_H
 
-#include "types.h"
-#include "components/IComponents.h"
+#include "../components/IComponent.h"
+#include "../../../types.h"
 
 #include <memory>
 #include <string>
-#include <map>
+#include <unordered_map>
+#include <ranges>
 #include <typeindex>
 #include <typeinfo>
 #include <vector>
@@ -16,38 +17,45 @@ namespace game {
 class Entity {
 public:
     Entity() = default;
-    explicit Entity(id_t id, std::string name = {}) : id_(id), name_(std::move(name)) {}
+    explicit Entity(id_t id = {}, std::string name = {}) : id_(id), name_(std::move(name)) {}
     virtual ~Entity() = default;
 
     [[nodiscard]] id_t get_id() const noexcept { return id_; }
     [[nodiscard]] const std::string& get_name() const noexcept { return name_; }
     void set_name(std::string new_name) { name_ = std::move(new_name); }
+    void set_id(id_t id) { id_ = id; }
 
-    void add_component(std::shared_ptr<IComponent> comp);
-
-    // возвращает удалённый компонент
-    std::shared_ptr<IComponent> remove_component(std::shared_ptr<IComponent> comp);
-
-    template<typename T>
-    [[nodiscard]] std::shared_ptr<T> get_component() const {
-        std::type_index idx(typeid(T));
-        auto it = components_.find(idx);
-        if (it == components_.end()) {
-            for (const auto &p : components_) {
-                std::shared_ptr<T> casted = std::dynamic_pointer_cast<T>(p.second);
-                if (casted) return casted;
-            }
-            return nullptr;
-        }
-        return std::dynamic_pointer_cast<T>(it->second);
+    template<typename Comp, typename... Args>
+    requires std::is_base_of_v<IComponent, Comp>
+    Comp& add_component(Args&&... args) {
+        auto comp = std::make_unique<Comp>(std::forward<Args>(args)...);
+        Comp& ref = *comp;
+        components_[std::type_index(typeid(Comp))] = std::move(comp);
+        return ref;
     }
 
-    [[nodiscard]] std::vector<std::shared_ptr<IComponent>> get_components() const;
+    template<typename Comp>
+    requires std::is_base_of_v<IComponent, Comp>
+    std::unique_ptr<Comp> remove_component() {
+        auto it = components_.find(std::type_index(typeid(Comp)));
+        if (it == components_.end()) return nullptr;
+        auto raw = static_cast<Comp*>(it->second.release());
+        components_.erase(it);
+        return std::unique_ptr<Comp>(raw);
+    }
+
+    template<typename Comp>
+    requires std::is_base_of_v<IComponent, Comp>
+    Comp* get_component() const noexcept {
+        auto it = components_.find(std::type_index(typeid(Comp)));
+        if (it == components_.end()) return nullptr;
+        return static_cast<Comp*>(it->second.get());
+    }
 
 protected:
-    id_t id_ = 0;
+    id_t id_;
     std::string name_;
-    std::map<std::type_index, std::shared_ptr<IComponent>> components_;
+    std::unordered_map<std::type_index, std::unique_ptr<IComponent>> components_;
 };
 
 }
