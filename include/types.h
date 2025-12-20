@@ -7,20 +7,8 @@ namespace game {
 
 using id_t = size_t;
 
-enum class ActionResult {
-    Ok,
-    Failed,
-    NotFound,
-    NoSpace,
-    OutOfBounds,
-    InvalidArgument,
-    AlreadyExists
-};
-
 enum class CellType {
     FLOOR,
-    OPEN_DOOR,
-    CLOSED_DOOR,
     WALL,
     GLASS,
     STASH
