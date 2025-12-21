@@ -109,6 +109,25 @@ TEST_CASE("Matrix") {
       REQUIRE((it2 - it) == 2);
       REQUIRE(it2[1] == ref[3]);
     }
+
+    SECTION("iterator directional moves use correct stride") {
+      auto it = m.begin();
+      REQUIRE(*it == ref[0]);
+      it.move_south(1);
+      REQUIRE(*it == ref[3]);
+      it.move_east(2);
+      REQUIRE(*it == ref[5]);
+      it.move_north(1);
+      REQUIRE(*it == ref[2]);
+      it.move_west(1);
+      REQUIRE(*it == ref[1]);
+    }
+
+    SECTION("const_iterator can be constructed from iterator") {
+      Matrix<int>::iterator it = m.begin();
+      Matrix<int>::const_iterator cit = it;
+      REQUIRE(*cit == ref[0]);
+    }
   }
 
   SECTION("Copy and Move semantics") {
@@ -159,6 +178,21 @@ TEST_CASE("Matrix") {
     REQUIRE(m.rows() == 1);
     REQUIRE(m.cols() == 1);
     REQUIRE(m(0,0) == 1);
+  }
+
+  SECTION("empty matrix iterators are equal and safe") {
+    Matrix<int> m;
+    REQUIRE(m.begin() == m.end());
+    REQUIRE(m.cbegin() == m.cend());
+  }
+
+  SECTION("resize to zero makes matrix empty") {
+    Matrix<int> m(2,2);
+    m.resize(0,0);
+    REQUIRE(m.empty());
+    REQUIRE(m.rows() == 0);
+    REQUIRE(m.cols() == 0);
+    REQUIRE(m.begin() == m.end());
   }
 
   SECTION("swap") {

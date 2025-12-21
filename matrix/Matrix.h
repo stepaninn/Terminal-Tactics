@@ -2,7 +2,12 @@
 #define INC_3_MATRIX_H
 
 #include <algorithm>
+#include <concepts>
+#include <cstddef>
+#include <iterator>
 #include <memory>
+#include <stdexcept>
+#include <type_traits>
 
 template<std::default_initializable T>
 class Matrix;
@@ -15,7 +20,7 @@ private:
 
     element_ptr_t ptr_ = nullptr;
 
-    explicit MatrixIterator(element_ptr_t ptr) noexcept : ptr_(ptr) {}
+    explicit MatrixIterator(element_ptr_t ptr, size_t rows, size_t cols) noexcept : ptr_(ptr), rows_(rows), cols_(cols) {}
 
     friend Matrix<T>;
     friend MatrixIterator<T, !is_const>;
@@ -71,6 +76,17 @@ public:
      * @note Реализует std::move_constructible и std::copy_constructible
      */
     template<bool other_const>
+    MatrixIterator(const MatrixIterator<T, other_const>& o) noexcept
+      // нельзя из неконстантного в константный
+      requires (is_const >= other_const) : ptr_(o.ptr_), rows_(o.rows_), cols_(o.cols_) {}
+
+    /*!
+     * @brief Копирующий конструктор с явным заданием размеров
+     * @tparam other_const Константность копируемого итератора
+     * @note Допускает копирование итератора иной константности
+     * @note Реализует std::move_constructible и std::copy_constructible
+     */
+    template<bool other_const>
     explicit MatrixIterator(const MatrixIterator<T, other_const>& o, size_type rows, size_type cols) noexcept
       // нельзя из неконстантного в константный
       requires (is_const >= other_const) : ptr_(o.ptr_), rows_(rows), cols_(cols) {}
@@ -87,6 +103,8 @@ public:
       // нельзя из неконстантного в константный
       requires (is_const >= other_const) {
         ptr_ = o.ptr_;
+        rows_ = o.rows_;
+        cols_ = o.cols_;
         return *this;
     }
 
@@ -367,7 +385,7 @@ public:
      * @returns Итератор, адресующий начало матрицы
      */
     iterator begin() noexcept {
-        return iterator(data_.get());
+        return iterator(data_ ? data_.get() : nullptr, rows_, cols_);
     }
 
     /*!
@@ -375,7 +393,8 @@ public:
      * @returns Итератор, адресующий конец матрицы
      */
     iterator end() noexcept {
-        return iterator(data_.get() + size());
+        return data_ ? iterator(data_.get() + size(), rows_, cols_)
+                     : iterator(nullptr, rows_, cols_);
     }
 
     /*!
@@ -383,7 +402,7 @@ public:
      * @returns Итератор, адресующий начало матрицы
      */
     const_iterator begin() const noexcept {
-        return const_iterator(data_.get(), rows_, cols_);
+        return const_iterator(data_ ? data_.get() : nullptr, rows_, cols_);
     }
 
     /*!
@@ -391,7 +410,8 @@ public:
      * @returns Итератор, адресующий конец матрицы
      */
     const_iterator end() const noexcept {
-        return const_iterator(data_.get() + size(), rows_, cols_);
+        return data_ ? const_iterator(data_.get() + size(), rows_, cols_)
+                     : const_iterator(nullptr, rows_, cols_);
     }
 
     /*!
@@ -399,7 +419,7 @@ public:
      * @returns Итератор, адресующий начало матрицы
      */
     const_iterator cbegin() const noexcept {
-        return const_iterator(data_.get(), rows_, cols_);
+        return const_iterator(data_ ? data_.get() : nullptr, rows_, cols_);
     }
 
     /*!
@@ -407,7 +427,8 @@ public:
      * @returns Итератор, адресующий конец матрицы
      */
     const_iterator cend() const noexcept {
-        return const_iterator(data_.get() + size(), rows_, cols_);
+        return data_ ? const_iterator(data_.get() + size(), rows_, cols_)
+                     : const_iterator(nullptr, rows_, cols_);
     }
 
     T& operator()(size_type r, size_type c) noexcept {
@@ -433,7 +454,8 @@ public:
         return operator()(r,c);
     }
 
-    void resize(size_type new_rows, size_type new_cols) {
+    void resize(size_type new_rows, size_type new_cols)
+      requires (std::is_move_assignable_v<T> || std::is_copy_assignable_v<T>) {
         if (new_rows == rows_ && new_cols == cols_) return;
         size_type new_size = new_rows * new_cols;
         std::unique_ptr<T[]> new_data = (new_size == 0) ? nullptr : std::make_unique<T[]>(new_size);
