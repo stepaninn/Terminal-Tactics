@@ -17,7 +17,7 @@ namespace game {
 class Entity {
 public:
     Entity() = default;
-    explicit Entity(id_t id = {}, std::string name = {}) : id_(id), name_(std::move(name)) {}
+    explicit Entity(id_t id, std::string name) : id_(id), name_(std::move(name)) {}
     virtual ~Entity() = default;
 
     [[nodiscard]] id_t get_id() const noexcept { return id_; }
@@ -25,35 +25,35 @@ public:
     void set_name(std::string new_name) { name_ = std::move(new_name); }
     void set_id(id_t id) { id_ = id; }
 
-    template<typename Comp, typename... Args>
-    requires std::is_base_of_v<IComponent, Comp>
-    Comp& add_component(Args&&... args) {
-        auto comp = std::make_unique<Comp>(std::forward<Args>(args)...);
-        Comp& ref = *comp;
-        components_[std::type_index(typeid(Comp))] = std::move(comp);
+    template<typename Key, typename Impl = Key, typename... Args>
+    requires std::is_base_of_v<IComponent, Key> && std::is_base_of_v<Key, Impl>
+    Key& add_component(Args&&... args) {
+        auto comp = std::make_unique<Impl>(std::forward<Args>(args)...);
+        Key& ref = *comp;
+        components_[std::type_index(typeid(Key))] = std::move(comp);
         return ref;
     }
 
-    template<typename Comp>
-    requires std::is_base_of_v<IComponent, Comp>
-    std::unique_ptr<Comp> remove_component() {
-        auto it = components_.find(std::type_index(typeid(Comp)));
+    template<typename Key>
+    requires std::is_base_of_v<IComponent, Key>
+    std::unique_ptr<Key> remove_component() {
+        auto it = components_.find(std::type_index(typeid(Key)));
         if (it == components_.end()) return nullptr;
-        auto raw = static_cast<Comp*>(it->second.release());
+        auto raw = static_cast<Key*>(it->second.release());
         components_.erase(it);
-        return std::unique_ptr<Comp>(raw);
+        return std::unique_ptr<Key>(raw);
     }
 
-    template<typename Comp>
-    requires std::is_base_of_v<IComponent, Comp>
-    Comp* get_component() const noexcept {
-        auto it = components_.find(std::type_index(typeid(Comp)));
+    template<typename Key>
+    requires std::is_base_of_v<IComponent, Key>
+    Key* get_component() const noexcept {
+        auto it = components_.find(std::type_index(typeid(Key)));
         if (it == components_.end()) return nullptr;
-        return static_cast<Comp*>(it->second.get());
+        return static_cast<Key*>(it->second.get());
     }
 
 protected:
-    id_t id_;
+    id_t id_{};
     std::string name_;
     std::unordered_map<std::type_index, std::unique_ptr<IComponent>> components_;
 };
