@@ -5,6 +5,9 @@ project(MyGameProject VERSION 0.1 LANGUAGES CXX)
 set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
+add_compile_options(--coverage)
+add_link_options(--coverage)
+
 add_library(project_headers INTERFACE)
 
 target_include_directories(project_headers
@@ -24,10 +27,6 @@ add_library(core_lib STATIC ${SRC_FILES}
         libs/model/repository/cells/ItemStorage.cpp)
 
 target_link_libraries(core_lib PUBLIC matrix project_headers)
-
-
-add_compile_options(--coverage)
-add_link_options(--coverage)
 
 #add_subdirectory(libs)
 add_subdirectory(matrix)
