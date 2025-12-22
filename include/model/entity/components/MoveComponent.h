@@ -9,7 +9,7 @@ namespace game {
 class MoveComponent : public IComponent {
 public:
     [[nodiscard]] virtual int get_step_cost() const noexcept = 0;
-    virtual void set_step_cost(int new_cost);
+    virtual void set_step_cost(int new_cost) = 0;
     ~MoveComponent() override = default;
 };
 

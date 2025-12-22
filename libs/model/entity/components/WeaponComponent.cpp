@@ -3,7 +3,7 @@
 namespace game {
 
 std::shared_ptr<Weapon> DefaultWeaponComp::set_weapon(const std::shared_ptr<Weapon> weapon) {
-    auto tmp = weapon;
+    auto tmp = weapon_;
     weapon_ = weapon;
     return tmp;
 }
