@@ -203,9 +203,9 @@ public:
         return *this;
     }
 
-    reference operator [] (difference_type n) noexcept { return ptr_[n]; }
+    reference operator [] (difference_type n) const noexcept { return ptr_[n]; }
 
-    pointer base() const noexcept { return ptr_; }
+    [[nodiscard]] pointer base() const noexcept { return ptr_; }
 
     friend MatrixIterator operator + (MatrixIterator it, difference_type n) noexcept {
         it += n;
@@ -229,9 +229,22 @@ public:
     friend bool operator < (const MatrixIterator& a, const MatrixIterator& b) noexcept {
         return a.ptr_ < b.ptr_;
     }
+
+    friend bool operator > (const MatrixIterator& a, const MatrixIterator& b) noexcept {
+        return b < a;
+    }
+
+    friend bool operator <= (const MatrixIterator& a, const MatrixIterator& b) noexcept {
+        return !(b < a);
+    }
+
+    friend bool operator >= (const MatrixIterator& a, const MatrixIterator& b) noexcept {
+        return !(a < b);
+    }
 };
 
-
+static_assert(std::random_access_iterator<MatrixIterator<int, false>>);
+static_assert(std::random_access_iterator<MatrixIterator<int, true>>);
 
 /*!
  * @brief Матрица
