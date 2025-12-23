@@ -8,14 +8,14 @@ namespace game {
 
 TEST_CASE("Item stores id and weight") {
   Item item(7, 42);
-  REQUIRE(item.get_weight() == 7);
-  REQUIRE(item.get_id() == 42);
+  REQUIRE(item.get_weight() == 42);
+  REQUIRE(item.get_id() == 7);
   item.set_id(99);
   REQUIRE(item.get_id() == 99);
 }
 
 TEST_CASE("Medkit exposes heal and cost") {
-  Medkit kit(5, 2, 1, 10);
+  Medkit kit(10, 1, 5, 2);
   REQUIRE(kit.get_heal() == 5);
   REQUIRE(kit.get_cost() == 2);
   REQUIRE(kit.get_weight() == 1);
@@ -23,7 +23,7 @@ TEST_CASE("Medkit exposes heal and cost") {
 }
 
 TEST_CASE("AmmoBag clamps add/reduce ammo") {
-  AmmoBag bag(3, 10, AmmoType::PISTOL, 2, 11);
+  AmmoBag bag(11, 4, 3, 10, AmmoType::PISTOL);
   REQUIRE(bag.get_current_ammo() == 3);
   REQUIRE(bag.get_max_ammo() == 10);
   REQUIRE(bag.get_ammo_type() == AmmoType::PISTOL);
@@ -40,7 +40,7 @@ TEST_CASE("AmmoBag clamps add/reduce ammo") {
 }
 
 TEST_CASE("Weapon exposes stats and clamps range/ammo") {
-  Weapon weapon(Damage{2, 5}, 3, 1, 2, AmmoType::RIFLE, 4, 9, 6, 17);
+  Weapon weapon(17, 6, Damage{2, 5}, 3, 1, 2, AmmoType::RIFLE, 4, 9);
   REQUIRE(weapon.get_dmg().min_dmg == 2);
   REQUIRE(weapon.get_dmg().max_dmg == 5);
   REQUIRE(weapon.get_range() == 3);

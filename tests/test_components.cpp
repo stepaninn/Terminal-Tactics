@@ -91,19 +91,19 @@ TEST_CASE("DefaultInventoryComp add/remove behavior") {
   REQUIRE(inv.size() == 0);
   REQUIRE(inv.get_weight() == 0);
 
-  auto medkit = std::make_unique<Medkit>(3, 1, 3, 11);
-  auto ammo = std::make_unique<AmmoBag>(5, 10, AmmoType::PISTOL, 4, 12);
+  auto medkit = std::make_unique<Medkit>(11, 1, 3, 5);
+  auto ammo = std::make_unique<AmmoBag>(12, 4, 5, 10, AmmoType::PISTOL);
 
   REQUIRE(inv.can_add(*medkit));
   inv.add(std::move(medkit), 11);
   inv.add(std::move(ammo), 12);
 
   REQUIRE(inv.size() == 2);
-  REQUIRE(inv.get_weight() == 7);
+  REQUIRE(inv.get_weight() == 5);
   REQUIRE(inv.get_item(11) != nullptr);
   REQUIRE(inv.get_item(12) != nullptr);
 
-  auto too_many = std::make_unique<Medkit>(1, 1, 1, 13);
+  auto too_many = std::make_unique<Medkit>(13, 1, 1, 1);
   REQUIRE_THROWS_AS(inv.add(std::move(too_many), 13), std::runtime_error);
 
   auto removed = inv.remove_by_id(11);
@@ -121,8 +121,8 @@ TEST_CASE("DefaultInventoryComp add/remove behavior") {
 }
 
 TEST_CASE("DefaultWeaponComp returns previous weapon") {
-  auto w1 = std::make_shared<Weapon>(Damage{1, 2}, 3, 1, 2, AmmoType::PISTOL, 1, 5, 2, 1);
-  auto w2 = std::make_shared<Weapon>(Damage{2, 3}, 4, 2, 3, AmmoType::RIFLE, 2, 6, 3, 2);
+  auto w1 = std::make_shared<Weapon>(1, 2, Damage{1, 2}, 3, 1, 2, AmmoType::PISTOL, 1, 5);
+  auto w2 = std::make_shared<Weapon>(2, 3, Damage{2, 3}, 4, 2, 3, AmmoType::RIFLE, 2, 6);
 
   DefaultWeaponComp wc(w1);
   REQUIRE(wc.get_weapon() == w1);

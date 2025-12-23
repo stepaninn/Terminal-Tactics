@@ -18,14 +18,14 @@ TEST_CASE("ItemStorage basic operations") {
   ItemStorage storage;
 
   SECTION("add and get_item") {
-    storage.add(std::make_unique<Medkit>(5, 1, 0, 42), 42);
+    storage.add(std::make_unique<Medkit>(42, 1, 0, 5), 42);
     REQUIRE(storage.size() == 1);
     REQUIRE(storage.get_item(42) != nullptr);
     REQUIRE(storage.get_item(99) == nullptr);
   }
 
   SECTION("remove_by_id returns element and shrinks size") {
-    storage.add(std::make_unique<Medkit>(5, 1, 0, 7), 7);
+    storage.add(std::make_unique<Medkit>(7, 1, 0, 5), 7);
     auto removed = storage.remove_by_id(7);
     REQUIRE(removed != nullptr);
     REQUIRE(removed->get_id() == 7);
@@ -39,7 +39,7 @@ TEST_CASE("ItemStorage basic operations") {
 
   SECTION("get_items returns stored pointers") {
     storage.add(std::make_unique<Medkit>(1, 1, 0, 1), 1);
-    storage.add(std::make_unique<AmmoBag>(5, 10, AmmoType::PISTOL, 0, 2), 2);
+    storage.add(std::make_unique<AmmoBag>(2, 10, 0, 5, AmmoType::PISTOL), 2);
     auto items = storage.get_items();
     REQUIRE(items.size() == 2);
     std::vector<id_t> ids;
@@ -60,8 +60,8 @@ TEST_CASE("Floor cell stores items and reports properties") {
   REQUIRE(floor.view_name() == std::string_view("Floor"));
   REQUIRE(floor.size() == 0);
 
-  auto medkit = std::make_unique<Medkit>(3, 1, 0, 10);
-  auto ammo = std::make_unique<AmmoBag>(2, 5, AmmoType::PISTOL, 0, 11);
+  auto medkit = std::make_unique<Medkit>(10, 1, 0, 3);
+  auto ammo = std::make_unique<AmmoBag>(11, 5, 0, 2, AmmoType::PISTOL);
 
   floor.add(std::move(medkit), 10);
   floor.add(std::move(ammo), 11);
@@ -124,7 +124,7 @@ TEST_CASE("Stash behaves like a floor with different name") {
   REQUIRE(stash.can_place_items());
   REQUIRE(stash.view_name() == std::string_view("Stash"));
 
-  stash.add(std::make_unique<Medkit>(4, 1, 0, 5), 5);
+  stash.add(std::make_unique<Medkit>(5, 1, 0, 4), 5);
   REQUIRE(stash.size() == 1);
   REQUIRE(stash.get_item(5) != nullptr);
 }
