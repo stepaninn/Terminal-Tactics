@@ -6,6 +6,10 @@
 namespace game {
 
 using id_t = size_t;
+using EntityId = size_t;
+using LevelId = size_t;
+using ItemId = size_t;
+using TeamId = size_t;
 
 enum class CellType {
     FLOOR,
