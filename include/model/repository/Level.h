@@ -8,6 +8,7 @@
 #include <unordered_map>
 #include <vector>
 #include <memory>
+#include <ranges>
 
 namespace game {
 
@@ -16,12 +17,13 @@ using FieldMatrix = Matrix<std::unique_ptr<ICell>>;
 class Level {
 public:
     Level() = delete;
-    explicit Level(LevelId id, std::string name);
+    explicit Level(LevelId id, std::string name) : id_(id), name_(std::move(name)) {}
 
     [[nodiscard]] const FieldMatrix& get_field() const noexcept { return field_; }
     [[nodiscard]] FieldMatrix& get_field() noexcept { return field_; }
 
-    [[nodiscard]] Entity* get_entity(EntityId id) { return entities_[id].get(); }
+    [[nodiscard]] Entity* get_entity(EntityId id) { auto it = entities_.find(id);
+        return it != entities_.end() ? it->second.get() : nullptr; }
     [[nodiscard]] std::vector<const Entity*> get_entities() noexcept;
 
     [[nodiscard]] ICell* get_cell(Position pos) const noexcept;
