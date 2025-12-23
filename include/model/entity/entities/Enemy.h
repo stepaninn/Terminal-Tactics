@@ -15,6 +15,7 @@ namespace game {
 
 class Enemy : public Entity {
 public:
+    Enemy() = default;
     explicit Enemy(EntityId id, std::string name = {}) : Entity(id, std::move(name)) {}
 
     [[nodiscard]] HealthComponent* health_comp() const { return get_component<HealthComponent>(); }
@@ -25,6 +26,7 @@ public:
 
 class Wild final : public Enemy {
 public:
+    Wild() = default;
     explicit Wild(EntityId id, std::string name = {}) : Enemy(id, std::move(name)) {}
     [[nodiscard]] CombatComponent* combat_comp() const { return get_component<CombatComponent>(); }
     [[nodiscard]] VisionComponent* vision_comp() const { return get_component<VisionComponent>(); }
@@ -32,6 +34,7 @@ public:
 
 class Intelligent final : public Enemy {
 public:
+    Intelligent() = default;
     explicit Intelligent(EntityId id, std::string name = {}) : Enemy(id, std::move(name)) {}
     [[nodiscard]] CombatComponent* combat_comp() const { return get_component<CombatComponent>(); }
     [[nodiscard]] VisionComponent* vision_comp() const { return get_component<VisionComponent>(); }
@@ -40,6 +43,7 @@ public:
 
 class Forager final : public Enemy {
 public:
+    Forager() = default;
     explicit Forager(EntityId id, std::string name = {}) : Enemy(id, std::move(name)) {}
     [[nodiscard]] InventoryComponent* inventory_comp() const { return get_component<InventoryComponent>(); }
     [[nodiscard]] VisionComponent* vision_comp() const { return get_component<VisionComponent>(); }
