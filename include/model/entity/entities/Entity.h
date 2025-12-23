@@ -17,13 +17,14 @@ namespace game {
 class Entity {
 public:
     Entity() = default;
-    explicit Entity(id_t id, std::string name) : id_(id), name_(std::move(name)) {}
+    explicit Entity(EntityId id, std::string name = {}, TeamId team_id = 0) :
+        id_(id), name_(std::move(name)), team_id_(team_id) {}
     virtual ~Entity() = default;
 
-    [[nodiscard]] id_t get_id() const noexcept { return id_; }
+    [[nodiscard]] EntityId get_id() const noexcept { return id_; }
     [[nodiscard]] const std::string& get_name() const noexcept { return name_; }
     void set_name(std::string new_name) { name_ = std::move(new_name); }
-    void set_id(id_t id) { id_ = id; }
+    void set_id(EntityId id) { id_ = id; }
 
     template<typename Key, typename Impl = Key, typename... Args>
     requires std::is_base_of_v<IComponent, Key> && std::is_base_of_v<Key, Impl>
@@ -53,8 +54,9 @@ public:
     }
 
 protected:
-    id_t id_{};
+    EntityId id_{};
     std::string name_;
+    TeamId team_id_{};
     std::unordered_map<std::type_index, std::unique_ptr<IComponent>> components_;
 };
 

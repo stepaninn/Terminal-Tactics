@@ -10,9 +10,9 @@ namespace game {
 class Weapon : public Item {
 public:
     Weapon() = default;
-    Weapon(Damage dmg, int range, int attack_cost, int reload_cost,
-           AmmoType type, int cur_ammo, int max_ammo, int weight = 0, id_t id = {}) :
-            Item(weight, id),
+    Weapon(ItemId id, int weight, Damage dmg, int range, int attack_cost, int reload_cost,
+           AmmoType type, int cur_ammo, int max_ammo) :
+            Item(id, weight),
             dmg_(dmg),
             range_(range),
             attack_cost_(attack_cost),

@@ -19,30 +19,30 @@ public:
     [[nodiscard]] virtual bool apply_shot() noexcept { return false; }
 
     [[nodiscard]] virtual bool can_place_items() const noexcept { return false; }
-    [[nodiscard]] virtual const Item* get_item(id_t id) const { return nullptr; }
+    [[nodiscard]] virtual const Item* get_item(ItemId id) const { return nullptr; }
     [[nodiscard]] virtual std::vector<const Item*> get_items() const { return {}; }
 
     [[nodiscard]] virtual std::string_view view_name() const noexcept = 0;
 
-    virtual void add([[maybe_unused]] std::unique_ptr<Item> item, [[maybe_unused]] id_t id) {}
-    virtual std::unique_ptr<Item> remove_by_id([[maybe_unused]] id_t id) { return nullptr; }
+    virtual void add([[maybe_unused]] std::unique_ptr<Item> item, [[maybe_unused]] ItemId id) {}
+    virtual std::unique_ptr<Item> remove_by_id([[maybe_unused]] ItemId id) { return nullptr; }
 
     [[nodiscard]] virtual size_t size() const noexcept { return 0; }
     
 };
 
 struct ItemStorage {
-    std::unordered_map<id_t, std::unique_ptr<Item>> items_;
+    std::unordered_map<ItemId, std::unique_ptr<Item>> items_;
 
-    void add(std::unique_ptr<Item> item, id_t id) { items_[id] = std::move(item); }
+    void add(std::unique_ptr<Item> item, ItemId id) { items_[id] = std::move(item); }
 
-    std::unique_ptr<Item> remove_by_id(id_t id);
+    std::unique_ptr<Item> remove_by_id(ItemId id);
 
     size_t size() const noexcept { return items_.size(); }
 
     std::vector<const Item*> get_items() const;
 
-    const Item* get_item(id_t id) const noexcept;
+    const Item* get_item(ItemId id) const noexcept;
 };
 
 }

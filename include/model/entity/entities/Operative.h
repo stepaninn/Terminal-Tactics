@@ -15,7 +15,7 @@ namespace game {
 class Operative final : public Entity {
 public:
     Operative() = default;
-    explicit Operative(id_t id, std::string name = {}) : Entity(id, std::move(name)) {}
+    explicit Operative(EntityId id, std::string name = {}) : Entity(id, std::move(name)) {}
 
     [[nodiscard]] InventoryComponent* inventory_comp() const { return get_component<InventoryComponent>(); }
     [[nodiscard]] HealthComponent* health_comp() const { return get_component<HealthComponent>(); }
