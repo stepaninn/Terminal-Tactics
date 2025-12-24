@@ -3,21 +3,35 @@
 
 #include "model/service/services.h"
 #include "model/repository/cells/Floor.h"
+#include "model/entity/components/HealthComponent.h"
+#include "model/entity/components/InventoryComponent.h"
 #include "model/entity/components/MoveComponent.h"
 #include "model/entity/components/TimePointsComponent.h"
 #include "model/entity/components/PositionComponent.h"
+#include "model/entity/components/WeaponComponent.h"
+#include "model/entity/entities/items/Item.h"
+#include "model/entity/entities/items/Weapon.h"
 
 #include <memory>
 
 namespace game {
 
 using entity::Entity;
+using entity::components::DefaultHealthComp;
+using entity::components::DefaultInventoryComp;
 using entity::components::DefaultMoveComp;
 using entity::components::DefaultPositionComp;
 using entity::components::DefaultTimePointsComp;
+using entity::components::DefaultWeaponComp;
+using entity::components::HealthComponent;
+using entity::components::InventoryComponent;
 using entity::components::MoveComponent;
 using entity::components::PositionComponent;
 using entity::components::TimePointsComponent;
+using entity::components::WeaponComponent;
+using entity::items::AmmoBag;
+using entity::items::Medkit;
+using entity::items::Weapon;
 using repo::Level;
 using repo::cells::Floor;
 
@@ -70,6 +84,49 @@ TEST_CASE("service MovementService spends points and updates position") {
   REQUIRE(pos->get_position().x == 1);
   REQUIRE(pos->get_position().y == 0);
   REQUIRE(tp->get_current_points() == 2);
+}
+
+TEST_CASE("service CombatService reduces hp and handles zero") {
+  auto level = std::make_shared<Level>(1, "L1");
+  auto target = std::make_unique<Entity>();
+  target->add_component<HealthComponent, DefaultHealthComp>(5, 10);
+  level->spawn_entity(std::move(target), Position{0, 0});
+
+  service::CombatService combat;
+  REQUIRE(combat.apply_damage(*level, 0, 1, 3));
+  auto* hp = level->get_entity(1)->get_component<HealthComponent>();
+  REQUIRE(hp->get_current_hp() == 2);
+
+  REQUIRE(combat.apply_damage(*level, 0, 1, 5));
+  REQUIRE(hp->get_current_hp() == 0);
+}
+
+TEST_CASE("service ItemService uses medkit and ammo bag") {
+  auto level = std::make_shared<Level>(1, "L1");
+  auto user = std::make_unique<Entity>();
+  user->add_component<HealthComponent, DefaultHealthComp>(5, 10);
+  user->add_component<TimePointsComponent, DefaultTimePointsComp>(3, 3);
+  user->add_component<InventoryComponent, DefaultInventoryComp>(3, 10);
+  auto weapon = std::make_unique<Weapon>(1, 1, Damage{1, 2}, 3, 1, 1, AmmoType::PISTOL, 1, 5);
+  user->add_component<WeaponComponent, DefaultWeaponComp>(std::move(weapon));
+  level->spawn_entity(std::move(user), Position{0, 0});
+
+  auto* inv = level->get_entity(1)->get_component<InventoryComponent>();
+  inv->add(std::make_unique<Medkit>(100, 1, 3, 2), 100);
+  inv->add(std::make_unique<AmmoBag>(200, 1, 3, 10, AmmoType::PISTOL), 200);
+
+  service::ItemService items;
+  REQUIRE(items.use_item(*level, 1, 100));
+  auto* hp = level->get_entity(1)->get_component<HealthComponent>();
+  auto* tp = level->get_entity(1)->get_component<TimePointsComponent>();
+  REQUIRE(hp->get_current_hp() == 8);
+  REQUIRE(tp->get_current_points() == 1);
+  REQUIRE(inv->get_item(100) == nullptr);
+
+  REQUIRE(items.use_item(*level, 1, 200));
+  auto* wc = level->get_entity(1)->get_component<WeaponComponent>();
+  REQUIRE(wc->get_weapon()->get_current_ammo() == 4);
+  REQUIRE(inv->get_item(200) == nullptr);
 }
 
 }
