@@ -57,7 +57,7 @@ private:
                      const game::entity::items::AmmoBag& bag, game::ItemId item_id) {
         auto* wc = user.get_component<game::entity::components::WeaponComponent>();
         if (!wc) return false;
-        auto weapon = wc->get_weapon();
+        auto* weapon = wc->get_weapon();
         if (!weapon || weapon->get_ammo_type() != bag.get_ammo_type()) return false;
 
         auto removed = inv.remove_by_id(item_id);

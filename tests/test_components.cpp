@@ -134,14 +134,16 @@ TEST_CASE("DefaultInventoryComp add/remove behavior") {
 }
 
 TEST_CASE("DefaultWeaponComp returns previous weapon") {
-  auto w1 = std::make_shared<Weapon>(1, 2, Damage{1, 2}, 3, 1, 2, AmmoType::PISTOL, 1, 5);
-  auto w2 = std::make_shared<Weapon>(2, 3, Damage{2, 3}, 4, 2, 3, AmmoType::RIFLE, 2, 6);
+  auto w1 = std::make_unique<Weapon>(1, 2, Damage{1, 2}, 3, 1, 2, AmmoType::PISTOL, 1, 5);
+  auto w2 = std::make_unique<Weapon>(2, 3, Damage{2, 3}, 4, 2, 3, AmmoType::RIFLE, 2, 6);
+  auto* w1_raw = w1.get();
+  auto* w2_raw = w2.get();
 
-  DefaultWeaponComp wc(w1);
-  REQUIRE(wc.get_weapon() == w1);
-  auto prev = wc.set_weapon(w2);
-  REQUIRE(prev == w1);
-  REQUIRE(wc.get_weapon() == w2);
+  DefaultWeaponComp wc(std::move(w1));
+  REQUIRE(wc.get_weapon() == w1_raw);
+  auto prev = wc.set_weapon(std::move(w2));
+  REQUIRE(prev.get() == w1_raw);
+  REQUIRE(wc.get_weapon() == w2_raw);
 }
 
 }

@@ -2,11 +2,11 @@
 
 namespace game::entity::components {
 
-std::shared_ptr<game::entity::items::Weapon> DefaultWeaponComp::set_weapon(
-    const std::shared_ptr<game::entity::items::Weapon> weapon
+std::unique_ptr<game::entity::items::Weapon> DefaultWeaponComp::set_weapon(
+    std::unique_ptr<game::entity::items::Weapon> weapon
 ) {
-    auto tmp = weapon_;
-    weapon_ = weapon;
+    auto tmp = std::move(weapon_);
+    weapon_ = std::move(weapon);
     return tmp;
 }
 
