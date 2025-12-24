@@ -4,24 +4,24 @@
 #include "IComponent.h"
 #include "../../../types.h"
 
-namespace game {
+namespace game::entity::components {
 
 class AIComponent : public IComponent {
 public:
-    [[nodiscard]] virtual AIState get_state() const = 0;
-    virtual void set_state(AIState s) = 0;
+    [[nodiscard]] virtual game::AIState get_state() const = 0;
+    virtual void set_state(game::AIState s) = 0;
     ~AIComponent() override = default;
 };
 
 class DefaultAIComp : public AIComponent {
 public:
     DefaultAIComp() = default;
-    explicit DefaultAIComp(AIState s) : state_(s) {}
-    [[nodiscard]] AIState get_state() const override { return state_; }
-    void set_state(AIState s) override { state_ = s; }
+    explicit DefaultAIComp(game::AIState s) : state_(s) {}
+    [[nodiscard]] game::AIState get_state() const override { return state_; }
+    void set_state(game::AIState s) override { state_ = s; }
 
 protected:
-    AIState state_ = AIState::NEUTRAL;
+    game::AIState state_ = game::AIState::NEUTRAL;
 };
 
 }

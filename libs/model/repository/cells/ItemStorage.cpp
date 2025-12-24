@@ -2,9 +2,9 @@
 
 #include <algorithm>
 
-namespace game {
+namespace game::repo::cells {
 
-std::unique_ptr<Item> ItemStorage::remove_by_id(id_t id) {
+std::unique_ptr<game::entity::items::Item> ItemStorage::remove_by_id(game::ItemId id) {
     auto it = items_.find(id);
     if (it == items_.end()) return nullptr;
 
@@ -13,8 +13,8 @@ std::unique_ptr<Item> ItemStorage::remove_by_id(id_t id) {
     return res;
 }
 
-std::vector<const Item*> ItemStorage::get_items() const {
-    std::vector<const Item*> res;
+std::vector<const game::entity::items::Item*> ItemStorage::get_items() const {
+    std::vector<const game::entity::items::Item*> res;
     res.reserve(items_.size());
     std::ranges::for_each(items_, [&res](const auto& item) {
         res.push_back(item.second.get());
@@ -22,7 +22,7 @@ std::vector<const Item*> ItemStorage::get_items() const {
     return res;
 }
 
-const Item* ItemStorage::get_item(id_t id) const noexcept {
+const game::entity::items::Item* ItemStorage::get_item(game::ItemId id) const noexcept {
     auto it = items_.find(id);
     if (it == items_.end()) return nullptr;
 

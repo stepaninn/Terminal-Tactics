@@ -4,7 +4,7 @@
 #include "IComponent.h"
 #include <algorithm>
 
-namespace game {
+namespace game::entity::components {
 
 class TimePointsComponent : public IComponent {
 public:

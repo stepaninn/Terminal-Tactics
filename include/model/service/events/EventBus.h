@@ -9,7 +9,7 @@
 #include <vector>
 #include <functional>
 
-namespace game {
+namespace game::service::events {
 
 class EventBus {
 public:
@@ -35,7 +35,7 @@ private:
     std::queue<std::shared_ptr<EventBase>> event_queue_;
 };
 
-} // namespace game
+}
 
 
 #endif //INC_3_EVENTBUS_H

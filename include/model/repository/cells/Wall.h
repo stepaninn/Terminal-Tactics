@@ -3,7 +3,7 @@
 
 #include "Cell.h"
 
-namespace game {
+namespace game::repo::cells {
 
 class Wall final : public ICell {
 public:

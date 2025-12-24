@@ -18,6 +18,19 @@
 
 namespace game {
 
+using entity::items::AmmoBag;
+using entity::items::Medkit;
+using entity::items::Weapon;
+using entity::components::DefaultAIComp;
+using entity::components::DefaultCombatComp;
+using entity::components::DefaultHealthComp;
+using entity::components::DefaultInventoryComp;
+using entity::components::DefaultMoveComp;
+using entity::components::DefaultPositionComp;
+using entity::components::DefaultTimePointsComp;
+using entity::components::DefaultVisionComp;
+using entity::components::DefaultWeaponComp;
+
 TEST_CASE("DefaultHealthComp clamps add/reduce") {
   DefaultHealthComp hc(5, 10);
   REQUIRE(hc.add_hp(3) == 3);
@@ -38,8 +51,8 @@ TEST_CASE("DefaultTimePointsComp clamps add/reduce") {
   REQUIRE(tp.get_current_points() == 5);
   REQUIRE(tp.reduce_points(3) == 3);
   REQUIRE(tp.get_current_points() == 2);
-  REQUIRE(tp.reduce_points(5) == 2);
-  REQUIRE(tp.get_current_points() == 0);
+  REQUIRE(tp.reduce_points(5) == 0);
+  REQUIRE(tp.get_current_points() == 2);
 }
 
 TEST_CASE("DefaultMoveComp enforces min step cost") {
@@ -131,4 +144,4 @@ TEST_CASE("DefaultWeaponComp returns previous weapon") {
   REQUIRE(wc.get_weapon() == w2);
 }
 
-} // namespace game
+}

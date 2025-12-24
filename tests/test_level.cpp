@@ -9,6 +9,10 @@
 
 namespace game {
 
+using entity::Entity;
+using repo::Level;
+using repo::cells::Floor;
+
 TEST_CASE("Level spawns entities with sequential ids") {
   Level level(1, "L1");
 
@@ -80,4 +84,17 @@ TEST_CASE("Level entity radius query") {
   REQUIRE(none.empty());
 }
 
-} // namespace game
+TEST_CASE("Level move_entity updates position") {
+  Level level(1, "L1");
+  level.resize_field(3, 3);
+
+  level.spawn_entity(std::make_unique<Entity>(), Position{0, 0});
+  REQUIRE(level.get_entities_radius(Position{0, 0}, 0).size() == 1);
+  REQUIRE(level.move_entity(1, Position{2, 2}));
+  REQUIRE(level.get_entities_radius(Position{0, 0}, 0).empty());
+  REQUIRE(level.get_entities_radius(Position{2, 2}, 0).size() == 1);
+  REQUIRE_FALSE(level.move_entity(1, Position{3, 3}));
+  REQUIRE_FALSE(level.move_entity(999, Position{1, 1}));
+}
+
+}

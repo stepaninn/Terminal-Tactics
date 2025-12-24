@@ -2,7 +2,7 @@
 
 #include <algorithm>
 
-namespace game {
+namespace game::entity::components {
 
 int DefaultHealthComp::add_hp(int amount) {
     int added = std::min(max_hp_ - current_hp_, amount);

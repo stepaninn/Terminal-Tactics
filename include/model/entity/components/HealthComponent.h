@@ -3,7 +3,7 @@
 
 #include "IComponent.h"
 
-namespace game {
+namespace game::entity::components {
 
 class HealthComponent : public IComponent {
 public:
@@ -31,6 +31,6 @@ protected:
     int max_hp_ = 0;
 };
 
-} // namespace game
+}
 
 #endif

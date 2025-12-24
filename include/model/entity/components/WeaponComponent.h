@@ -4,30 +4,36 @@
 #include "IComponent.h"
 #include <memory>
 
-namespace game {
-
+namespace game::entity::items {
 class Weapon;
+}
+
+namespace game::entity::components {
 
 class WeaponComponent : public IComponent {
 public:
-    [[nodiscard]] virtual std::shared_ptr<Weapon> get_weapon() const = 0;
+    [[nodiscard]] virtual std::shared_ptr<game::entity::items::Weapon> get_weapon() const = 0;
     // возвращает прежнее оружие
-    virtual std::shared_ptr<Weapon> set_weapon(std::shared_ptr<Weapon> weapon) = 0;
+    virtual std::shared_ptr<game::entity::items::Weapon> set_weapon(
+        std::shared_ptr<game::entity::items::Weapon> weapon
+    ) = 0;
     ~WeaponComponent() override = default;
 };
 
 class DefaultWeaponComp : public WeaponComponent {
 public:
     DefaultWeaponComp() = default;
-    explicit DefaultWeaponComp(std::shared_ptr<Weapon> w) : weapon_(std::move(w)) {}
+    explicit DefaultWeaponComp(std::shared_ptr<game::entity::items::Weapon> w) : weapon_(std::move(w)) {}
 
-    [[nodiscard]] std::shared_ptr<Weapon> get_weapon() const override { return weapon_; }
-    std::shared_ptr<Weapon> set_weapon(std::shared_ptr<Weapon> weapon) override;
+    [[nodiscard]] std::shared_ptr<game::entity::items::Weapon> get_weapon() const override { return weapon_; }
+    std::shared_ptr<game::entity::items::Weapon> set_weapon(
+        std::shared_ptr<game::entity::items::Weapon> weapon
+    ) override;
 
 protected:
-    std::shared_ptr<Weapon> weapon_;
+    std::shared_ptr<game::entity::items::Weapon> weapon_;
 };
 
-} // namespace game
+}
 
 #endif //INC_3_WEAPONCOMPONENT_H

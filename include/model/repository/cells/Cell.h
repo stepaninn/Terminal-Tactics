@@ -8,7 +8,7 @@
 #include <unordered_map>
 #include <string_view>
 
-namespace game {
+namespace game::repo::cells {
 
 class ICell {
 public:
@@ -19,30 +19,33 @@ public:
     [[nodiscard]] virtual bool apply_shot() noexcept { return false; }
 
     [[nodiscard]] virtual bool can_place_items() const noexcept { return false; }
-    [[nodiscard]] virtual const Item* get_item(ItemId id) const { return nullptr; }
-    [[nodiscard]] virtual std::vector<const Item*> get_items() const { return {}; }
+    [[nodiscard]] virtual const game::entity::items::Item* get_item(game::ItemId id) const { return nullptr; }
+    [[nodiscard]] virtual std::vector<const game::entity::items::Item*> get_items() const { return {}; }
 
     [[nodiscard]] virtual std::string_view view_name() const noexcept = 0;
 
-    virtual void add([[maybe_unused]] std::unique_ptr<Item> item, [[maybe_unused]] ItemId id) {}
-    virtual std::unique_ptr<Item> remove_by_id([[maybe_unused]] ItemId id) { return nullptr; }
+    virtual void add([[maybe_unused]] std::unique_ptr<game::entity::items::Item> item,
+                     [[maybe_unused]] game::ItemId id) {}
+    virtual std::unique_ptr<game::entity::items::Item> remove_by_id([[maybe_unused]] game::ItemId id) {
+        return nullptr;
+    }
 
     [[nodiscard]] virtual size_t size() const noexcept { return 0; }
     
 };
 
 struct ItemStorage {
-    std::unordered_map<ItemId, std::unique_ptr<Item>> items_;
+    std::unordered_map<game::ItemId, std::unique_ptr<game::entity::items::Item>> items_;
 
-    void add(std::unique_ptr<Item> item, ItemId id) { items_[id] = std::move(item); }
+    void add(std::unique_ptr<game::entity::items::Item> item, game::ItemId id) { items_[id] = std::move(item); }
 
-    std::unique_ptr<Item> remove_by_id(ItemId id);
+    std::unique_ptr<game::entity::items::Item> remove_by_id(game::ItemId id);
 
     size_t size() const noexcept { return items_.size(); }
 
-    std::vector<const Item*> get_items() const;
+    std::vector<const game::entity::items::Item*> get_items() const;
 
-    const Item* get_item(ItemId id) const noexcept;
+    const game::entity::items::Item* get_item(game::ItemId id) const noexcept;
 };
 
 }

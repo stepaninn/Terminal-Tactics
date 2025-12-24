@@ -3,7 +3,7 @@
 
 #include "Cell.h"
 
-namespace game {
+namespace game::repo::cells {
 
 class Glass final : public ICell  {
 public:

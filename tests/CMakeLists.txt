@@ -23,3 +23,7 @@ target_link_libraries(test_entities PRIVATE core_lib project_headers Catch2::Cat
 add_executable(test_level test_level.cpp)
 
 target_link_libraries(test_level PRIVATE core_lib project_headers Catch2::Catch2WithMain)
+
+add_executable(test_service test_service.cpp)
+
+target_link_libraries(test_service PRIVATE core_lib project_headers Catch2::Catch2WithMain)

@@ -1,6 +1,6 @@
 #include "model/entity/entities/items/Item.h"
 
-namespace game {
+namespace game::entity::items {
 
 int AmmoBag::add_ammo(int ammo) {
     int added = std::min(max_ammo_ - current_ammo_, ammo);

@@ -8,6 +8,14 @@
 
 namespace game {
 
+using entity::Entity;
+using entity::components::AIComponent;
+using entity::components::DefaultAIComp;
+using entity::components::DefaultHealthComp;
+using entity::components::DefaultPositionComp;
+using entity::components::HealthComponent;
+using entity::components::PositionComponent;
+
 TEST_CASE("Entity stores id and name") {
   Entity e(7, "unit");
   REQUIRE(e.get_id() == 7);
@@ -62,4 +70,4 @@ TEST_CASE("Entity replace component of same type") {
   REQUIRE(current->get_max_hp() == 7);
 }
 
-} // namespace game
+}

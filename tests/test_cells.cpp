@@ -14,6 +14,16 @@
 #include <vector>
 
 namespace game {
+
+using entity::items::AmmoBag;
+using entity::items::Medkit;
+using repo::cells::Floor;
+using repo::cells::Glass;
+using repo::cells::ItemStorage;
+using repo::cells::Partition;
+using repo::cells::Stash;
+using repo::cells::Wall;
+
 TEST_CASE("ItemStorage basic operations") {
   ItemStorage storage;
 

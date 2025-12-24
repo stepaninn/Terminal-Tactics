@@ -47,6 +47,6 @@ enum class AmmoType {
     SNIPER
 };
 
-} // namespace game
+}
 
 #endif

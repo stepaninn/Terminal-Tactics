@@ -3,7 +3,7 @@
 #include "Cell.h"
 #include "Floor.h"
 
-namespace game {
+namespace game::repo::cells {
 
 class Stash final : public Floor {
 public:

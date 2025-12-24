@@ -6,14 +6,14 @@
 
 #include <stdexcept>
 
-namespace game {
+namespace game::entity::components {
 
-bool DefaultInventoryComp::can_add(const Item& item) const noexcept {
+bool DefaultInventoryComp::can_add(const game::entity::items::Item& item) const noexcept {
     if (items_.size() == capacity_) return false;
     return item.get_weight() + weight_ <= max_weight_;
 }
 
-void DefaultInventoryComp::add(std::unique_ptr<Item> item, id_t id) {
+void DefaultInventoryComp::add(std::unique_ptr<game::entity::items::Item> item, game::id_t id) {
     if (items_.size() == capacity_) throw std::runtime_error("Not enough space");
     if (item->get_weight() + weight_ >= max_weight_) throw std::runtime_error("Item is too heavy");
 
@@ -22,7 +22,7 @@ void DefaultInventoryComp::add(std::unique_ptr<Item> item, id_t id) {
     weight_ += w;
 }
 
-std::unique_ptr<Item> DefaultInventoryComp::remove_by_id(id_t id) {
+std::unique_ptr<game::entity::items::Item> DefaultInventoryComp::remove_by_id(game::id_t id) {
     auto it = items_.find(id);
 
     if (it == items_.end()) return nullptr;
@@ -34,8 +34,8 @@ std::unique_ptr<Item> DefaultInventoryComp::remove_by_id(id_t id) {
     return res;
 }
 
-std::vector<const Item*> DefaultInventoryComp::get_items() const {
-    std::vector<const Item*> res;
+std::vector<const game::entity::items::Item*> DefaultInventoryComp::get_items() const {
+    std::vector<const game::entity::items::Item*> res;
     res.reserve(items_.size());
     std::ranges::for_each(items_, [&res](const auto& item) {
         res.push_back(item.second.get());
@@ -43,7 +43,7 @@ std::vector<const Item*> DefaultInventoryComp::get_items() const {
     return res;
 }
 
-const Item* DefaultInventoryComp::get_item(id_t id) const noexcept {
+const game::entity::items::Item* DefaultInventoryComp::get_item(game::id_t id) const noexcept {
     auto it = items_.find(id);
     if (it == items_.end()) return nullptr;
 

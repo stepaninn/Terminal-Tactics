@@ -1,13 +1,13 @@
 #ifndef INC_3_ICOMPONENT_H
 #define INC_3_ICOMPONENT_H
 
-namespace game {
+namespace game::entity::components {
 
 class IComponent {
 public:
     virtual ~IComponent() = default;
 };
 
-} // namespace game
+}
 
 #endif

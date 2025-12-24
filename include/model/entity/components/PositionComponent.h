@@ -4,27 +4,27 @@
 #include "IComponent.h"
 #include "../../../types.h"
 
-namespace game {
+namespace game::entity::components {
 
 class PositionComponent : public IComponent {
 public:
-    [[nodiscard]] virtual Position get_position() const = 0;
-    virtual void set_position(Position pos) = 0;
+    [[nodiscard]] virtual game::Position get_position() const = 0;
+    virtual void set_position(game::Position pos) = 0;
     ~PositionComponent() override = default;
 };
 
 class DefaultPositionComp : public PositionComponent {
 public:
     DefaultPositionComp() = default;
-    explicit DefaultPositionComp(Position pos) : pos_(pos) {}
+    explicit DefaultPositionComp(game::Position pos) : pos_(pos) {}
 
-    [[nodiscard]] Position get_position() const override { return pos_; }
-    void set_position(Position pos) override { pos_ = pos; }
+    [[nodiscard]] game::Position get_position() const override { return pos_; }
+    void set_position(game::Position pos) override { pos_ = pos; }
 
 protected:
-    Position pos_{0, 0};
+    game::Position pos_{0, 0};
 };
 
-} // namespace game
+}
 
 #endif //INC_3_POSITIONCOMPONENT_H

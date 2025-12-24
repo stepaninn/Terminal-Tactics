@@ -6,6 +6,11 @@
 
 namespace game {
 
+using entity::items::AmmoBag;
+using entity::items::Item;
+using entity::items::Medkit;
+using entity::items::Weapon;
+
 TEST_CASE("Item stores id and weight") {
   Item item(7, 42);
   REQUIRE(item.get_weight() == 42);
@@ -68,4 +73,4 @@ TEST_CASE("Weapon exposes stats and clamps range/ammo") {
   REQUIRE(weapon.get_current_ammo() == 0);
 }
 
-} // namespace game
+}
