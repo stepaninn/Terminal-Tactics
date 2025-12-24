@@ -1,7 +1,7 @@
 #ifndef INC_3_TMP_SERVICE_QUERY_H
 #define INC_3_TMP_SERVICE_QUERY_H
 
-#include "../entity/entities/Entity.h"
+#include "model/entity/entities/Entity.h"
 
 namespace game::service {
 

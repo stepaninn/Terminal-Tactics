@@ -1,7 +1,7 @@
 #ifndef INC_3_TMP_SERVICE_WORLD_H
 #define INC_3_TMP_SERVICE_WORLD_H
 
-#include "../repository/Level.h"
+#include "model/repository/Level.h"
 #include "events/EventBus.h"
 #include "Query.h"
 
