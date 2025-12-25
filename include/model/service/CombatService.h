@@ -2,6 +2,13 @@
 #define INC_3_TMP_SERVICE_COMBATSERVICE_H
 
 #include "model/repository/Level.h"
+#include "model/entity/components/CombatComponent.h"
+#include "model/entity/components/HealthComponent.h"
+#include "model/entity/components/InventoryComponent.h"
+#include "model/entity/components/PositionComponent.h"
+#include "model/entity/components/TimePointsComponent.h"
+#include "model/entity/components/WeaponComponent.h"
+#include "model/entity/entities/items/Weapon.h"
 #include "ServiceBase.h"
 
 #include <memory>
@@ -12,8 +19,24 @@ class CombatService : public ServiceBase {
 public:
     explicit CombatService(std::shared_ptr<events::EventBus> bus = nullptr) : ServiceBase(std::move(bus)) {}
 
+    [[nodiscard]] bool can_shoot(const game::entity::Entity& attacker,
+                                 const game::entity::items::Weapon& weapon) const;
+
+    [[nodiscard]] bool try_shoot(game::repo::Level& level,
+                                game::EntityId attacker_id,
+                                game::EntityId target_id);
+
+    [[nodiscard]] bool reload_weapon(game::entity::Entity& user, game::ItemId ammo_bag_id);
+
     [[nodiscard]] bool apply_damage(game::repo::Level& level, game::EntityId attacker_id,
                                     game::EntityId target_id, int amount);
+
+private:
+    [[nodiscard]] int roll_damage(const game::entity::items::Weapon& weapon) const;
+    // здесь настраивается точность (для баланса)
+    [[nodiscard]] bool roll_hit(const game::entity::components::CombatComponent& combat,
+                                const game::entity::items::Weapon& weapon,
+                                int distance) const;
 };
 
 }

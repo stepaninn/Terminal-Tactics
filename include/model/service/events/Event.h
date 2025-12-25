@@ -22,6 +22,11 @@ struct DamageEvent final : EventBase {
     int amount{0};
 };
 
+struct ShotMissedEvent final : EventBase {
+    game::id_t attacker_id;
+    game::id_t target_id;
+};
+
 struct ItemPickedEvent final : EventBase {
     game::id_t entity_id;
     game::id_t item_id;
