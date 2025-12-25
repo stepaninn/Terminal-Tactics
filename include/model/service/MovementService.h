@@ -1,7 +1,7 @@
 #ifndef INC_3_TMP_SERVICE_MOVEMENTSERVICE_H
 #define INC_3_TMP_SERVICE_MOVEMENTSERVICE_H
 
-#include "modelgit /repository/Level.h"
+#include "model/repository/Level.h"
 #include "model/entity/components/PositionComponent.h"
 #include "ServiceBase.h"
 
