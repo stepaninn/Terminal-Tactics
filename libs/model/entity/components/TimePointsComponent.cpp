@@ -9,9 +9,9 @@ int DefaultTimePointsComp::add_points(int amount) {
 }
 
 int DefaultTimePointsComp::reduce_points(int amount) {
-    if (amount > current_tp_) return 0;
-    current_tp_ -= amount;
-    return amount;
+    int removed = std::min(current_tp_, amount);
+    current_tp_ -= removed;
+    return removed;
 }
 
 
