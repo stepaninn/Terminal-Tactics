@@ -86,21 +86,6 @@ TEST_CASE("service MovementService spends points and updates position") {
   REQUIRE(tp->get_current_points() == 2);
 }
 
-TEST_CASE("service CombatService reduces hp and handles zero") {
-  auto level = std::make_shared<Level>(1, "L1");
-  auto target = std::make_unique<Entity>();
-  target->add_component<HealthComponent, DefaultHealthComp>(5, 10);
-  level->spawn_entity(std::move(target), Position{0, 0});
-
-  service::CombatService combat;
-  REQUIRE(combat.apply_damage(*level, 0, 1, 3));
-  auto* hp = level->get_entity(1)->get_component<HealthComponent>();
-  REQUIRE(hp->get_current_hp() == 2);
-
-  REQUIRE(combat.apply_damage(*level, 0, 1, 5));
-  REQUIRE(hp->get_current_hp() == 0);
-}
-
 TEST_CASE("service CombatService blocks shooting without ammo or time points") {
   auto level = std::make_shared<Level>(1, "L1");
 

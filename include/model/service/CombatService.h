@@ -20,20 +20,31 @@ public:
         : ServiceBase(std::move(bus)), rng_(seed) {}
 
     /**
-     *
+     * @brief Метод проверки возможности атаки
      * @param attacker Атакующее существо
-     * @return
+     * @return bool true, если существо может атаковать, false иначе
      */
     [[nodiscard]] static bool can_shoot(const game::entity::Entity& attacker);
 
+    /**
+     * @brief Метод атаки
+     * @param level Уровень, на котором происходит попытка атаки
+     * @param attacker_id ID атакующего существа
+     * @param target_id ID атакуемого существа
+     * @return bool true, если выстрел успешен
+     */
     [[nodiscard]] bool try_shoot(game::repo::Level& level,
-                                game::EntityId attacker_id,
-                                game::EntityId target_id);
+                                 game::EntityId attacker_id,
+                                 game::EntityId target_id);
 
+    /**
+     * @brief Метод перезарядки
+     * @param user Существо, которое хочет перезарядиться
+     * @param ammo_bag_id ID мешка с патронами
+     * @return bool true, если перезарядка успешка
+     */
     [[nodiscard]] static bool reload_weapon(game::entity::Entity& user, game::ItemId ammo_bag_id);
 
-    [[nodiscard]] bool apply_damage(game::repo::Level& level, game::EntityId attacker_id,
-                                    game::EntityId target_id, int amount) const;
 
 private:
     [[nodiscard]] int roll_damage(const game::entity::items::Weapon& w) { return w.roll_damage(rng_); }
