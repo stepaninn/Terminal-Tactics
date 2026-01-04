@@ -7,10 +7,19 @@
 
 namespace game::entity::components {
 
+/// @brief Класс компонента оружия
 class WeaponComponent : public IComponent {
 public:
+    /**
+     * @brief Метод получения текущего оружия
+     * @return Указатель на оружие или nullptr, если оружие не задано
+     */
     [[nodiscard]] virtual game::entity::items::Weapon* get_weapon() const = 0;
-    // возвращает прежнее оружие
+    /**
+     * @brief Метод задания оружия
+     * @param weapon Указатель на новое оружие
+     * @return unique_ptr на прежнее оружие (может быть nullptr)
+     */
     virtual std::unique_ptr<game::entity::items::Weapon> set_weapon(
         std::unique_ptr<game::entity::items::Weapon> weapon
     ) = 0;

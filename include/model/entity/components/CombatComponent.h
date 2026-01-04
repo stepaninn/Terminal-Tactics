@@ -6,6 +6,7 @@
 
 namespace game::entity::components {
 
+/// @brief Класс боевого компонента
 class CombatComponent : public IComponent {
 public:
     /**

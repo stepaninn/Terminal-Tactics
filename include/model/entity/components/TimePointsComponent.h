@@ -6,11 +6,32 @@
 
 namespace game::entity::components {
 
+/// @brief Класс компонента очков времени
 class TimePointsComponent : public IComponent {
 public:
+    /**
+     * @brief Метод получения текущих очков времени
+     * @return int количество текущих очков времени
+     */
     [[nodiscard]] virtual int get_current_points() const = 0;
+    /**
+     * @brief Метод добавления очков времени
+     * @param amount Количество добавляемых очков времени
+     * @return int количество реально добавленных очков
+     * @note Не может увеличить очки выше максимума
+     */
     virtual int add_points(int amount) = 0;
+    /**
+     * @brief Метод снятия очков времени
+     * @param amount Количество снимаемых очков времени
+     * @return int количество реально снятых очков
+     * @note Не может уменьшить очки меньше нуля
+     */
     virtual int reduce_points(int amount) = 0;
+    /**
+     * @brief Метод получения максимальных очков времени
+     * @return int количество максимальных очков времени
+     */
     [[nodiscard]] virtual int get_max_points() const = 0;
     ~TimePointsComponent() override = default;
 };

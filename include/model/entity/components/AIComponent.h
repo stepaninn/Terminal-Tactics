@@ -6,9 +6,18 @@
 
 namespace game::entity::components {
 
+/// @brief Класс компонента ИИ
 class AIComponent : public IComponent {
 public:
+    /**
+     * @brief Метод получения состояния ИИ
+     * @return enum состояние компонента
+     */
     [[nodiscard]] virtual game::AIState get_state() const = 0;
+    /**
+     * @brief Метод задания состояния ИИ
+     * @param s Состояние ИИ
+     */
     virtual void set_state(game::AIState s) = 0;
     ~AIComponent() override = default;
 };

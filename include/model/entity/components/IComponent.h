@@ -3,6 +3,7 @@
 
 namespace game::entity::components {
 
+/// @brief Класс-интерфейс компонента
 class IComponent {
 public:
     virtual ~IComponent() = default;

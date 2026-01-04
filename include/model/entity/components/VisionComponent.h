@@ -6,11 +6,24 @@
 
 namespace game::entity::components {
 
+/// @brief Класс компонента зрения
 class VisionComponent : public IComponent {
 public:
+    /**
+     * @brief Метод получения радиуса обзора
+     * @return int радиус обзора
+     */
     [[nodiscard]] virtual int get_vision_radius() const = 0;
+    /**
+     * @brief Метод задания радиуса обзора
+     * @param r Новый радиус обзора (не меньше нуля)
+     */
     virtual void set_vision_radius(int r) = 0;
 
+    /**
+     * @brief Метод проверки видимости существ
+     * @return bool true, если компонент видит существ, иначе false
+     */
     [[nodiscard]] virtual bool is_sees_creatures() const = 0;
 
     ~VisionComponent() override = default;

@@ -6,9 +6,18 @@
 
 namespace game::entity::components {
 
+/// @brief Класс компонента перемещения
 class MoveComponent : public IComponent {
 public:
+    /**
+     * @brief Метод получения стоимости шага
+     * @return int стоимость шага (в очках времени)
+     */
     [[nodiscard]] virtual int get_step_cost() const noexcept = 0;
+    /**
+     * @brief Метод задания стоимости шага
+     * @param new_cost Новая стоимость шага (минимум 1)
+     */
     virtual void set_step_cost(int new_cost) = 0;
     ~MoveComponent() override = default;
 };
