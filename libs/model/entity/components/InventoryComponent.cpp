@@ -4,8 +4,6 @@
 
 #include "model/entity/entities/items/Item.h"
 
-#include <stdexcept>
-
 namespace game::entity::components {
 
 bool DefaultInventoryComp::can_add(const game::entity::items::Item& item) const noexcept {
@@ -14,8 +12,7 @@ bool DefaultInventoryComp::can_add(const game::entity::items::Item& item) const 
 }
 
 void DefaultInventoryComp::add(std::unique_ptr<game::entity::items::Item> item, game::id_t id) {
-    if (items_.size() == capacity_) throw std::runtime_error("Not enough space");
-    if (item->get_weight() + weight_ >= max_weight_) throw std::runtime_error("Item is too heavy");
+    if (!can_add(*item)) return;
 
     int w = item->get_weight();
     items_[id] = std::move(item);
