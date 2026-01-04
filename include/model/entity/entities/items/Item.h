@@ -7,14 +7,27 @@
 
 namespace game::entity::items {
 
+/// @brief Базовый класс предмета
 class Item {
 public:
     Item() = default;
     explicit Item(game::ItemId id, int weight) : id_(id), weight_(std::max(0, weight)) {}
     virtual ~Item() = default;
 
+    /**
+     * @brief Метод получения веса предмета
+     * @return int вес предмета
+     */
     [[nodiscard]] virtual int get_weight() const noexcept { return weight_; }
+    /**
+     * @brief Метод получения идентификатора предмета
+     * @return ItemId идентификатор предмета
+     */
     [[nodiscard]] virtual game::ItemId get_id() const noexcept { return id_; }
+    /**
+     * @brief Метод задания идентификатора предмета
+     * @param id новый идентификатор
+     */
     virtual void set_id(game::ItemId id) noexcept { id_ = id; }
 
 protected:
@@ -22,6 +35,7 @@ protected:
     int weight_ = 0;
 };
 
+/// @brief Класс подсумка для патронов
 class AmmoBag : public Item {
 public:
     AmmoBag(game::ItemId id, int weight, int current_ammo, int max_ammo, game::AmmoType t)
@@ -33,15 +47,39 @@ public:
         if (current_ammo_ > max_ammo_) current_ammo_ = max_ammo_;
     }
 
+    /**
+     * @brief Метод получения текущего количества патронов
+     * @return int текущее количество патронов
+     */
     [[nodiscard]] int get_current_ammo() const noexcept { return current_ammo_; }
+    /**
+     * @brief Метод получения максимального количества патронов
+     * @return int максимальное количество патронов
+     */
     [[nodiscard]] int get_max_ammo() const noexcept { return max_ammo_; }
+    /**
+     * @brief Метод получения типа патронов
+     * @return AmmoType тип патронов
+     */
     [[nodiscard]] game::AmmoType get_ammo_type() const noexcept { return ammo_type_; }
 
     // сделал не сеттеры для удобства
     // добавляет ammo, возвращает реальное число добавленных патронов
+    /**
+     * @brief Метод добавления патронов
+     * @param ammo количество добавляемых патронов
+     * @return int количество реально добавленных патронов
+     * @note Не добавляет ничего при ammo <= 0
+     */
     [[nodiscard]] int add_ammo(int ammo);
 
     // извлекает ammo, возвращает реальное число извлеченных патронов
+    /**
+     * @brief Метод извлечения патронов
+     * @param ammo количество извлекаемых патронов
+     * @return int количество реально извлеченных патронов
+     * @note Не извлекает ничего при ammo <= 0
+     */
     [[nodiscard]] int reduce_ammo(int ammo);
 
 private:
@@ -50,12 +88,21 @@ private:
     game::AmmoType ammo_type_ = game::AmmoType::PISTOL;
 };
 
+/// @brief Класс аптечки
 class Medkit : public Item {
 public:
     Medkit(game::ItemId id, int weight, int heal_hp, int time_cost)
       : Item(id, weight), heal_hp_(heal_hp), time_cost_(time_cost) {}
 
+    /**
+     * @brief Метод получения количества лечащего HP
+     * @return int количество лечащего HP
+     */
     [[nodiscard]] int get_heal() const noexcept { return heal_hp_; }
+    /**
+     * @brief Метод получения стоимости по времени
+     * @return int стоимость по времени
+     */
     [[nodiscard]] int get_cost() const noexcept { return time_cost_; }
 
 private:

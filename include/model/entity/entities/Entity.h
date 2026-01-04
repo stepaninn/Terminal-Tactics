@@ -14,6 +14,7 @@
 
 namespace game::entity {
 
+/// @brief Базовая сущность игры с набором компонентов
 class Entity {
 public:
     Entity() = default;
@@ -21,21 +22,58 @@ public:
         id_(id), name_(std::move(name)), team_id_(team_id) {}
     virtual ~Entity() = default;
 
+    /**
+     * @brief Метод получения идентификатора сущности
+     * @return EntityId идентификатор сущности
+     */
     [[nodiscard]] game::EntityId get_id() const noexcept { return id_; }
+    /**
+     * @brief Метод получения имени сущности
+     * @return const std::string& имя сущности
+     */
     [[nodiscard]] const std::string& get_name() const noexcept { return name_; }
+    /**
+     * @brief Метод получения идентификатора команды
+     * @return TeamId идентификатор команды
+     */
     [[nodiscard]] game::TeamId get_team_id() const noexcept { return team_id_; }
+    /**
+     * @brief Метод задания имени сущности
+     * @param new_name новое имя сущности
+     */
     void set_name(std::string new_name) { name_ = std::move(new_name); }
+    /**
+     * @brief Метод задания идентификатора сущности
+     * @param id новый идентификатор сущности
+     */
     void set_id(game::EntityId id) { id_ = id; }
+    /**
+     * @brief Метод задания идентификатора команды
+     * @param team_id новый идентификатор команды
+     */
     void set_team_id(game::TeamId team_id) noexcept { team_id_ = team_id; }
 
     template<typename Key>
     requires std::is_base_of_v<components::IComponent, Key>
+    /**
+     * @brief Метод проверки наличия компонента
+     * @tparam Key тип компонента
+     * @return bool true, если компонент установлен
+     */
     [[nodiscard]] bool has_component() const noexcept {
         return components_.contains(std::type_index(typeid(Key)));
     }
 
     template<typename Key, typename Impl = Key, typename... Args>
     requires std::is_base_of_v<components::IComponent, Key> && std::is_base_of_v<Key, Impl>
+    /**
+     * @brief Метод добавления компонента
+     * @tparam Key тип компонента
+     * @tparam Impl тип реализации компонента
+     * @param args аргументы конструктора компонента
+     * @return Key& ссылка на добавленный компонент
+     * @note Если компонент уже есть, возвращает существующий
+     */
     Key& add_component(Args&&... args) {
         auto type = std::type_index(typeid(Key));
         if (auto it = components_.find(type); it != components_.end()) {
@@ -50,6 +88,13 @@ public:
 
     template<typename Key, typename Impl = Key, typename... Args>
     requires std::is_base_of_v<components::IComponent, Key> && std::is_base_of_v<Key, Impl>
+    /**
+     * @brief Метод замены компонента
+     * @tparam Key тип компонента
+     * @tparam Impl тип реализации компонента
+     * @param args аргументы конструктора нового компонента
+     * @return std::unique_ptr<Key> прежний компонент или nullptr
+     */
     std::unique_ptr<Key> replace_component(Args&&... args) {
         auto type = std::type_index(typeid(Key));
         auto comp = std::make_unique<Impl>(std::forward<Args>(args)...);
@@ -60,6 +105,11 @@ public:
 
     template<typename Key>
     requires std::is_base_of_v<components::IComponent, Key>
+    /**
+     * @brief Метод удаления компонента
+     * @tparam Key тип компонента
+     * @return std::unique_ptr<Key> удаленный компонент или nullptr
+     */
     std::unique_ptr<Key> remove_component() {
         auto it = components_.find(std::type_index(typeid(Key)));
         if (it == components_.end()) return nullptr;
@@ -70,6 +120,11 @@ public:
 
     template<typename Key>
     requires std::is_base_of_v<components::IComponent, Key>
+    /**
+     * @brief Метод получения компонента
+     * @tparam Key тип компонента
+     * @return Key* указатель на компонент или nullptr
+     */
     [[nodiscard]] Key* get_component() const noexcept {
         auto it = components_.find(std::type_index(typeid(Key)));
         if (it == components_.end()) return nullptr;
