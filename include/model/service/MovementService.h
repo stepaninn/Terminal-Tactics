@@ -2,7 +2,6 @@
 #define INC_3_TMP_SERVICE_MOVEMENTSERVICE_H
 
 #include "model/repository/Level.h"
-#include "model/entity/components/PositionComponent.h"
 #include "ServiceBase.h"
 
 #include <memory>

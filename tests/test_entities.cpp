@@ -4,7 +4,6 @@
 #include "model/entity/entities/Entity.h"
 #include "model/entity/components/HealthComponent.h"
 #include "model/entity/components/AIComponent.h"
-#include "model/entity/components/PositionComponent.h"
 
 namespace game {
 
@@ -12,9 +11,7 @@ using entity::Entity;
 using entity::components::AIComponent;
 using entity::components::DefaultAIComp;
 using entity::components::DefaultHealthComp;
-using entity::components::DefaultPositionComp;
 using entity::components::HealthComponent;
-using entity::components::PositionComponent;
 
 TEST_CASE("Entity stores id and name") {
   Entity e(7, "unit");
@@ -45,15 +42,15 @@ TEST_CASE("Entity add/get/remove component") {
 TEST_CASE("Entity supports multiple component types") {
   Entity e;
   e.add_component<AIComponent, DefaultAIComp>(AIState::AGGRESSIVE);
-  e.add_component<PositionComponent, DefaultPositionComp>(Position{2, 4});
+  e.add_component<HealthComponent, DefaultHealthComp>(3, 5);
 
   auto* ai = e.get_component<AIComponent>();
-  auto* pos = e.get_component<PositionComponent>();
+  auto* hp = e.get_component<HealthComponent>();
   REQUIRE(ai != nullptr);
-  REQUIRE(pos != nullptr);
+  REQUIRE(hp != nullptr);
   REQUIRE(ai->get_state() == AIState::AGGRESSIVE);
-  REQUIRE(pos->get_position().x == 2);
-  REQUIRE(pos->get_position().y == 4);
+  REQUIRE(hp->get_current_hp() == 3);
+  REQUIRE(hp->get_max_hp() == 5);
 }
 
 TEST_CASE("Entity replace component of same type") {

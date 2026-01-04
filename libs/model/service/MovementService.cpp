@@ -13,16 +13,18 @@ bool MovementService::move(game::repo::Level& level, game::EntityId id, game::Po
     auto* entity = level.get_entity(id);
     if (!entity) return false;
 
-    auto* pos = entity->get_component<game::entity::components::PositionComponent>();
     auto* mv = entity->get_component<game::entity::components::MoveComponent>();
     auto* tp = entity->get_component<game::entity::components::TimePointsComponent>();
-    if (!pos || !mv || !tp) return false;
+    if (!mv || !tp) return false;
+
+    const auto* from_pos = level.get_entity_position(id);
+    if (!from_pos) return false;
 
     if (to.x >= level.get_field().rows() || to.y >= level.get_field().cols()) return false;
     auto* cell = level.get_cell(to);
     if (!cell || !cell->is_walkable()) return false;
 
-    game::Position from = pos->get_position();
+    game::Position from = *from_pos;
     int dx = static_cast<int>(to.x) - static_cast<int>(from.x);
     int dy = static_cast<int>(to.y) - static_cast<int>(from.y);
     int dist = std::max(std::abs(dx), std::abs(dy));

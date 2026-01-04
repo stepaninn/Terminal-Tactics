@@ -8,7 +8,6 @@
 #include "model/entity/components/InventoryComponent.h"
 #include "model/entity/components/MoveComponent.h"
 #include "model/entity/components/TimePointsComponent.h"
-#include "model/entity/components/PositionComponent.h"
 #include "model/entity/components/WeaponComponent.h"
 #include "model/entity/entities/items/Item.h"
 #include "model/entity/entities/items/Weapon.h"
@@ -22,14 +21,12 @@ using entity::components::DefaultCombatComp;
 using entity::components::DefaultHealthComp;
 using entity::components::DefaultInventoryComp;
 using entity::components::DefaultMoveComp;
-using entity::components::DefaultPositionComp;
 using entity::components::DefaultTimePointsComp;
 using entity::components::DefaultWeaponComp;
 using entity::components::CombatComponent;
 using entity::components::HealthComponent;
 using entity::components::InventoryComponent;
 using entity::components::MoveComponent;
-using entity::components::PositionComponent;
 using entity::components::TimePointsComponent;
 using entity::components::WeaponComponent;
 using entity::items::AmmoBag;
@@ -74,7 +71,6 @@ TEST_CASE("service MovementService spends points and updates position") {
 
   auto mover = std::make_unique<Entity>();
   mover->set_team_id(0);
-  mover->add_component<PositionComponent, DefaultPositionComp>(Position{0, 0});
   mover->add_component<MoveComponent, DefaultMoveComp>(1);
   mover->add_component<TimePointsComponent, DefaultTimePointsComp>(3, 3);
   level->spawn_entity(std::move(mover), Position{0, 0});
@@ -82,10 +78,11 @@ TEST_CASE("service MovementService spends points and updates position") {
   service::MovementService movement;
   REQUIRE(movement.move(*level, 1, Position{1, 0}));
 
-  auto* pos = level->get_entity(1)->get_component<PositionComponent>();
+  auto* pos = level->get_entity_position(1);
   auto* tp = level->get_entity(1)->get_component<TimePointsComponent>();
-  REQUIRE(pos->get_position().x == 1);
-  REQUIRE(pos->get_position().y == 0);
+  REQUIRE(pos != nullptr);
+  REQUIRE(pos->x == 1);
+  REQUIRE(pos->y == 0);
   REQUIRE(tp->get_current_points() == 2);
 }
 
@@ -109,7 +106,6 @@ TEST_CASE("service CombatService blocks shooting without ammo or time points") {
 
   auto attacker = std::make_unique<Entity>();
   attacker->add_component<CombatComponent, DefaultCombatComp>(1.0);
-  attacker->add_component<PositionComponent, DefaultPositionComp>(Position{0, 0});
   attacker->add_component<TimePointsComponent, DefaultTimePointsComp>(0, 5);
   auto weapon = std::make_unique<Weapon>(1, 1, Damage{1, 2}, 5, 2, 1, AmmoType::PISTOL, 0, 5);
   attacker->add_component<WeaponComponent, DefaultWeaponComp>(std::move(weapon));
@@ -117,7 +113,6 @@ TEST_CASE("service CombatService blocks shooting without ammo or time points") {
 
   auto target = std::make_unique<Entity>();
   target->add_component<HealthComponent, DefaultHealthComp>(5, 5);
-  target->add_component<PositionComponent, DefaultPositionComp>(Position{1, 0});
   level->spawn_entity(std::move(target), Position{1, 0});
 
   service::CombatService combat;

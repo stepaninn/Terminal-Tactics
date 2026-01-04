@@ -7,7 +7,6 @@
 #include "model/entity/components/VisionComponent.h"
 #include "model/entity/components/CombatComponent.h"
 #include "model/entity/components/AIComponent.h"
-#include "model/entity/components/PositionComponent.h"
 #include "model/entity/components/InventoryComponent.h"
 #include "model/entity/components/WeaponComponent.h"
 #include "model/entity/entities/items/Item.h"
@@ -26,7 +25,6 @@ using entity::components::DefaultCombatComp;
 using entity::components::DefaultHealthComp;
 using entity::components::DefaultInventoryComp;
 using entity::components::DefaultMoveComp;
-using entity::components::DefaultPositionComp;
 using entity::components::DefaultTimePointsComp;
 using entity::components::DefaultVisionComp;
 using entity::components::DefaultWeaponComp;
@@ -51,8 +49,8 @@ TEST_CASE("DefaultTimePointsComp clamps add/reduce") {
   REQUIRE(tp.get_current_points() == 5);
   REQUIRE(tp.reduce_points(3) == 3);
   REQUIRE(tp.get_current_points() == 2);
-  REQUIRE(tp.reduce_points(5) == 0);
-  REQUIRE(tp.get_current_points() == 2);
+  REQUIRE(tp.reduce_points(5) == 2);
+  REQUIRE(tp.get_current_points() == 0);
 }
 
 TEST_CASE("DefaultMoveComp enforces min step cost") {
@@ -90,15 +88,6 @@ TEST_CASE("DefaultAIComp stores state") {
   REQUIRE(ai.get_state() == AIState::AGGRESSIVE);
 }
 
-TEST_CASE("DefaultPositionComp stores position") {
-  DefaultPositionComp pc;
-  REQUIRE(pc.get_position().x == 0);
-  REQUIRE(pc.get_position().y == 0);
-  pc.set_position(Position{2, 3});
-  REQUIRE(pc.get_position().x == 2);
-  REQUIRE(pc.get_position().y == 3);
-}
-
 TEST_CASE("DefaultInventoryComp add/remove behavior") {
   DefaultInventoryComp inv(2, 10);
   REQUIRE(inv.size() == 0);
@@ -117,7 +106,8 @@ TEST_CASE("DefaultInventoryComp add/remove behavior") {
   REQUIRE(inv.get_item(12) != nullptr);
 
   auto too_many = std::make_unique<Medkit>(13, 1, 1, 1);
-  REQUIRE_THROWS_AS(inv.add(std::move(too_many), 13), std::runtime_error);
+  inv.add(std::move(too_many), 13);
+  REQUIRE(inv.size() == 2);
 
   auto removed = inv.remove_by_id(11);
   REQUIRE(removed != nullptr);

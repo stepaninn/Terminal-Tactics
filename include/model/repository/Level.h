@@ -22,9 +22,12 @@ public:
     [[nodiscard]] const FieldMatrix& get_field() const noexcept { return field_; }
     [[nodiscard]] FieldMatrix& get_field() noexcept { return field_; }
 
-    [[nodiscard]] game::entity::Entity* get_entity(game::EntityId id) { auto it = entities_.find(id);
-        return it != entities_.end() ? it->second.get() : nullptr; }
+    [[nodiscard]] game::entity::Entity* get_entity(game::EntityId id) {
+        auto it = entities_.find(id);
+        return it != entities_.end() ? it->second.get() : nullptr;
+    }
     [[nodiscard]] std::vector<const game::entity::Entity*> get_entities() noexcept;
+    [[nodiscard]] const game::Position* get_entity_position(game::EntityId id) const noexcept;
 
     [[nodiscard]] cells::ICell* get_cell(game::Position pos) const noexcept;
     std::unique_ptr<cells::ICell> set_cell(game::Position pos, std::unique_ptr<cells::ICell> cell);

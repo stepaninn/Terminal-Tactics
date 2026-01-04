@@ -8,7 +8,6 @@
 #include "HealthComponent.h"
 #include "InventoryComponent.h"
 #include "MoveComponent.h"
-#include "PositionComponent.h"
 #include "TimePointsComponent.h"
 #include "VisionComponent.h"
 #include "WeaponComponent.h"

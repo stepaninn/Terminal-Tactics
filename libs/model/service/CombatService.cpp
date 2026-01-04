@@ -1,7 +1,6 @@
 #include "model/service/CombatService.h"
 
 #include "model/entity/components/HealthComponent.h"
-#include "model/entity/components/PositionComponent.h"
 #include "model/entity/components/TimePointsComponent.h"
 #include "model/entity/components/WeaponComponent.h"
 
@@ -48,17 +47,18 @@ bool CombatService::try_shoot(game::repo::Level& level,
 
     auto* wp_cmp = attacker->get_component<entity::components::WeaponComponent>();
     auto* cmb_cmp = attacker->get_component<entity::components::CombatComponent>();
-    auto* from_cmp = attacker->get_component<entity::components::PositionComponent>();
-    auto* to_cmp = target->get_component<entity::components::PositionComponent>();
     auto* hp = target->get_component<entity::components::HealthComponent>();
     auto* tp = attacker->get_component<entity::components::TimePointsComponent>();
-    if (!wp_cmp || !cmb_cmp || !from_cmp || !to_cmp || !hp || !tp) return false;
+    if (!wp_cmp || !cmb_cmp || !hp || !tp) return false;
 
     auto* wp = wp_cmp->get_weapon();
     if (!wp) return false;
 
-    auto from = from_cmp->get_position();
-    auto to = to_cmp->get_position();
+    const auto* from_pos = level.get_entity_position(attacker_id);
+    const auto* to_pos = level.get_entity_position(target_id);
+    if (!from_pos || !to_pos) return false;
+    auto from = *from_pos;
+    auto to = *to_pos;
 
     int dx = static_cast<int>(to.x) - static_cast<int>(from.x);
     int dy = static_cast<int>(to.y) - static_cast<int>(from.y);

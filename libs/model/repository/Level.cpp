@@ -2,8 +2,6 @@
 
 #include <utility>
 
-#include "model/entity/components/PositionComponent.h"
-
 namespace game::repo {
 
 std::vector<const game::entity::Entity*> Level::get_entities() noexcept {
@@ -37,9 +35,6 @@ bool Level::move_entity(game::EntityId id, game::Position to) {
     if (to.x >= field_.rows() || to.y >= field_.cols()) return false;
     auto ent_it = entities_.find(id);
     if (ent_it == entities_.end()) return false;
-    if (auto* pos_comp = ent_it->second->get_component<game::entity::components::PositionComponent>()) {
-        pos_comp->set_position(to);
-    }
     entity_positions_[id] = to;
     return true;
 }
@@ -56,6 +51,12 @@ std::unique_ptr<game::entity::Entity> Level::remove_entity(game::EntityId id) {
     entities_.erase(it);
     entity_positions_.erase(id);
     return res;
+}
+
+const game::Position* Level::get_entity_position(game::EntityId id) const noexcept {
+    auto it = entity_positions_.find(id);
+    if (it == entity_positions_.end()) return nullptr;
+    return &it->second;
 }
 
 std::vector<const game::entity::Entity*> Level::get_entities_radius(game::Position pos, int r) const {
