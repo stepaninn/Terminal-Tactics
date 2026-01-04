@@ -12,10 +12,14 @@ bool DefaultInventoryComp::can_add(const game::entity::items::Item& item) const 
 }
 
 void DefaultInventoryComp::add(std::unique_ptr<game::entity::items::Item> item, game::id_t id) {
-    if (!can_add(*item)) return;
+    if (!item || !can_add(*item)) return;
 
     int w = item->get_weight();
-    items_[id] = std::move(item);
+
+    auto it = items_.find(id);
+    if (it != items_.end()) return;
+    items_.emplace(id, std::move(item));
+
     weight_ += w;
 }
 

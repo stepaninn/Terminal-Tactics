@@ -30,7 +30,8 @@ public:
 
 class DefaultInventoryComp : public InventoryComponent {
 public:
-    explicit DefaultInventoryComp(int capacity, int max_weight) : capacity_(capacity), max_weight_(max_weight) {}
+    explicit DefaultInventoryComp(int capacity, int max_weight)
+        : capacity_(std::max(0, capacity)), max_weight_(std::max(0, max_weight)) {}
 
     void add(std::unique_ptr<game::entity::items::Item> item, game::id_t id) override;
     std::unique_ptr<game::entity::items::Item> remove_by_id(game::id_t id) override;
