@@ -30,11 +30,17 @@ bool CombatService::roll_hit(const game::entity::components::CombatComponent& co
     return dist(rng_) < chance;
 }
 
-bool CombatService::can_shoot(const game::entity::Entity& attacker,
-                             const game::entity::items::Weapon& weapon) {
-    if (weapon.get_current_ammo() == 0) return false;
+bool CombatService::can_shoot(const game::entity::Entity& attacker) {
+    auto* wp_cmp = attacker.get_component<entity::components::WeaponComponent>();
     auto* tp = attacker.get_component<entity::components::TimePointsComponent>();
-    if (!tp || tp->get_current_points() < weapon.get_attack_cost()) return false;
+    if (!wp_cmp || !tp) return false;
+
+    auto* weapon = wp_cmp->get_weapon();
+    if (!weapon) return false;
+    if (weapon->get_current_ammo() == 0) return false;
+
+    if (tp->get_current_points() < weapon->get_attack_cost()) return false;
+
     return true;
 }
 
@@ -64,7 +70,7 @@ bool CombatService::try_shoot(game::repo::Level& level,
     int dy = static_cast<int>(to.y) - static_cast<int>(from.y);
     int dist = std::max(std::abs(dx), std::abs(dy));
 
-    if (!can_shoot(*attacker, *wp)) return false;
+    if (!can_shoot(*attacker)) return false;
 
     int cost = wp->get_attack_cost();
     if (tp->reduce_points(cost) != cost) return false;

@@ -19,8 +19,12 @@ public:
     explicit CombatService(size_t seed, std::shared_ptr<events::EventBus> bus = nullptr)
         : ServiceBase(std::move(bus)), rng_(seed) {}
 
-    [[nodiscard]] static bool can_shoot(const game::entity::Entity& attacker,
-                                 const game::entity::items::Weapon& weapon) ;
+    /**
+     *
+     * @param attacker Атакующее существо
+     * @return
+     */
+    [[nodiscard]] static bool can_shoot(const game::entity::Entity& attacker);
 
     [[nodiscard]] bool try_shoot(game::repo::Level& level,
                                 game::EntityId attacker_id,
