@@ -24,8 +24,14 @@ protected:
 
 class AmmoBag : public Item {
 public:
-    AmmoBag(game::ItemId id, int weight, int current_ammo, int max_ammo, game::AmmoType t) :
-        Item(id, weight), current_ammo_(current_ammo), max_ammo_(max_ammo), ammo_type_(t) {}
+    AmmoBag(game::ItemId id, int weight, int current_ammo, int max_ammo, game::AmmoType t)
+        : Item(id, weight),
+          current_ammo_(std::max(0, current_ammo)),
+          max_ammo_(std::max(0, max_ammo)),
+          ammo_type_(t)
+    {
+        if (current_ammo_ > max_ammo_) current_ammo_ = max_ammo_;
+    }
 
     [[nodiscard]] int get_current_ammo() const noexcept { return current_ammo_; }
     [[nodiscard]] int get_max_ammo() const noexcept { return max_ammo_; }
