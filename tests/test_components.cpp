@@ -80,7 +80,7 @@ TEST_CASE("DefaultCombatComp clamps accuracy") {
   cc.set_base_accuracy(-5);
   REQUIRE(cc.get_base_accuracy() == 0);
   cc.set_base_accuracy(7);
-  REQUIRE(cc.get_base_accuracy() == 7);
+  REQUIRE(cc.get_base_accuracy() == 1);
 }
 
 TEST_CASE("DefaultAIComp stores state") {

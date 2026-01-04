@@ -40,6 +40,12 @@ public:
 
     [[nodiscard]] game::AmmoType get_ammo_type() const noexcept { return ammo_type_; }
 
+    template <typename RNGT>
+    [[nodiscard]] int roll_damage(RNGT& rng) const {
+        std::uniform_int_distribution dist(dmg_.min_dmg, dmg_.max_dmg);
+        return dist(rng);
+    }
+
 private:
     game::Damage dmg_{0, 0};
     int range_ = 0;

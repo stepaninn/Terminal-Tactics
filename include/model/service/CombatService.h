@@ -3,21 +3,21 @@
 
 #include "model/repository/Level.h"
 #include "model/entity/components/CombatComponent.h"
-#include "model/entity/components/HealthComponent.h"
 #include "model/entity/components/InventoryComponent.h"
-#include "model/entity/components/PositionComponent.h"
-#include "model/entity/components/TimePointsComponent.h"
-#include "model/entity/components/WeaponComponent.h"
 #include "model/entity/entities/items/Weapon.h"
 #include "ServiceBase.h"
 
 #include <memory>
+#include <random>
 
 namespace game::service {
 
 class CombatService : public ServiceBase {
 public:
-    explicit CombatService(std::shared_ptr<events::EventBus> bus = nullptr) : ServiceBase(std::move(bus)) {}
+    explicit CombatService(std::shared_ptr<events::EventBus> bus = nullptr)
+        : ServiceBase(std::move(bus)), rng_(std::random_device{}()) {}
+    explicit CombatService(size_t seed, std::shared_ptr<events::EventBus> bus = nullptr)
+        : ServiceBase(std::move(bus)), rng_(seed) {}
 
     [[nodiscard]] bool can_shoot(const game::entity::Entity& attacker,
                                  const game::entity::items::Weapon& weapon) const;
@@ -32,11 +32,13 @@ public:
                                     game::EntityId target_id, int amount);
 
 private:
-    [[nodiscard]] int roll_damage(const game::entity::items::Weapon& weapon) const;
+    [[nodiscard]] int roll_damage(const game::entity::items::Weapon& w) { return w.roll_damage(rng_); }
     // здесь настраивается точность (для баланса)
     [[nodiscard]] bool roll_hit(const game::entity::components::CombatComponent& combat,
                                 const game::entity::items::Weapon& weapon,
-                                int distance) const;
+                                int distance);
+
+    std::mt19937 rng_;
 };
 
 }

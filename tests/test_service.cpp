@@ -108,7 +108,7 @@ TEST_CASE("service CombatService blocks shooting without ammo or time points") {
   auto level = std::make_shared<Level>(1, "L1");
 
   auto attacker = std::make_unique<Entity>();
-  attacker->add_component<CombatComponent, DefaultCombatComp>(100);
+  attacker->add_component<CombatComponent, DefaultCombatComp>(1.0);
   attacker->add_component<PositionComponent, DefaultPositionComp>(Position{0, 0});
   attacker->add_component<TimePointsComponent, DefaultTimePointsComp>(0, 5);
   auto weapon = std::make_unique<Weapon>(1, 1, Damage{1, 2}, 5, 2, 1, AmmoType::PISTOL, 0, 5);

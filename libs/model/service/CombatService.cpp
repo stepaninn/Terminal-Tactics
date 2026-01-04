@@ -1,8 +1,13 @@
 #include "model/service/CombatService.h"
 
+#include "model/entity/components/HealthComponent.h"
+#include "model/entity/components/PositionComponent.h"
+#include "model/entity/components/TimePointsComponent.h"
+#include "model/entity/components/WeaponComponent.h"
+
 #include <algorithm>
 #include <cmath>
-#include <cstdlib>
+#include <random>
 #include <memory>
 #include <utility>
 
@@ -10,26 +15,20 @@
 
 namespace game::service {
 
-
-int CombatService::roll_damage(const game::entity::items::Weapon& weapon) const {
-    auto dmg = weapon.get_dmg();
-    int max_dmg = dmg.max_dmg;
-    int min_dmg = dmg.min_dmg;
-    if (max_dmg < min_dmg) std::swap(max_dmg, min_dmg);
-
-    int real_dmg = min_dmg + std::rand() % (max_dmg - min_dmg + 1);
-    return real_dmg;
-}
-
 bool CombatService::roll_hit(const game::entity::components::CombatComponent& combat,
                              const game::entity::items::Weapon& weapon,
-                             int distance) const {
-    // sqrt(-dist + 11) * 0.316
-    if (distance > 10 || distance > weapon.get_range()) return false;
-    double chance = std::sqrt(-distance + 11) * 0.316 * combat.get_base_accuracy();
-    if (chance <= 0.0) return false;
-    if (chance > 100.0) chance = 100.0;
-    return (std::rand() % 101) < chance;
+                             int distance) {
+    int range = weapon.get_range();
+    if (range <= 0 || distance > range) return false;
+
+    double base_accuracy = combat.get_base_accuracy();
+
+    double d = std::clamp(distance / static_cast<double>(range), 0.0, 1.0);
+    double coef = (1.0 - d) * (1.0 - d);
+    double chance = std::clamp(base_accuracy * coef, 0.0, 1.0);
+
+    std::uniform_real_distribution<double> dist(0.0, 1.0);
+    return dist(rng_) < chance;
 }
 
 bool CombatService::can_shoot(const game::entity::Entity& attacker,

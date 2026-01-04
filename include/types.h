@@ -2,6 +2,7 @@
 #define INC_3_TYPES_H
 
 #include <string>
+#include <stdexcept>
 
 namespace game {
 
@@ -32,6 +33,11 @@ enum class EnemyType {
 struct Damage {
     int min_dmg = 0;
     int max_dmg = 0;
+
+    constexpr Damage(int mn, int mx) : min_dmg(mn), max_dmg(mx) {
+        if (min_dmg > max_dmg) std::swap(min_dmg, max_dmg);
+        if (min_dmg < 0 || max_dmg < 0) throw std::invalid_argument("Damage must be non negative");
+    }
 };
 
 enum class AIState {
