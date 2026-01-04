@@ -27,12 +27,12 @@ bool CombatService::roll_hit(const game::entity::components::CombatComponent& co
     double coef = (1.0 - d) * (1.0 - d);
     double chance = std::clamp(base_accuracy * coef, 0.0, 1.0);
 
-    std::uniform_real_distribution<double> dist(0.0, 1.0);
+    std::uniform_real_distribution dist(0.0, 1.0);
     return dist(rng_) < chance;
 }
 
 bool CombatService::can_shoot(const game::entity::Entity& attacker,
-                             const game::entity::items::Weapon& weapon) const {
+                             const game::entity::items::Weapon& weapon) {
     if (weapon.get_current_ammo() == 0) return false;
     auto* tp = attacker.get_component<entity::components::TimePointsComponent>();
     if (!tp || tp->get_current_points() < weapon.get_attack_cost()) return false;
@@ -145,7 +145,7 @@ bool CombatService::reload_weapon(game::entity::Entity& user, game::ItemId ammo_
 }
 
 bool CombatService::apply_damage(game::repo::Level& level, game::EntityId attacker_id,
-                                 game::EntityId target_id, int amount) {
+                                 game::EntityId target_id, int amount) const {
     if (amount <= 0) return false;
     auto* target = level.get_entity(target_id);
     if (!target) return false;

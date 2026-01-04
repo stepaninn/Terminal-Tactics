@@ -19,17 +19,17 @@ public:
     explicit CombatService(size_t seed, std::shared_ptr<events::EventBus> bus = nullptr)
         : ServiceBase(std::move(bus)), rng_(seed) {}
 
-    [[nodiscard]] bool can_shoot(const game::entity::Entity& attacker,
-                                 const game::entity::items::Weapon& weapon) const;
+    [[nodiscard]] static bool can_shoot(const game::entity::Entity& attacker,
+                                 const game::entity::items::Weapon& weapon) ;
 
     [[nodiscard]] bool try_shoot(game::repo::Level& level,
                                 game::EntityId attacker_id,
                                 game::EntityId target_id);
 
-    [[nodiscard]] bool reload_weapon(game::entity::Entity& user, game::ItemId ammo_bag_id);
+    [[nodiscard]] static bool reload_weapon(game::entity::Entity& user, game::ItemId ammo_bag_id);
 
     [[nodiscard]] bool apply_damage(game::repo::Level& level, game::EntityId attacker_id,
-                                    game::EntityId target_id, int amount);
+                                    game::EntityId target_id, int amount) const;
 
 private:
     [[nodiscard]] int roll_damage(const game::entity::items::Weapon& w) { return w.roll_damage(rng_); }
