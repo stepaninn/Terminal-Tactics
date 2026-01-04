@@ -28,13 +28,34 @@ public:
     void set_id(game::EntityId id) { id_ = id; }
     void set_team_id(game::TeamId team_id) noexcept { team_id_ = team_id; }
 
+    template<typename Key>
+    requires std::is_base_of_v<components::IComponent, Key>
+    [[nodiscard]] bool has_component() const noexcept {
+        return components_.contains(std::type_index(typeid(Key)));
+    }
+
     template<typename Key, typename Impl = Key, typename... Args>
     requires std::is_base_of_v<components::IComponent, Key> && std::is_base_of_v<Key, Impl>
     Key& add_component(Args&&... args) {
+        auto type = std::type_index(typeid(Key));
+        if (auto it = components_.find(type); it != components_.end()) {
+            return *static_cast<Key*>(it->second.get());
+        }
+
         auto comp = std::make_unique<Impl>(std::forward<Args>(args)...);
         Key& ref = *comp;
-        components_[std::type_index(typeid(Key))] = std::move(comp);
+        components_[type] = std::move(comp);
         return ref;
+    }
+
+    template<typename Key, typename Impl = Key, typename... Args>
+    requires std::is_base_of_v<components::IComponent, Key> && std::is_base_of_v<Key, Impl>
+    std::unique_ptr<Key> replace_component(Args&&... args) {
+        auto type = std::type_index(typeid(Key));
+        auto comp = std::make_unique<Impl>(std::forward<Args>(args)...);
+        auto old = remove_component<Key>();
+        components_[type] = std::move(comp);
+        return old;
     }
 
     template<typename Key>
@@ -49,7 +70,7 @@ public:
 
     template<typename Key>
     requires std::is_base_of_v<components::IComponent, Key>
-    Key* get_component() const noexcept {
+    [[nodiscard]] Key* get_component() const noexcept {
         auto it = components_.find(std::type_index(typeid(Key)));
         if (it == components_.end()) return nullptr;
         return static_cast<Key*>(it->second.get());

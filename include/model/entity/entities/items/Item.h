@@ -8,7 +8,7 @@ namespace game::entity::items {
 class Item {
 public:
     Item() = default;
-    explicit Item(game::ItemId id, int weight) : id_(id), weight_(weight) {}
+    explicit Item(game::ItemId id, int weight) : id_(id), weight_(std::max(0, weight)) {}
     virtual ~Item() = default;
 
     [[nodiscard]] virtual int get_weight() const noexcept { return weight_; }

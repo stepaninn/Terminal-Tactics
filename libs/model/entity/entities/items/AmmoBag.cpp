@@ -3,12 +3,14 @@
 namespace game::entity::items {
 
 int AmmoBag::add_ammo(int ammo) {
+    if (ammo <= 0) return 0;
     int added = std::min(max_ammo_ - current_ammo_, ammo);
     current_ammo_ += added;
     return added;
 }
 
 int AmmoBag::reduce_ammo(int ammo) {
+    if (ammo <= 0) return 0;
     int removed = std::min(current_ammo_, ammo);
     current_ammo_ -= removed;
     return removed;

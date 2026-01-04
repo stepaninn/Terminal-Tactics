@@ -14,13 +14,14 @@ public:
            game::AmmoType type, int cur_ammo, int max_ammo) :
             Item(id, weight),
             dmg_(dmg),
-            range_(range),
-            attack_cost_(attack_cost),
-            reload_cost_(reload_cost),
+            range_(std::max(1, range)),
+            attack_cost_(std::max(0, attack_cost)),
+            reload_cost_(std::max(0, reload_cost)),
             ammo_type_(type),
-            current_ammo_(cur_ammo),
-            max_ammo_(max_ammo)
-    {}
+            current_ammo_(std::max(0, cur_ammo)),
+            max_ammo_(std::max(0, max_ammo)) {
+        if (current_ammo_ > max_ammo_) current_ammo_ = max_ammo_;
+    }
 
     [[nodiscard]] game::Damage get_dmg() const noexcept { return dmg_; }
     void set_dmg(game::Damage d) noexcept { dmg_ = d; }
