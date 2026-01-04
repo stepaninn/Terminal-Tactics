@@ -21,7 +21,7 @@ cells::ICell* Level::get_cell(game::Position pos) const noexcept {
 }
 
 std::unique_ptr<cells::ICell> Level::set_cell(game::Position pos, std::unique_ptr<cells::ICell> cell) {
-    if (pos.x >= field_.rows() || pos.y >= field_.cols()) return nullptr;
+    if (pos.x >= field_.rows() || pos.y >= field_.cols()) return cell;
     return std::exchange(field_(pos.x, pos.y), std::move(cell));
 }
 
