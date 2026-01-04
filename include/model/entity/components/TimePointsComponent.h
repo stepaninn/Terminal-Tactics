@@ -18,7 +18,9 @@ public:
 class DefaultTimePointsComp : public TimePointsComponent {
 public:
     DefaultTimePointsComp() = default;
-    DefaultTimePointsComp(int cur, int maxv) : current_tp_(cur), max_tp_(maxv) {}
+    DefaultTimePointsComp(int cur, int maxv) : current_tp_(cur), max_tp_(maxv) {
+        if (current_tp_ > max_tp_) current_tp_ = max_tp_;
+    }
 
     [[nodiscard]] int get_current_points() const override { return current_tp_; }
 

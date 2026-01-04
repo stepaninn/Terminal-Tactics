@@ -17,7 +17,9 @@ public:
 class DefaultHealthComp : public HealthComponent {
 public:
     DefaultHealthComp() = default;
-    DefaultHealthComp(int cur, int maxv) : current_hp_(cur), max_hp_(maxv) {}
+    DefaultHealthComp(int cur, int maxv) : current_hp_(cur), max_hp_(maxv) {
+        if (current_hp_ > max_hp_) current_hp_ = max_hp_;
+    }
 
     [[nodiscard]] int get_current_hp() const noexcept override { return current_hp_; }
     [[nodiscard]] int get_max_hp() const noexcept override { return max_hp_; }
