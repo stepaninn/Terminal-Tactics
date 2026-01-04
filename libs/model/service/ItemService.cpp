@@ -19,22 +19,23 @@ bool ItemService::use_item(game::repo::Level& level, game::EntityId user_id, gam
     if (!item) return false;
 
     if (auto* kit = dynamic_cast<const game::entity::items::Medkit*>(item)) {
-        return use_medkit(*user, *inv, *kit, item_id);
+        return use_medkit(*user, *inv, *kit);
     }
     if (auto* bag = dynamic_cast<const game::entity::items::AmmoBag*>(item)) {
-        return use_ammobag(*user, *inv, *bag, item_id);
+        return use_ammobag(*user, *inv, *bag);
     }
     return false;
 }
 
 bool ItemService::use_medkit(game::entity::Entity& user, game::entity::components::InventoryComponent& inv,
-                             const game::entity::items::Medkit& kit, game::ItemId item_id) {
+                             const game::entity::items::Medkit& kit) {
     auto* hp = user.get_component<game::entity::components::HealthComponent>();
     auto* tp = user.get_component<game::entity::components::TimePointsComponent>();
     if (!hp || !tp) return false;
     if (tp->get_current_points() < kit.get_cost()) return false;
     if (tp->reduce_points(kit.get_cost()) != kit.get_cost()) return false;
 
+    game::ItemId item_id = kit.get_id();
     auto removed = inv.remove_by_id(item_id);
     if (!removed) return false;
 
@@ -44,12 +45,13 @@ bool ItemService::use_medkit(game::entity::Entity& user, game::entity::component
 }
 
 bool ItemService::use_ammobag(game::entity::Entity& user, game::entity::components::InventoryComponent& inv,
-                             const game::entity::items::AmmoBag& bag, game::ItemId item_id) {
+                             const game::entity::items::AmmoBag& bag) {
     auto* wc = user.get_component<game::entity::components::WeaponComponent>();
     if (!wc) return false;
     auto* weapon = wc->get_weapon();
     if (!weapon || weapon->get_ammo_type() != bag.get_ammo_type()) return false;
 
+    game::ItemId item_id = bag.get_id();
     auto removed = inv.remove_by_id(item_id);
     if (!removed) return false;
 

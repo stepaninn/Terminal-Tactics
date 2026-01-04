@@ -18,10 +18,10 @@ public:
 
 private:
     bool use_medkit(game::entity::Entity& user, game::entity::components::InventoryComponent& inv,
-                    const game::entity::items::Medkit& kit, game::ItemId item_id);
+                    const game::entity::items::Medkit& kit);
 
     bool use_ammobag(game::entity::Entity& user, game::entity::components::InventoryComponent& inv,
-                     const game::entity::items::AmmoBag& bag, game::ItemId item_id);
+                     const game::entity::items::AmmoBag& bag);
 
     void publish_used(game::EntityId user_id, game::ItemId item_id);
 };

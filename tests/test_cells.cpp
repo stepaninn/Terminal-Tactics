@@ -28,14 +28,14 @@ TEST_CASE("ItemStorage basic operations") {
   ItemStorage storage;
 
   SECTION("add and get_item") {
-    storage.add(std::make_unique<Medkit>(42, 1, 0, 5), 42);
+    storage.add(std::make_unique<Medkit>(42, 1, 0, 5));
     REQUIRE(storage.size() == 1);
     REQUIRE(storage.get_item(42) != nullptr);
     REQUIRE(storage.get_item(99) == nullptr);
   }
 
   SECTION("remove_by_id returns element and shrinks size") {
-    storage.add(std::make_unique<Medkit>(7, 1, 0, 5), 7);
+    storage.add(std::make_unique<Medkit>(7, 1, 0, 5));
     auto removed = storage.remove_by_id(7);
     REQUIRE(removed != nullptr);
     REQUIRE(removed->get_id() == 7);
@@ -48,8 +48,8 @@ TEST_CASE("ItemStorage basic operations") {
   }
 
   SECTION("get_items returns stored pointers") {
-    storage.add(std::make_unique<Medkit>(1, 1, 0, 1), 1);
-    storage.add(std::make_unique<AmmoBag>(2, 10, 0, 5, AmmoType::PISTOL), 2);
+    storage.add(std::make_unique<Medkit>(1, 1, 0, 1));
+    storage.add(std::make_unique<AmmoBag>(2, 10, 0, 5, AmmoType::PISTOL));
     auto items = storage.get_items();
     REQUIRE(items.size() == 2);
     std::vector<id_t> ids;
@@ -73,8 +73,8 @@ TEST_CASE("Floor cell stores items and reports properties") {
   auto medkit = std::make_unique<Medkit>(10, 1, 0, 3);
   auto ammo = std::make_unique<AmmoBag>(11, 5, 0, 2, AmmoType::PISTOL);
 
-  floor.add(std::move(medkit), 10);
-  floor.add(std::move(ammo), 11);
+  floor.add(std::move(medkit));
+  floor.add(std::move(ammo));
   REQUIRE(floor.size() == 2);
   REQUIRE(floor.get_item(10) != nullptr);
   REQUIRE(floor.get_item(11) != nullptr);
@@ -94,7 +94,7 @@ TEST_CASE("Wall cell blocks walking and vision") {
   REQUIRE_FALSE(wall.can_place_items());
   REQUIRE(wall.view_name() == std::string_view("Wall"));
   REQUIRE(wall.size() == 0);
-  wall.add(std::make_unique<Medkit>(1, 1, 0, 1), 1);
+  wall.add(std::make_unique<Medkit>(1, 1, 0, 1));
   REQUIRE(wall.size() == 0);
   REQUIRE(wall.remove_by_id(1) == nullptr);
 }
@@ -134,7 +134,7 @@ TEST_CASE("Stash behaves like a floor with different name") {
   REQUIRE(stash.can_place_items());
   REQUIRE(stash.view_name() == std::string_view("Stash"));
 
-  stash.add(std::make_unique<Medkit>(5, 1, 0, 4), 5);
+  stash.add(std::make_unique<Medkit>(5, 1, 0, 4));
   REQUIRE(stash.size() == 1);
   REQUIRE(stash.get_item(5) != nullptr);
 }

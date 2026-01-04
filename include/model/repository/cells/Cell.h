@@ -24,8 +24,7 @@ public:
 
     [[nodiscard]] virtual std::string_view view_name() const noexcept = 0;
 
-    virtual void add([[maybe_unused]] std::unique_ptr<game::entity::items::Item> item,
-                     [[maybe_unused]] game::ItemId id) {}
+    virtual void add([[maybe_unused]] std::unique_ptr<game::entity::items::Item> item) {}
     virtual std::unique_ptr<game::entity::items::Item> remove_by_id([[maybe_unused]] game::ItemId id) {
         return nullptr;
     }
@@ -37,7 +36,10 @@ public:
 struct ItemStorage {
     std::unordered_map<game::ItemId, std::unique_ptr<game::entity::items::Item>> items_;
 
-    void add(std::unique_ptr<game::entity::items::Item> item, game::ItemId id) { items_[id] = std::move(item); }
+    void add(std::unique_ptr<game::entity::items::Item> item) {
+        if (!item) return;
+        items_[item->get_id()] = std::move(item);
+    }
 
     std::unique_ptr<game::entity::items::Item> remove_by_id(game::ItemId id);
 

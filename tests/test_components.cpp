@@ -97,8 +97,8 @@ TEST_CASE("DefaultInventoryComp add/remove behavior") {
   auto ammo = std::make_unique<AmmoBag>(12, 4, 5, 10, AmmoType::PISTOL);
 
   REQUIRE(inv.can_add(*medkit));
-  inv.add(std::move(medkit), 11);
-  inv.add(std::move(ammo), 12);
+  inv.add(std::move(medkit));
+  inv.add(std::move(ammo));
 
   REQUIRE(inv.size() == 2);
   REQUIRE(inv.get_weight() == 5);
@@ -106,7 +106,7 @@ TEST_CASE("DefaultInventoryComp add/remove behavior") {
   REQUIRE(inv.get_item(12) != nullptr);
 
   auto too_many = std::make_unique<Medkit>(13, 1, 1, 1);
-  inv.add(std::move(too_many), 13);
+  inv.add(std::move(too_many));
   REQUIRE(inv.size() == 2);
 
   auto removed = inv.remove_by_id(11);

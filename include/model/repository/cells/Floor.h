@@ -22,8 +22,8 @@ public:
 
     [[nodiscard]] std::string_view view_name() const noexcept override { return "Floor"; }
 
-    void add(std::unique_ptr<game::entity::items::Item> item, game::ItemId id) override {
-        items_.add(std::move(item), id);
+    void add(std::unique_ptr<game::entity::items::Item> item) override {
+        items_.add(std::move(item));
     }
     std::unique_ptr<game::entity::items::Item> remove_by_id(game::ItemId id) override {
         return items_.remove_by_id(id);

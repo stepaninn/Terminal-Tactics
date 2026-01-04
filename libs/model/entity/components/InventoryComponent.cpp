@@ -11,11 +11,12 @@ bool DefaultInventoryComp::can_add(const game::entity::items::Item& item) const 
     return item.get_weight() + weight_ <= max_weight_;
 }
 
-void DefaultInventoryComp::add(std::unique_ptr<game::entity::items::Item> item, game::id_t id) {
+void DefaultInventoryComp::add(std::unique_ptr<game::entity::items::Item> item) {
     if (!item || !can_add(*item)) return;
 
     int w = item->get_weight();
 
+    game::id_t id = item->get_id();
     auto it = items_.find(id);
     if (it != items_.end()) return;
     items_.emplace(id, std::move(item));

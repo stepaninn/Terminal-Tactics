@@ -10,9 +10,14 @@
 
 namespace game::entity::components {
 
+/// @brief Класс компонента инвентаря
 class InventoryComponent : public IComponent {
 public:
-    virtual void add(std::unique_ptr<game::entity::items::Item> item, game::id_t id) = 0;
+    /**
+     * @brief Метод добавления предмет в инвентарь
+     * @param item unique_ptr указатель на предмет (создается фабрикой)
+     */
+    virtual void add(std::unique_ptr<game::entity::items::Item> item) = 0;
     virtual std::unique_ptr<game::entity::items::Item> remove_by_id(game::id_t id) = 0;
 
     [[nodiscard]] virtual size_t size() const noexcept = 0;
@@ -33,7 +38,7 @@ public:
     explicit DefaultInventoryComp(int capacity, int max_weight)
         : capacity_(std::max(0, capacity)), max_weight_(std::max(0, max_weight)) {}
 
-    void add(std::unique_ptr<game::entity::items::Item> item, game::id_t id) override;
+    void add(std::unique_ptr<game::entity::items::Item> item) override;
     std::unique_ptr<game::entity::items::Item> remove_by_id(game::id_t id) override;
 
     [[nodiscard]] size_t size() const noexcept override { return items_.size(); }
