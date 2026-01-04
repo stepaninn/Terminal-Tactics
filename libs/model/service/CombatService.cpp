@@ -118,19 +118,19 @@ bool CombatService::reload_weapon(game::entity::Entity& user, game::ItemId ammo_
 
     auto* ammo_bag = dynamic_cast<entity::items::AmmoBag*>(removed.get());
     if (!ammo_bag || ammo_bag->get_ammo_type() != wp->get_ammo_type()) {
-        inv->add(std::move(removed), ammo_bag_id);
+        inv->add(std::move(removed));
         return false;
     }
 
     int needed = wp->get_max_ammo() - wp->get_current_ammo();
     if (needed <= 0) {
-        inv->add(std::move(removed), ammo_bag_id);
+        inv->add(std::move(removed));
         return false;
     }
 
     int gotten_ammo = ammo_bag->reduce_ammo(needed);
     if (gotten_ammo <= 0) {
-        inv->add(std::move(removed), ammo_bag_id);
+        inv->add(std::move(removed));
         return false;
     }
 
@@ -138,7 +138,7 @@ bool CombatService::reload_weapon(game::entity::Entity& user, game::ItemId ammo_
     if (tp->reduce_points(wp->get_reload_cost()) != wp->get_reload_cost()) return false;
 
     if (ammo_bag->get_current_ammo() > 0) {
-        inv->add(std::move(removed), ammo_bag_id);
+        inv->add(std::move(removed));
     }
 
     return true;

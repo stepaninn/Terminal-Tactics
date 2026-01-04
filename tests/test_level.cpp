@@ -45,7 +45,8 @@ TEST_CASE("Level cell access and replacement") {
   REQUIRE(level.get_cell(Position{0, 0}) != nullptr);
 
   REQUIRE(level.get_cell(Position{10, 10}) == nullptr);
-  REQUIRE(level.set_cell(Position{10, 10}, std::make_unique<Floor>()) == nullptr);
+  auto out_of_bounds = level.set_cell(Position{10, 10}, std::make_unique<Floor>());
+  REQUIRE(out_of_bounds != nullptr);
 }
 
 TEST_CASE("Level remove entity by id and pointer") {

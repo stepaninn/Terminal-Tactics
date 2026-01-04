@@ -57,9 +57,10 @@ TEST_CASE("Entity replace component of same type") {
   Entity e;
   auto& h1 = e.add_component<HealthComponent, DefaultHealthComp>(1, 5);
   REQUIRE(h1.get_current_hp() == 1);
-  auto& h2 = e.add_component<HealthComponent, DefaultHealthComp>(4, 7);
-  REQUIRE(h2.get_current_hp() == 4);
-  REQUIRE(h2.get_max_hp() == 7);
+  auto replaced = e.replace_component<HealthComponent, DefaultHealthComp>(4, 7);
+  REQUIRE(replaced != nullptr);
+  REQUIRE(replaced->get_current_hp() == 1);
+  REQUIRE(replaced->get_max_hp() == 5);
 
   auto* current = e.get_component<HealthComponent>();
   REQUIRE(current != nullptr);

@@ -136,7 +136,7 @@ TEST_CASE("service CombatService reloads weapon and consumes time points") {
   level->spawn_entity(std::move(user), Position{0, 0});
 
   auto* inv = level->get_entity(1)->get_component<InventoryComponent>();
-  inv->add(std::make_unique<AmmoBag>(200, 1, 3, 10, AmmoType::PISTOL), 200);
+  inv->add(std::make_unique<AmmoBag>(200, 1, 3, 10, AmmoType::PISTOL));
 
   service::CombatService combat;
   REQUIRE(combat.reload_weapon(*level->get_entity(1), 200));
@@ -158,8 +158,8 @@ TEST_CASE("service ItemService uses medkit and ammo bag") {
   level->spawn_entity(std::move(user), Position{0, 0});
 
   auto* inv = level->get_entity(1)->get_component<InventoryComponent>();
-  inv->add(std::make_unique<Medkit>(100, 1, 3, 2), 100);
-  inv->add(std::make_unique<AmmoBag>(200, 1, 3, 10, AmmoType::PISTOL), 200);
+  inv->add(std::make_unique<Medkit>(100, 1, 3, 2));
+  inv->add(std::make_unique<AmmoBag>(200, 1, 3, 10, AmmoType::PISTOL));
 
   service::ItemService items;
   REQUIRE(items.use_item(*level, 1, 100));
