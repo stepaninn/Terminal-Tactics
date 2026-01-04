@@ -3,6 +3,8 @@
 
 #include "../../../../types.h"
 
+#include <algorithm>
+
 namespace game::entity::items {
 
 class Item {
