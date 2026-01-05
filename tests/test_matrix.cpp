@@ -142,7 +142,10 @@ TEST_CASE("Matrix") {
     REQUIRE(c.rows() == 2);
     REQUIRE(c.cols() == 3);
     REQUIRE(std::equal(c.cbegin(), c.cend(), ref.cbegin(), ref.cend()));
-    REQUIRE(a.size() == 0);
+    a = Matrix<int>(1, 1, 9);
+    REQUIRE(a.rows() == 1);
+    REQUIRE(a.cols() == 1);
+    REQUIRE(a(0, 0) == 9);
   }
 
   SECTION("Assignment operators") {
