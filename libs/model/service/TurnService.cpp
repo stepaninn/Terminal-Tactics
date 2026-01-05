@@ -12,7 +12,7 @@ bool TurnService::select_entity(game::repo::Level& level, game::EntityId id) {
     auto* entity = level.get_entity(id);
     if (!entity) return false;
     if (!teams_.empty() && entity->get_team_id() != active_team_) return false;
-    active_entity_ = id;
+    active_entity_ = entity->get_id();
     return true;
 }
 
@@ -36,7 +36,7 @@ bool TurnService::next_team(game::repo::Level& level) {
     return true;
 }
 
-void TurnService::refresh_team(game::repo::Level& level, game::TeamId team_id) const {
+void TurnService::refresh_team(game::repo::Level& level, game::TeamId team_id) {
     auto entities = level.get_entities();
     for (auto* entity : entities) {
         if (!entity || entity->get_team_id() != team_id) continue;

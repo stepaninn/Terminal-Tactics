@@ -4,7 +4,7 @@
 
 namespace game::repo {
 
-std::vector<const game::entity::Entity*> Level::get_entities() noexcept {
+std::vector<const game::entity::Entity*> Level::get_entities() const noexcept {
     std::vector<const game::entity::Entity*> res;
     res.reserve(entities_.size());
     for (const auto& entity : entities_ | std::views::values) {
@@ -23,12 +23,13 @@ std::unique_ptr<cells::ICell> Level::set_cell(game::Position pos, std::unique_pt
     return std::exchange(field_(pos.x, pos.y), std::move(cell));
 }
 
-void Level::spawn_entity(std::unique_ptr<game::entity::Entity> e, game::Position pos) {
-    if (!e) return;
-    e->set_id(next_entity_id_++);
+game::entity::Entity* Level::spawn_entity(std::unique_ptr<game::entity::Entity> e, game::Position pos) {
+    if (!e) return nullptr;
     game::EntityId id = e->get_id();
+    if (entities_.contains(id)) return nullptr;
     entities_[id] = std::move(e);
     entity_positions_[id] = pos;
+    return entities_[id].get();
 }
 
 bool Level::move_entity(game::EntityId id, game::Position to) {

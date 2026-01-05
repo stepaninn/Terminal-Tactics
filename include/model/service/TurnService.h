@@ -64,7 +64,7 @@ public:
      * @param level Уровень, на котором обновляются очки действия команды
      * @param team_id Команда, для которой обновляются очки действия
      */
-    void refresh_team(game::repo::Level& level, game::TeamId team_id) const;
+    static void refresh_team(game::repo::Level& level, game::TeamId team_id) ;
 
 private:
     game::TeamId active_team_{0};

@@ -8,7 +8,6 @@
 #include <unordered_map>
 #include <vector>
 #include <memory>
-#include <ranges>
 
 namespace game::repo {
 
@@ -32,6 +31,13 @@ public:
     [[nodiscard]] FieldMatrix& get_field() noexcept { return field_; }
 
     /**
+     * @brief Метод проверки наличия существа на уровне
+     * @param id ID искомого существа
+     * @return bool true, если существо есть на уровне
+     */
+    bool check_entity(game::EntityId id) const noexcept { return entities_.contains(id); }
+
+    /**
      * @brief Метод получения сущности по идентификатору
      * @param id идентификатор сущности
      * @return Entity* указатель на сущность или nullptr
@@ -44,7 +50,7 @@ public:
      * @brief Метод получения всех сущностей уровня
      * @return std::vector<const Entity*> массив указателей на сущности
      */
-    [[nodiscard]] std::vector<const game::entity::Entity*> get_entities() noexcept;
+    [[nodiscard]] std::vector<const game::entity::Entity*> get_entities() const noexcept;
     /**
      * @brief Метод получения позиции сущности
      * @param id идентификатор сущности
@@ -70,9 +76,10 @@ public:
      * @brief Метод добавления сущности на уровень
      * @param e сущность
      * @param pos позиция сущности
-     * @note Идентификатор сущности заменяется на следующий доступный
+     * @return Entity* указатель на добавленное существо
+     * @note Идентификатор сущности должен быть уникальным
      */
-    void spawn_entity(std::unique_ptr<game::entity::Entity> e, game::Position pos);
+    game::entity::Entity* spawn_entity(std::unique_ptr<game::entity::Entity> e, game::Position pos);
     /**
      * @brief Метод перемещения сущности
      * @param id идентификатор сущности
@@ -134,7 +141,6 @@ private:
     std::unordered_map<game::EntityId, std::unique_ptr<game::entity::Entity>> entities_;
     std::unordered_map<game::EntityId, game::Position> entity_positions_;
 
-    game::EntityId next_entity_id_{1};
 };
 
 }
