@@ -12,21 +12,43 @@ namespace game::service {
 
 class World {
 public:
-    explicit World(std::shared_ptr<game::repo::Level> level, std::shared_ptr<events::EventBus> bus = nullptr)
+    explicit World(std::unique_ptr<game::repo::Level> level, std::unique_ptr<events::EventBus> bus = nullptr)
         : level_(std::move(level)), event_bus_(std::move(bus)) {}
 
-    [[nodiscard]] std::shared_ptr<game::repo::Level> level() const noexcept { return level_; }
+    /**
+     * @brief Метод, возвращающий текущий уровень
+     * @return Текущий уровень
+     */
+    [[nodiscard]] game::repo::Level* level() const noexcept { return level_.get(); }
+    /**
+     * @brief Метод, возвращающий текущий EventBus
+     * @return Текущий EventBus
+     */
     [[nodiscard]] events::EventBus* events() const noexcept { return event_bus_.get(); }
 
+    /**
+     * @brief Метод поиска существа по ID на текущем уровне
+     * @param id ID искомого существа
+     * @return Указатель на искомое существо
+     */
     [[nodiscard]] game::entity::Entity* entity(game::EntityId id) const {
         return level_ ? level_->get_entity(id) : nullptr;
     }
 
+    /**
+     * @brief Метод получения существ на текущем уровне
+     * @return Массив существ на текущем уровне
+     */
     [[nodiscard]] std::vector<const game::entity::Entity*> entities() const {
         if (!level_) return {};
         return level_->get_entities();
     }
 
+    /**
+     * @brief Метод, возвращаюший существ по компоненту
+     * @tparam Comps Типы компонентов, по которым осуществляется поиск
+     * @return Массив существ, которые имеют данный компонент
+     */
     template<typename... Comps>
     [[nodiscard]] std::vector<const game::entity::Entity*> view() const {
         std::vector<const game::entity::Entity*> res;
@@ -40,8 +62,8 @@ public:
     }
 
 private:
-    std::shared_ptr<game::repo::Level> level_;
-    std::shared_ptr<events::EventBus> event_bus_;
+    std::unique_ptr<game::repo::Level> level_;
+    std::unique_ptr<events::EventBus> event_bus_;
 };
 
 }
