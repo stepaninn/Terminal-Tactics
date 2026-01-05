@@ -1,7 +1,6 @@
 #ifndef INC_3_TYPES_H
 #define INC_3_TYPES_H
 
-#include <string>
 #include <stdexcept>
 #include <algorithm>
 
@@ -23,6 +22,7 @@ enum class CellType {
 struct Position {
     size_t x = 0;
     size_t y = 0;
+    bool operator==(game::Position to) const { return x == to.x && y == to.y; }
 };
 
 enum class EnemyType {

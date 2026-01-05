@@ -19,7 +19,12 @@ public:
      * @param to Позиция, в которую переместится существо
      * @return bool true, если перемещение успешно
      */
-    [[nodiscard]] bool move(game::repo::Level& level, game::EntityId id, game::Position to);
+    [[nodiscard]] bool move(game::repo::Level& level, game::EntityId id, game::Position to) const;
+
+private:
+    [[nodiscard]] static std::vector<game::Position> find_path(const game::repo::Level& level,
+                                                               game::EntityId id,
+                                                               game::Position to);
 };
 
 }

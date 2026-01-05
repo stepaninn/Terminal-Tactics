@@ -2,6 +2,8 @@
 #define INC_3_EVENT_H
 
 #include <string>
+#include <vector>
+#include <optional>
 #include "../../../types.h"
 
 namespace game::service::events {
@@ -14,6 +16,7 @@ struct MoveEvent final : EventBase {
     game::id_t entity_id;
     game::Position from;
     game::Position to;
+    std::optional<std::vector<Position>> path;
 };
 
 struct DamageEvent final : EventBase {
