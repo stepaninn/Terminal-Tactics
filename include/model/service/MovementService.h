@@ -12,6 +12,13 @@ class MovementService : public ServiceBase {
 public:
     explicit MovementService(std::shared_ptr<events::EventBus> bus = nullptr) : ServiceBase(std::move(bus)) {}
 
+    /**
+     * @brief Метод перемещения существа по уровню
+     * @param level Уровень, на котором перемещается существо
+     * @param id ID перемещающегося существа
+     * @param to Позиция, в которую переместится существо
+     * @return bool true, если перемещение успешно
+     */
     [[nodiscard]] bool move(game::repo::Level& level, game::EntityId id, game::Position to);
 };
 

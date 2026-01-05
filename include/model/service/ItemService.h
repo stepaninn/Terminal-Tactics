@@ -14,6 +14,13 @@ class ItemService : public ServiceBase {
 public:
     explicit ItemService(std::shared_ptr<events::EventBus> bus = nullptr)  : ServiceBase(std::move(bus)) {}
 
+    /**
+     * @brif Метод использования предмета
+     * @param level Уровень, на котором используется предмет
+     * @param user_id ID существа, которое использует предмет
+     * @param item_id ID используемого предмета
+     * @return bool true, если использование успешно
+     */
     [[nodiscard]] bool use_item(game::repo::Level& level, game::EntityId user_id, game::ItemId item_id);
 
 private:
