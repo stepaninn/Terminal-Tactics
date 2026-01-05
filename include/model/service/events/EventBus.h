@@ -18,7 +18,7 @@ public:
         auto key = std::type_index(typeid(T));
 
         std::function<void(std::shared_ptr<EventBase>)> wrapper =
-            [handler](std::shared_ptr<EventBase> ev_base) {
+            [handler](const std::shared_ptr<EventBase>& ev_base) {
                 auto ev = std::static_pointer_cast<T>(ev_base);
                 handler(ev);
         };
