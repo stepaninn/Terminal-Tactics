@@ -37,15 +37,6 @@ public:
                                  game::EntityId attacker_id,
                                  game::EntityId target_id);
 
-    /**
-     * @brief Метод перезарядки
-     * @param user Существо, которое хочет перезарядиться
-     * @param ammo_bag_id ID мешка с патронами
-     * @return bool true, если перезарядка успешка
-     */
-    [[nodiscard]] static bool reload_weapon(game::entity::Entity& user, game::ItemId ammo_bag_id);
-
-
 private:
     [[nodiscard]] int roll_damage(const game::entity::items::Weapon& w) { return w.roll_damage(rng_); }
     // здесь настраивается точность (для баланса)

@@ -45,6 +45,13 @@ std::vector<const game::entity::items::Item*> DefaultInventoryComp::get_items() 
     return res;
 }
 
+game::entity::items::Item* DefaultInventoryComp::get_item(game::id_t id) noexcept {
+    auto it = items_.find(id);
+    if (it == items_.end()) return nullptr;
+
+    return it->second.get();
+}
+
 const game::entity::items::Item* DefaultInventoryComp::get_item(game::id_t id) const noexcept {
     auto it = items_.find(id);
     if (it == items_.end()) return nullptr;

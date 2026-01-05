@@ -5,6 +5,8 @@
 
 #include <algorithm>
 
+namespace game::service { struct UseContext; }
+
 namespace game::entity::items {
 
 /// @brief Базовый класс предмета
@@ -30,13 +32,20 @@ public:
      */
     virtual void set_id(game::ItemId id) noexcept { id_ = id; }
 
+    /**
+     * @brief Метод использования предмета с учетом контекста
+     * @param ctx контекст для использования предмета
+     * @return bool true, если использование успешно
+     */
+    [[nodiscard]] virtual bool use(game::service::UseContext& ctx) noexcept { return false; }
+
 protected:
     game::ItemId id_{};
     int weight_ = 0;
 };
 
 /// @brief Класс подсумка для патронов
-class AmmoBag : public Item {
+class AmmoBag final : public Item {
 public:
     AmmoBag(game::ItemId id, int weight, int current_ammo, int max_ammo, game::AmmoType t)
         : Item(id, weight),
@@ -82,6 +91,8 @@ public:
      */
     [[nodiscard]] int reduce_ammo(int ammo);
 
+    [[nodiscard]] bool use(game::service::UseContext& ctx) noexcept override;
+
 private:
     int current_ammo_ = 0;
     int max_ammo_ = 0;
@@ -89,7 +100,7 @@ private:
 };
 
 /// @brief Класс аптечки
-class Medkit : public Item {
+class Medkit final : public Item {
 public:
     Medkit(game::ItemId id, int weight, int heal_hp, int time_cost)
       : Item(id, weight), heal_hp_(heal_hp), time_cost_(time_cost) {}
@@ -104,6 +115,8 @@ public:
      * @return int стоимость по времени
      */
     [[nodiscard]] int get_cost() const noexcept { return time_cost_; }
+
+    [[nodiscard]] bool use(game::service::UseContext& ctx) noexcept override;
 
 private:
     int heal_hp_ = 0;

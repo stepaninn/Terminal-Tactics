@@ -108,46 +108,5 @@ bool CombatService::try_shoot(game::repo::Level& level,
     return true;
 }
 
-bool CombatService::reload_weapon(game::entity::Entity& user, game::ItemId ammo_bag_id) {
-    auto* inv = user.get_component<entity::components::InventoryComponent>();
-    auto* tp = user.get_component<entity::components::TimePointsComponent>();
-    auto* wp_cmp = user.get_component<entity::components::WeaponComponent>();
-    if (!inv || !tp || !wp_cmp) return false;
-
-    auto* wp = wp_cmp->get_weapon();
-    if (!wp) return false;
-
-    if (tp->get_current_points() < wp->get_reload_cost()) return false;
-
-    auto removed = inv->remove_by_id(ammo_bag_id);
-    if (!removed) return false;
-
-    auto* ammo_bag = dynamic_cast<entity::items::AmmoBag*>(removed.get());
-    if (!ammo_bag || ammo_bag->get_ammo_type() != wp->get_ammo_type()) {
-        inv->add(std::move(removed));
-        return false;
-    }
-
-    int needed = wp->get_max_ammo() - wp->get_current_ammo();
-    if (needed <= 0) {
-        inv->add(std::move(removed));
-        return false;
-    }
-
-    int gotten_ammo = ammo_bag->reduce_ammo(needed);
-    if (gotten_ammo <= 0) {
-        inv->add(std::move(removed));
-        return false;
-    }
-
-    (void)wp->add_ammo(gotten_ammo);
-    if (tp->reduce_points(wp->get_reload_cost()) != wp->get_reload_cost()) return false;
-
-    if (ammo_bag->get_current_ammo() > 0) {
-        inv->add(std::move(removed));
-    }
-
-    return true;
-}
 
 }

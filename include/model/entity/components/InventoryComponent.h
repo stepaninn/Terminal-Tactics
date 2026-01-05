@@ -38,6 +38,13 @@ public:
     [[nodiscard]] virtual const game::entity::items::Item* get_item(game::id_t id) const noexcept = 0;
 
     /**
+     * @brief Метод получения предмета в инвентаре для чтения
+     * @param id ID желаемого предмета
+     * @return Указатель на предмет
+     */
+    [[nodiscard]] virtual game::entity::items::Item* get_item(game::id_t id) noexcept = 0;
+
+    /**
      * @brief Метод получения текущего веса инвентаря
      * @return int текущий вес инвентаря
      */
@@ -77,6 +84,8 @@ public:
     std::unique_ptr<game::entity::items::Item> remove_by_id(game::id_t id) override;
 
     [[nodiscard]] size_t size() const noexcept override { return items_.size(); }
+
+    [[nodiscard]] game::entity::items::Item* get_item(game::id_t id) noexcept override;
     [[nodiscard]] const game::entity::items::Item* get_item(game::id_t id) const noexcept override;
 
     [[nodiscard]] int get_weight() const noexcept override { return weight_; }
