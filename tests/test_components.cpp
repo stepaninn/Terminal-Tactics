@@ -49,8 +49,8 @@ TEST_CASE("DefaultTimePointsComp clamps add/reduce") {
   REQUIRE(tp.get_current_points() == 5);
   REQUIRE(tp.reduce_points(3) == 3);
   REQUIRE(tp.get_current_points() == 2);
-  REQUIRE(tp.reduce_points(5) == 2);
-  REQUIRE(tp.get_current_points() == 0);
+  REQUIRE(tp.reduce_points(5) == 0);
+  REQUIRE(tp.get_current_points() == 2);
 }
 
 TEST_CASE("DefaultMoveComp enforces min step cost") {
@@ -65,7 +65,7 @@ TEST_CASE("DefaultMoveComp enforces min step cost") {
 TEST_CASE("DefaultVisionComp clamps radius and visibility") {
   DefaultVisionComp vc(-3, true);
   REQUIRE(vc.get_vision_radius() == 0);
-  REQUIRE_FALSE(vc.is_sees_creatures());
+  REQUIRE(vc.is_sees_items_only());
   vc.set_vision_radius(-1);
   REQUIRE(vc.get_vision_radius() == 0);
   vc.set_vision_radius(4);

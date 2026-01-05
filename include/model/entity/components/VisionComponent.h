@@ -22,9 +22,9 @@ public:
 
     /**
      * @brief Метод проверки видимости существ
-     * @return bool true, если компонент видит существ, иначе false
+     * @return bool true, если компонент не видит существ, иначе false
      */
-    [[nodiscard]] virtual bool is_sees_creatures() const = 0;
+    [[nodiscard]] virtual bool is_sees_items_only() const = 0;
 
     ~VisionComponent() override = default;
 };
@@ -38,7 +38,7 @@ public:
 
     void set_vision_radius(int r) override { radius_ = std::max(0, r); }
 
-    [[nodiscard]] bool is_sees_creatures() const override { return !sees_items_only_; }
+    [[nodiscard]] bool is_sees_items_only() const override { return sees_items_only_; }
 
 protected:
     int radius_ = 0;

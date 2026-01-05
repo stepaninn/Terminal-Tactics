@@ -39,7 +39,7 @@ public:
 class DefaultTimePointsComp : public TimePointsComponent {
 public:
     DefaultTimePointsComp() = default;
-    DefaultTimePointsComp(int cur, int maxv) : current_tp_(cur), max_tp_(maxv) {
+    DefaultTimePointsComp(int cur, int maxv) : current_tp_(std::max(0, cur)), max_tp_(std::max(0, maxv)) {
         if (current_tp_ > max_tp_) current_tp_ = max_tp_;
     }
 
