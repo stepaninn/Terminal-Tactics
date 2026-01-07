@@ -1,5 +1,5 @@
-#ifndef INC_3_TMP_SERVICE_QUERY_H
-#define INC_3_TMP_SERVICE_QUERY_H
+#ifndef MYGAMEPROJECT_QUERY_H
+#define MYGAMEPROJECT_QUERY_H
 
 #include "model/entity/entities/Entity.h"
 
@@ -12,4 +12,4 @@ template<typename... Comps>
 
 }
 
-#endif // INC_3_TMP_SERVICE_QUERY_H
+#endif // MYGAMEPROJECT_QUERY_H

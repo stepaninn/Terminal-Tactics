@@ -1,5 +1,5 @@
-#ifndef INC_3_TYPES_H
-#define INC_3_TYPES_H
+#ifndef MYGAMEPROJECT_TYPES_H
+#define MYGAMEPROJECT_TYPES_H
 
 #include <stdexcept>
 #include <algorithm>

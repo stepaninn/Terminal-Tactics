@@ -1,5 +1,5 @@
-#ifndef INC_3_CELL_H
-#define INC_3_CELL_H
+#ifndef MYGAMEPROJECT_CELL_H
+#define MYGAMEPROJECT_CELL_H
 
 #include "model/entity/entities/items/Item.h"
 #include "types.h"
@@ -123,4 +123,4 @@ struct ItemStorage {
 }
 
 
-#endif //INC_3_CELL_H
+#endif //MYGAMEPROJECT_CELL_H

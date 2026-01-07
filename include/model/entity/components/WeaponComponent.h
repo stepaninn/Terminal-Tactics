@@ -1,5 +1,5 @@
-#ifndef INC_3_WEAPONCOMPONENT_H
-#define INC_3_WEAPONCOMPONENT_H
+#ifndef MYGAMEPROJECT_WEAPONCOMPONENT_H
+#define MYGAMEPROJECT_WEAPONCOMPONENT_H
 
 #include "IComponent.h"
 #include "model/entity/entities/items/Weapon.h"
@@ -42,4 +42,4 @@ protected:
 
 }
 
-#endif //INC_3_WEAPONCOMPONENT_H
+#endif //MYGAMEPROJECT_WEAPONCOMPONENT_H

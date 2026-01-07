@@ -1,5 +1,5 @@
-#ifndef INC_3_ENEMY_H
-#define INC_3_ENEMY_H
+#ifndef MYGAMEPROJECT_ENEMY_H
+#define MYGAMEPROJECT_ENEMY_H
 
 #include "Entity.h"
 #include "../components/HealthComponent.h"
@@ -103,4 +103,4 @@ public:
 
 }
 
-#endif //INC_3_ENEMY_H
+#endif //MYGAMEPROJECT_ENEMY_H

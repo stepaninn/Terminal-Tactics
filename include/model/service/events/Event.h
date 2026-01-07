@@ -1,5 +1,5 @@
-#ifndef INC_3_EVENT_H
-#define INC_3_EVENT_H
+#ifndef MYGAMEPROJECT_EVENT_H
+#define MYGAMEPROJECT_EVENT_H
 
 #include <string>
 #include <vector>
@@ -53,4 +53,4 @@ struct ItemUsedEvent final : EventBase {
 }
 
 
-#endif //INC_3_EVENT_H
+#endif //MYGAMEPROJECT_EVENT_H

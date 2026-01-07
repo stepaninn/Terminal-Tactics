@@ -1,5 +1,5 @@
-#ifndef INC_3_AICOMPONENT_H
-#define INC_3_AICOMPONENT_H
+#ifndef MYGAMEPROJECT_AICOMPONENT_H
+#define MYGAMEPROJECT_AICOMPONENT_H
 
 #include "IComponent.h"
 #include "../../../types.h"
@@ -35,4 +35,4 @@ protected:
 
 }
 
-#endif //INC_3_AICOMPONENT_H
+#endif //MYGAMEPROJECT_AICOMPONENT_H

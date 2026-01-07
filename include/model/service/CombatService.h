@@ -1,5 +1,5 @@
-#ifndef INC_3_TMP_SERVICE_COMBATSERVICE_H
-#define INC_3_TMP_SERVICE_COMBATSERVICE_H
+#ifndef MYGAMEPROJECT_COMBATSERVICE_H
+#define MYGAMEPROJECT_COMBATSERVICE_H
 
 #include "model/repository/Level.h"
 #include "model/entity/components/CombatComponent.h"
@@ -49,4 +49,4 @@ private:
 
 }
 
-#endif // INC_3_TMP_SERVICE_COMBATSERVICE_H
+#endif // MYGAMEPROJECT_COMBATSERVICE_H

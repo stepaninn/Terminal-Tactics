@@ -1,5 +1,5 @@
-#ifndef INC_3_VISIONCOMPONENT_H
-#define INC_3_VISIONCOMPONENT_H
+#ifndef MYGAMEPROJECT_VISIONCOMPONENT_H
+#define MYGAMEPROJECT_VISIONCOMPONENT_H
 
 #include "IComponent.h"
 #include <algorithm>
@@ -47,4 +47,4 @@ protected:
 
 }
 
-#endif //INC_3_VISIONCOMPONENT_H
+#endif //MYGAMEPROJECT_VISIONCOMPONENT_H

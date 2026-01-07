@@ -1,5 +1,5 @@
-#ifndef INC_3_ICOMPONENT_H
-#define INC_3_ICOMPONENT_H
+#ifndef MYGAMEPROJECT_ICOMPONENT_H
+#define MYGAMEPROJECT_ICOMPONENT_H
 
 namespace game::entity::components {
 

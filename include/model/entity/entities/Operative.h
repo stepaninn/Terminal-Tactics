@@ -1,5 +1,5 @@
-#ifndef INC_3_OPERATIVE_H
-#define INC_3_OPERATIVE_H
+#ifndef MYGAMEPROJECT_OPERATIVE_H
+#define MYGAMEPROJECT_OPERATIVE_H
 
 #include "Entity.h"
 #include "../components/InventoryComponent.h"
@@ -61,4 +61,4 @@ public:
 
 }
 
-#endif //INC_3_OPERATIVE_H
+#endif //MYGAMEPROJECT_OPERATIVE_H

@@ -1,5 +1,5 @@
-#ifndef INC_3_TMP_SERVICE_WORLD_H
-#define INC_3_TMP_SERVICE_WORLD_H
+#ifndef MYGAMEPROJECT_WORLD_H
+#define MYGAMEPROJECT_WORLD_H
 
 #include "model/repository/Level.h"
 #include "events/EventBus.h"
@@ -68,4 +68,4 @@ private:
 
 }
 
-#endif // INC_3_TMP_SERVICE_WORLD_H
+#endif // MYGAMEPROJECT_WORLD_H

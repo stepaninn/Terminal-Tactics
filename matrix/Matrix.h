@@ -1,5 +1,5 @@
-#ifndef INC_3_MATRIX_H
-#define INC_3_MATRIX_H
+#ifndef MYGAMEPROJECT_MATRIX_H
+#define MYGAMEPROJECT_MATRIX_H
 
 #include <algorithm>
 #include <concepts>
@@ -502,4 +502,4 @@ public:
 
 };
 
-#endif //INC_3_MATRIX_H
+#endif //MYGAMEPROJECT_MATRIX_H

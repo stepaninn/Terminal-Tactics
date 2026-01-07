@@ -1,5 +1,5 @@
-#ifndef INC_3_EVENTBUS_H
-#define INC_3_EVENTBUS_H
+#ifndef MYGAMEPROJECT_EVENTBUS_H
+#define MYGAMEPROJECT_EVENTBUS_H
 
 #include "Event.h"
 #include <memory>
@@ -38,4 +38,4 @@ private:
 }
 
 
-#endif //INC_3_EVENTBUS_H
+#endif //MYGAMEPROJECT_EVENTBUS_H

@@ -1,5 +1,5 @@
-#ifndef INC_3_ITEMS_H
-#define INC_3_ITEMS_H
+#ifndef MYGAMEPROJECT_ITEMS_H
+#define MYGAMEPROJECT_ITEMS_H
 
 #include "../../../../types.h"
 
@@ -125,4 +125,4 @@ private:
 
 }
 
-#endif //INC_3_ITEMS_H
+#endif //MYGAMEPROJECT_ITEMS_H

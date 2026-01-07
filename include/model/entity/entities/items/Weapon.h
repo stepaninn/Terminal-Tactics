@@ -1,5 +1,5 @@
-#ifndef INC_3_WEAPON_H
-#define INC_3_WEAPON_H
+#ifndef MYGAMEPROJECT_WEAPON_H
+#define MYGAMEPROJECT_WEAPON_H
 
 #include "Item.h"
 #include "../../../../types.h"
@@ -113,4 +113,4 @@ private:
 }
 
 
-#endif //INC_3_WEAPON_H
+#endif //MYGAMEPROJECT_WEAPON_H

@@ -1,9 +1,8 @@
-#ifndef INC_3_TMP_SERVICE_ITEMSERVICE_H
-#define INC_3_TMP_SERVICE_ITEMSERVICE_H
+#ifndef MYGAMEPROJECT_ITEMSERVICE_H
+#define MYGAMEPROJECT_ITEMSERVICE_H
 
 #include "model/repository/Level.h"
 #include "model/entity/components/InventoryComponent.h"
-#include "model/entity/entities/items/Item.h"
 #include "ServiceBase.h"
 
 #include <memory>
@@ -28,4 +27,4 @@ public:
 
 }
 
-#endif // INC_3_TMP_SERVICE_ITEMSERVICE_H
+#endif // MYGAMEPROJECT_ITEMSERVICE_H

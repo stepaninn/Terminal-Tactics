@@ -1,5 +1,5 @@
-#ifndef INC_3_MOVECOMPONENT_H
-#define INC_3_MOVECOMPONENT_H
+#ifndef MYGAMEPROJECT_MOVECOMPONENT_H
+#define MYGAMEPROJECT_MOVECOMPONENT_H
 
 #include "IComponent.h"
 #include <algorithm>
@@ -35,4 +35,4 @@ protected:
 
 }
 
-#endif //INC_3_MOVECOMPONENT_H
+#endif //MYGAMEPROJECT_MOVECOMPONENT_H

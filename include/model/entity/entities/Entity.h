@@ -1,5 +1,5 @@
-#ifndef INC_3_ENTITY_H
-#define INC_3_ENTITY_H
+#ifndef MYGAMEPROJECT_ENTITY_H
+#define MYGAMEPROJECT_ENTITY_H
 
 #include "../components/IComponent.h"
 #include "../../../types.h"
@@ -140,4 +140,4 @@ protected:
 
 }
 
-#endif //INC_3_ENTITY_H
+#endif //MYGAMEPROJECT_ENTITY_H

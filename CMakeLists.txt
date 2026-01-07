@@ -26,7 +26,8 @@ add_library(core_lib STATIC ${SRC_FILES}
         libs/model/entity/entities/items/Weapon.cpp
         libs/model/repository/cells/ItemStorage.cpp
         libs/model/service/events/EventBus.cpp
-        libs/model/repository/Level.cpp)
+        libs/model/repository/Level.cpp
+        libs/model/entity/entities/items/Medkit.cpp)
 
 target_link_libraries(core_lib PUBLIC matrix project_headers)
 

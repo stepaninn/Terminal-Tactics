@@ -1,5 +1,5 @@
-#ifndef INC_3_TMP_SERVICE_TURNSERVICE_H
-#define INC_3_TMP_SERVICE_TURNSERVICE_H
+#ifndef MYGAMEPROJECT_TURNSERVICE_H
+#define MYGAMEPROJECT_TURNSERVICE_H
 
 #include "model/repository/Level.h"
 
@@ -74,4 +74,4 @@ private:
 
 }
 
-#endif // INC_3_TMP_SERVICE_TURNSERVICE_H
+#endif // MYGAMEPROJECT_TURNSERVICE_H

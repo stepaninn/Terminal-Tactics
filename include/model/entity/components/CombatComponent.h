@@ -1,5 +1,5 @@
-#ifndef INC_3_COMBATCOMPONENT_H
-#define INC_3_COMBATCOMPONENT_H
+#ifndef MYGAMEPROJECT_COMBATCOMPONENT_H
+#define MYGAMEPROJECT_COMBATCOMPONENT_H
 
 #include "IComponent.h"
 #include <algorithm>
@@ -35,4 +35,4 @@ protected:
 
 }
 
-#endif //INC_3_COMBATCOMPONENT_H
+#endif //MYGAMEPROJECT_COMBATCOMPONENT_H

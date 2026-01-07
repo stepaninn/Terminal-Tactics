@@ -1,5 +1,5 @@
-#ifndef INC_3_HEALTHCOMPONENT_H
-#define INC_3_HEALTHCOMPONENT_H
+#ifndef MYGAMEPROJECT_HEALTHCOMPONENT_H
+#define MYGAMEPROJECT_HEALTHCOMPONENT_H
 
 #include "IComponent.h"
 #include <algorithm>

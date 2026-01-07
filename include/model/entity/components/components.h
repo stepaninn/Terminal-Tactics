@@ -1,5 +1,5 @@
-#ifndef INC_3_COMPONENTS_H
-#define INC_3_COMPONENTS_H
+#ifndef MYGAMEPROJECT_COMPONENTS_H
+#define MYGAMEPROJECT_COMPONENTS_H
 
 #include "IComponent.h"
 
@@ -12,4 +12,4 @@
 #include "VisionComponent.h"
 #include "WeaponComponent.h"
 
-#endif //INC_3_COMPONENTS_H
+#endif //MYGAMEPROJECT_COMPONENTS_H

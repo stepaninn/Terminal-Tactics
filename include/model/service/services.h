@@ -1,5 +1,5 @@
-#ifndef INC_3_TMP_SERVICE_SERVICES_H
-#define INC_3_TMP_SERVICE_SERVICES_H
+#ifndef MYGAMEPROJECT_SERVICES_H
+#define MYGAMEPROJECT_SERVICES_H
 
 #include "World.h"
 #include "TurnService.h"
@@ -7,4 +7,4 @@
 #include "CombatService.h"
 #include "ItemService.h"
 
-#endif // INC_3_TMP_SERVICE_SERVICES_H
+#endif // MYGAMEPROJECT_SERVICES_H

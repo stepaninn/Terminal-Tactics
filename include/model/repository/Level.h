@@ -1,5 +1,5 @@
-#ifndef INC_3_LEVEL_H
-#define INC_3_LEVEL_H
+#ifndef MYGAMEPROJECT_LEVEL_H
+#define MYGAMEPROJECT_LEVEL_H
 
 #include "../../types.h"
 #include "../entity/entities/Entity.h"
@@ -145,4 +145,4 @@ private:
 
 }
 
-#endif //INC_3_LEVEL_H
+#endif //MYGAMEPROJECT_LEVEL_H
