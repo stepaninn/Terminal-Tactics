@@ -1,0 +1,61 @@
+#include "model/service/World.h"
+
+namespace game::service {
+
+void World::make_teams() {
+    if (!level_) return;
+    auto ent = level_->get_entities();
+    for (const auto* e : ent) {
+        teams_[e->get_team_id()].push_back(e->get_id());
+    }
+}
+
+void World::remove_from_team(game::TeamId team_id, game::EntityId id) {
+    if (auto it = teams_.find(team_id); it != teams_.end()) {
+        auto& list = it->second;
+        list.erase(std::ranges::remove(list, id).begin(), list.end());
+    }
+}
+
+void World::resize(size_t rows, size_t cols) {
+    if (!level_) return;
+    level_->resize_field(rows, cols);
+    for (auto& map : unit_fov_ | std::views::values) map->resize(rows, cols);
+    for (auto& map : team_visible_ | std::views::values) map->resize(rows, cols);
+    for (auto& map : team_explored_ | std::views::values) map->resize(rows, cols);
+}
+
+game::entity::Entity* World::spawn_entity(std::unique_ptr<game::entity::Entity> e, game::Position pos) {
+    if (!level_) return nullptr;
+    auto* res = level_->spawn_entity(std::move(e), pos);
+    if (!res) return nullptr;
+    teams_[res->get_team_id()].push_back(res->get_id());
+    return res;
+}
+
+std::unique_ptr<game::entity::Entity> World::remove_entity(const game::entity::Entity* e) {
+    if (!level_ || !e) return nullptr;
+    remove_from_team(e->get_team_id(), e->get_id());
+    return level_->remove_entity(e);
+}
+
+std::unique_ptr<game::entity::Entity> World::remove_entity(game::EntityId id) {
+    if (!level_) return nullptr;
+    if (auto* e = level_->get_entity(id)) {
+        remove_from_team(e->get_team_id(), e->get_id());
+    }
+    return level_->remove_entity(id);
+}
+
+bool World::set_entity_team(game::EntityId id, game::TeamId team_id) {
+    if (!level_) return false;
+    auto* e = level_->get_entity(id);
+    if (!e) return false;
+    if (e->get_team_id() == team_id) return true;
+    remove_from_team(e->get_team_id(), id);
+    e->set_team_id(team_id);
+    teams_[team_id].push_back(id);
+    return true;
+}
+
+}
