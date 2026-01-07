@@ -2,6 +2,7 @@
 #define MYGAMEPROJECT_TURNSERVICE_H
 
 #include "model/repository/Level.h"
+#include "types.h"
 
 #include <algorithm>
 #include <vector>
