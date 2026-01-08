@@ -94,7 +94,6 @@ public:
     explicit World(std::unique_ptr<game::repo::Level> level, std::unique_ptr<events::EventBus> bus = nullptr)
         : level_(std::move(level)), event_bus_(std::move(bus)) { make_teams(); }
 
-
     /**
      * @brief Метод, возвращающий текущий уровень
      * @return Текущий уровень
@@ -204,6 +203,17 @@ public:
      * @return unique_ptr на удаленную сущность или nullptr
      */
     std::unique_ptr<game::entity::Entity> remove_entity(game::EntityId id);
+
+    /**
+     * @brief Метод получения ширины уровня
+     * @return size_t ширина уровня
+     */
+    size_t get_width() const noexcept { return level_->get_width(); }
+    /**
+     * @brief Метод получения высоты уровня
+     * @return size_t высота уровня
+     */
+    size_t get_height() const noexcept { return level_->get_height(); }
 
     /**
      * @brief Метод смены команды сущности

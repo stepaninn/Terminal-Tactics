@@ -132,6 +132,45 @@ public:
      */
     void set_name(const std::string& new_name) { name_ = new_name; }
 
+    /**
+     * @brief Метод получения ширины уровня
+     * @return size_t ширина уровня
+     */
+    [[nodiscard]] size_t get_width() const noexcept { return field_.rows(); }
+    /**
+     * @brief Метод получения высоты уровня
+     * @return size_t высота уровня
+     */
+    [[nodiscard]] size_t get_height() const noexcept { return field_.cols(); }
+
+    /**
+    * @brief Метод проверки вхождения координаты в границы уровня
+     * @param x Координата по x
+     * @param y Координата по y
+     * @return bool true, если координата в границах уровня
+     */
+    [[nodiscard]] bool in_bounds(size_t x, size_t y) const noexcept { return x < get_width() && y < get_height(); }
+
+    /**
+    * @brief Метод проверки блокирования обзора клеткой
+    * @param pos Позиция
+    * @return bool true, если по клетке можно ходить
+    */
+    [[nodiscard]] bool is_blocks_vision(Position pos) const noexcept { return field_(pos.x, pos.y)->is_blocks_vision(); }
+    /**
+     * @brief Метод проверки проходимости клетки
+     * @param pos Позиция
+     * @return bool true, если клетка блокирует обзор
+     */
+    [[nodiscard]] bool is_walkable(Position pos) const noexcept { return field_(pos.x, pos.y)->is_walkable(); }
+    /**
+    * @brief Метод проверки прострела
+    * @param x Координата по x
+    * @param y Координата по y
+    * @return bool true, если можно стрелять сквозь клетку
+    */
+    [[nodiscard]] bool can_shoot_through(size_t x, size_t y) const noexcept { return field_(x, y)->can_shoot_through(); }
+
 private:
     game::LevelId id_;
     std::string name_;
