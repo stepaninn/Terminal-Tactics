@@ -14,13 +14,13 @@ std::vector<const game::entity::Entity*> Level::get_entities() const noexcept {
 }
 
 cells::ICell* Level::get_cell(game::Position pos) const noexcept {
-    if (pos.x >= field_.rows() || pos.y >= field_.cols()) return nullptr;
-    return field_(pos.x, pos.y).get();
+    if (!in_bounds(pos)) return nullptr;
+    return field_(static_cast<size_t>(pos.x), static_cast<size_t>(pos.y)).get();
 }
 
 std::unique_ptr<cells::ICell> Level::set_cell(game::Position pos, std::unique_ptr<cells::ICell> cell) {
-    if (pos.x >= field_.rows() || pos.y >= field_.cols()) return cell;
-    return std::exchange(field_(pos.x, pos.y), std::move(cell));
+    if (!in_bounds(pos)) return cell;
+    return std::exchange(field_(static_cast<size_t>(pos.x), static_cast<size_t>(pos.y)), std::move(cell));
 }
 
 game::entity::Entity* Level::spawn_entity(std::unique_ptr<game::entity::Entity> e, game::Position pos) {
@@ -33,7 +33,7 @@ game::entity::Entity* Level::spawn_entity(std::unique_ptr<game::entity::Entity> 
 }
 
 bool Level::move_entity(game::EntityId id, game::Position to) {
-    if (to.x >= field_.rows() || to.y >= field_.cols()) return false;
+    if (!in_bounds(to)) return false;
     auto ent_it = entities_.find(id);
     if (ent_it == entities_.end()) return false;
     entity_positions_[id] = to;

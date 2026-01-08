@@ -8,6 +8,7 @@
 #include <typeindex>
 #include <vector>
 #include <functional>
+#include <utility>
 
 namespace game::service::events {
 
@@ -18,7 +19,7 @@ public:
         auto key = std::type_index(typeid(T));
 
         std::function<void(std::shared_ptr<EventBase>)> wrapper =
-            [handler](const std::shared_ptr<EventBase>& ev_base) {
+            [handler = std::forward<Func>(handler)](const std::shared_ptr<EventBase>& ev_base) {
                 auto ev = std::static_pointer_cast<T>(ev_base);
                 handler(ev);
         };

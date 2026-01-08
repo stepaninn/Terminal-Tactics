@@ -14,7 +14,7 @@ public:
     explicit ItemService(std::shared_ptr<events::EventBus> bus = nullptr) : ServiceBase(std::move(bus)) {}
 
     /**
-     * @brif Метод использования предмета
+     * @brief Метод использования предмета
      * @param level Уровень, на котором используется предмет
      * @param user_id ID существа, которое использует предмет
      * @param target_id ID существа, на котором используется предмет

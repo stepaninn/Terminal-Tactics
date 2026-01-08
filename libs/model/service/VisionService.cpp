@@ -26,16 +26,16 @@ void VisionService::cast_light(VisibilityMap& map, const game::repo::Level& lvl,
             if (ax >= static_cast<int>(lvl.get_width()) || ay >= static_cast<int>(lvl.get_height())) continue;
 
             int cheb = std::max(std::abs(dx), std::abs(dy));
-            if (cheb <= radius) map.set_visible(ax, ay, true);
+            if (cheb <= radius) map.set_visible({ax, ay}, true);
 
             if (blocked) {
-                if (lvl.is_blocks_vision(static_cast<size_t>(ax), static_cast<size_t>(ay))) {
+                if (lvl.is_blocks_vision(ax, ay)) {
                     next_start_slope = r_slope;
                     continue;
                 }
                 blocked = false;
                 start_slope = next_start_slope;
-            } else if (lvl.is_blocks_vision(static_cast<size_t>(ax), static_cast<size_t>(ay))) {
+            } else if (lvl.is_blocks_vision(ax, ay)) {
                 blocked = true;
                 next_start_slope = r_slope;
                 cast_light(map, lvl, x, y, radius, i + 1,
@@ -55,11 +55,13 @@ VisibilityMap VisionService::compute_fov(const game::repo::Level& lvl, Position 
     };
 
     VisibilityMap fov_map(lvl.get_width(), lvl.get_height());
-    if (pos.x >= lvl.get_width() || pos.y >= lvl.get_height()) return fov_map;
-    if (!lvl.is_blocks_vision(pos.x, pos.y)) fov_map.set_visible(pos.x, pos.y, true);
+    if (!lvl.in_bounds(pos)) return fov_map;
+    if (!lvl.is_blocks_vision(pos)) {
+        fov_map.set_visible(pos, true);
+    }
     if (r <= 0) return fov_map;
     for (int i = 0; i < 8; ++i) {
-        cast_light(fov_map, lvl, static_cast<int>(pos.x), static_cast<int>(pos.y), r, 1, 1.0, 0.0,
+        cast_light(fov_map, lvl, pos.x, pos.y, r, 1, 1.0, 0.0,
             multipliers[0][i], multipliers[1][i],
             multipliers[2][i], multipliers[3][i]);
     }
@@ -68,7 +70,8 @@ VisibilityMap VisionService::compute_fov(const game::repo::Level& lvl, Position 
 }
 
 bool VisionService::has_line_of_fire(const game::repo::Level& lvl, game::Position from, game::Position to) {
-    if (!lvl.in_bounds(from. x, from.y) || !lvl.in_bounds(to.x, to.y)) return false;
+    if (!lvl.in_bounds(from) || !lvl.in_bounds(to)) return false;
+    if (from == to) return true;
 
     int dx = to.x - from.x, dy = to.y - from.y;
     int nx = std::abs(dx), ny = std::abs(dy);

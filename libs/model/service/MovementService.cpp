@@ -53,25 +53,29 @@ std::vector<game::Position> MovementService::find_path(const game::repo::Level& 
 
     size_t rows = level.get_field().rows();
     size_t cols = level.get_field().cols();
-    if (to.x >= rows || to.y >= cols) return {};
+    if (!level.in_bounds(to)) return {};
+    if (!level.in_bounds(*from)) return {};
 
     std::vector<std::vector<bool>> occupied(rows, std::vector<bool>(cols, false));
     for (auto& e : level.get_entities()) {
         if (e->get_id() == id) continue;
         auto pos = level.get_entity_position(e->get_id());
         if (!pos) throw std::logic_error("No position for entity!");
-        occupied[pos->x][pos->y] = true;
+        if (!level.in_bounds(*pos)) {
+            throw std::logic_error("Entity position out of bounds!");
+        }
+        occupied[static_cast<size_t>(pos->x)][static_cast<size_t>(pos->y)] = true;
     }
 
-    if (occupied[to.x][to.y]) return {};
+    if (occupied[static_cast<size_t>(to.x)][static_cast<size_t>(to.y)]) return {};
 
     // bfs
     std::vector<std::vector<bool>> visited(rows, std::vector<bool>(cols, false));
     std::vector<std::vector<game::Position>> parent(
-        rows, std::vector<game::Position>(cols, {rows, cols}));
+        rows, std::vector<game::Position>(cols, {-1, -1}));
 
     std::queue<game::Position> q;
-    visited[from->x][from->y] = true;
+    visited[static_cast<size_t>(from->x)][static_cast<size_t>(from->y)] = true;
     q.push(*from);
 
     const int dirs[8][2] = {
@@ -85,35 +89,36 @@ std::vector<game::Position> MovementService::find_path(const game::repo::Level& 
         q.pop();
 
         for (auto& d : dirs) {
-            int nx = static_cast<int>(cur.x) + d[0];
-            int ny = static_cast<int>(cur.y) + d[1];
+            int nx = cur.x + d[0];
+            int ny = cur.y + d[1];
             if (nx < 0 || ny < 0) continue;
             auto ux = static_cast<size_t>(nx);
             auto uy = static_cast<size_t>(ny);
             if (ux >= rows || uy >= cols) continue;
             if (visited[ux][uy] || occupied[ux][uy]) continue;
 
-            auto* cell = level.get_cell({ux, uy});
+            auto* cell = level.get_cell({nx, ny});
             if (!cell || !cell->is_walkable()) continue;
 
             // запрет идти по диагонали
             if (d[0] != 0 && d[1] != 0) {
-                auto* c1 = level.get_cell({cur.x, uy});
-                auto* c2 = level.get_cell({ux, cur.y});
+                auto* c1 = level.get_cell({cur.x, ny});
+                auto* c2 = level.get_cell({nx, cur.y});
                 if (!c1 || !c2 || !c1->is_walkable() || !c2->is_walkable()) continue;
             }
 
             visited[ux][uy] = true;
             parent[ux][uy] = cur;
-            q.push({ux, uy});
+            q.push({nx, ny});
         }
     }
 
-    if (!visited[to.x][to.y]) return {};
+    if (!visited[static_cast<size_t>(to.x)][static_cast<size_t>(to.y)]) return {};
 
     // воссатновление пути
     std::vector<game::Position> path;
-    for (auto cur = to; !(cur.x == from->x && cur.y == from->y); cur = parent[cur.x][cur.y]) {
+    for (auto cur = to; !(cur.x == from->x && cur.y == from->y);
+         cur = parent[static_cast<size_t>(cur.x)][static_cast<size_t>(cur.y)]) {
         path.push_back(cur);
     }
     std::ranges::reverse(path);

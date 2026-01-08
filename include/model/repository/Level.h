@@ -144,32 +144,70 @@ public:
     [[nodiscard]] size_t get_height() const noexcept { return field_.cols(); }
 
     /**
+    * @brief Метод проверки вхождения позиции в границы уровня
+     * @param pos Позиция
+     * @return bool true, если позиция в границах уровня
+     */
+    [[nodiscard]] bool in_bounds(Position pos) const noexcept { return in_bounds(pos.x, pos.y); }
+    /**
     * @brief Метод проверки вхождения координаты в границы уровня
      * @param x Координата по x
      * @param y Координата по y
      * @return bool true, если координата в границах уровня
      */
-    [[nodiscard]] bool in_bounds(size_t x, size_t y) const noexcept { return x < get_width() && y < get_height(); }
+    [[nodiscard]] bool in_bounds(int x, int y) const noexcept {
+        return x >= 0 && y >= 0 && static_cast<size_t>(x) < get_width()
+            && static_cast<size_t>(y) < get_height();
+    }
 
     /**
-    * @brief Метод проверки блокирования обзора клеткой
+    * @brief Метод проверки блокирования обзора клеткой по позиции
     * @param pos Позиция
-    * @return bool true, если по клетке можно ходить
+    * @return bool true, если клетка блокирует обзор
     */
-    [[nodiscard]] bool is_blocks_vision(Position pos) const noexcept { return field_(pos.x, pos.y)->is_blocks_vision(); }
+    [[nodiscard]] bool is_blocks_vision(Position pos) const noexcept { return is_blocks_vision(pos.x, pos.y); }
     /**
-     * @brief Метод проверки проходимости клетки
+    * @brief Метод проверки блокирования обзора клеткой по координатам
+    * @param x Координата по x
+    * @param y Координата по y
+    * @return bool true, если клетка блокирует обзор
+    */
+    [[nodiscard]] bool is_blocks_vision(int x, int y) const noexcept {
+        if (!in_bounds(x, y)) return true;
+        return field_(static_cast<size_t>(x), static_cast<size_t>(y))->is_blocks_vision();
+    }
+    /**
+     * @brief Метод проверки проходимости клетки по позиции
      * @param pos Позиция
-     * @return bool true, если клетка блокирует обзор
+     * @return bool true, если по клетке можно ходить
      */
-    [[nodiscard]] bool is_walkable(Position pos) const noexcept { return field_(pos.x, pos.y)->is_walkable(); }
+    [[nodiscard]] bool is_walkable(Position pos) const noexcept { return is_walkable(pos.x, pos.y); }
     /**
-    * @brief Метод проверки прострела
+     * @brief Метод проверки проходимости клетки по координатам
+     * @param x Координата по x
+     * @param y Координата по y
+     * @return bool true, если по клетке можно ходить
+     */
+    [[nodiscard]] bool is_walkable(int x, int y) const noexcept {
+        if (!in_bounds(x, y)) return false;
+        return field_(static_cast<size_t>(x), static_cast<size_t>(y))->is_walkable();
+    }
+    /**
+    * @brief Метод проверки прострела клетки по позиции
+    * @param pos Позиция
+    * @return bool true, если можно стрелять сквозь клетку
+    */
+    [[nodiscard]] bool can_shoot_through(Position pos) const noexcept { return can_shoot_through(pos.x, pos.y); }
+    /**
+    * @brief Метод проверки прострела клетки по координатам
     * @param x Координата по x
     * @param y Координата по y
     * @return bool true, если можно стрелять сквозь клетку
     */
-    [[nodiscard]] bool can_shoot_through(size_t x, size_t y) const noexcept { return field_(x, y)->can_shoot_through(); }
+    [[nodiscard]] bool can_shoot_through(int x, int y) const noexcept {
+        if (!in_bounds(x, y)) return false;
+        return field_(static_cast<size_t>(x), static_cast<size_t>(y))->can_shoot_through();
+    }
 
 private:
     game::LevelId id_;

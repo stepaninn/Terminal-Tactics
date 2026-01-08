@@ -65,8 +65,8 @@ TEST_CASE("service TurnService cycles teams and refreshes action points") {
 TEST_CASE("service MovementService spends points and updates position") {
   auto level = std::make_shared<Level>(1, "L1");
   level->resize_field(2, 2);
-  for (size_t r = 0; r < 2; ++r) {
-    for (size_t c = 0; c < 2; ++c) {
+  for (int r = 0; r < 2; ++r) {
+    for (int c = 0; c < 2; ++c) {
       level->set_cell(Position{r, c}, std::make_unique<Floor>());
     }
   }
@@ -156,7 +156,7 @@ TEST_CASE("service CombatService reloads weapon and consumes time points") {
   inv->add(std::make_unique<AmmoBag>(200, 1, 3, 10, AmmoType::PISTOL));
 
   service::CombatService combat;
-  REQUIRE(combat.reload_weapon(*level->get_entity(5), 200));
+  REQUIRE(combat.reload_weapon(*level, 5));
   auto* tp = level->get_entity(5)->get_component<TimePointsComponent>();
   auto* wc = level->get_entity(5)->get_component<WeaponComponent>();
   REQUIRE(tp->get_current_points() == 0);
@@ -179,7 +179,7 @@ TEST_CASE("service CombatService keeps ammo bag after partial reload") {
   inv->add(std::make_unique<AmmoBag>(201, 1, 10, 10, AmmoType::PISTOL));
 
   service::CombatService combat;
-  REQUIRE(combat.reload_weapon(*level->get_entity(6), 201));
+  REQUIRE(combat.reload_weapon(*level, 6));
   auto* tp = level->get_entity(6)->get_component<TimePointsComponent>();
   auto* wc = level->get_entity(6)->get_component<WeaponComponent>();
   auto* bag = dynamic_cast<AmmoBag*>(inv->get_item(201));
@@ -205,14 +205,14 @@ TEST_CASE("service ItemService uses medkit and ammo bag") {
   inv->add(std::make_unique<AmmoBag>(200, 1, 3, 10, AmmoType::PISTOL));
 
   service::ItemService items;
-  REQUIRE(items.use_item(*level, 8, 100));
+  REQUIRE(items.use_item(*level, 8, 8, 100));
   auto* hp = level->get_entity(8)->get_component<HealthComponent>();
   auto* tp = level->get_entity(8)->get_component<TimePointsComponent>();
   REQUIRE(hp->get_current_hp() == 8);
   REQUIRE(tp->get_current_points() == 1);
   REQUIRE(inv->get_item(100) == nullptr);
 
-  REQUIRE(items.use_item(*level, 8, 200));
+  REQUIRE(items.use_item(*level, 8, 8, 200));
   auto* wc = level->get_entity(8)->get_component<WeaponComponent>();
   REQUIRE(wc->get_weapon()->get_current_ammo() == 4);
   REQUIRE(inv->get_item(200) == nullptr);

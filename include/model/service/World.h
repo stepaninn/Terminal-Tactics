@@ -53,6 +53,15 @@ public:
         if (visible) cell |= static_cast<uint8_t>(kVisible) | static_cast<uint8_t>(kExplored);
         else cell &= static_cast<uint8_t>(~kVisible);
     }
+    /**
+     * @brief Метод установки видимости позиции
+     * @param pos Позиция
+     * @param visible Флаг видимости клетки
+     */
+    void set_visible(game::Position pos, bool visible = true) {
+        if (!in_bounds(pos)) return;
+        set_visible(static_cast<size_t>(pos.x), static_cast<size_t>(pos.y), visible);
+    }
 
     /**
      * @brief Метод проверки видимости клетки
@@ -62,6 +71,14 @@ public:
      */
     [[nodiscard]] bool is_visible(size_t x, size_t y) const {
         return in_bounds(x, y) && (cells_(x, y) & kVisible) != 0;
+    }
+    /**
+     * @brief Метод проверки видимости клетки по позиции
+     * @param pos Позиция
+     * @return bool true, если видима
+     */
+    [[nodiscard]] bool is_visible(game::Position pos) const {
+        return in_bounds(pos) && (cells_(static_cast<size_t>(pos.x), static_cast<size_t>(pos.y)) & kVisible) != 0;
     }
 
     /**
@@ -73,6 +90,14 @@ public:
     [[nodiscard]] bool is_explored(size_t x, size_t y) const {
         return in_bounds(x, y) && (cells_(x, y) & kExplored) != 0;
     }
+    /**
+     * @brief Метод проверки была ли клетка хоть раз исследована по позиции
+     * @param pos Позиция
+     * @return bool true, если было исследовано
+     */
+    [[nodiscard]] bool is_explored(game::Position pos) const {
+        return in_bounds(pos) && (cells_(static_cast<size_t>(pos.x), static_cast<size_t>(pos.y)) & kExplored) != 0;
+    }
 
     [[nodiscard]] size_t rows() const noexcept { return cells_.rows(); }
     [[nodiscard]] size_t cols() const noexcept { return cells_.cols(); }
@@ -83,6 +108,16 @@ private:
 
     [[nodiscard]] bool in_bounds(size_t x, size_t y) const {
         return x < cells_.rows() && y < cells_.cols();
+    }
+    /**
+     * @brief Метод проверки вхождения позиции в границы карты видимости
+     * @param pos Позиция
+     * @return bool true, если позиция в границах карты
+     */
+    [[nodiscard]] bool in_bounds(game::Position pos) const {
+        return pos.x >= 0 && pos.y >= 0
+            && static_cast<size_t>(pos.x) < cells_.rows()
+            && static_cast<size_t>(pos.y) < cells_.cols();
     }
 
     Matrix<uint8_t> cells_;

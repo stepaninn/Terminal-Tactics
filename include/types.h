@@ -20,8 +20,8 @@ enum class CellType {
 };
 
 struct Position {
-    size_t x = 0;
-    size_t y = 0;
+    int x = 0;
+    int y = 0;
     bool operator==(game::Position to) const { return x == to.x && y == to.y; }
 };
 

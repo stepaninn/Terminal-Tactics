@@ -1,8 +1,11 @@
 #include "model/service/CombatService.h"
 
 #include "model/entity/components/HealthComponent.h"
+#include "model/entity/components/InventoryComponent.h"
 #include "model/entity/components/TimePointsComponent.h"
 #include "model/entity/components/WeaponComponent.h"
+#include "model/entity/entities/items/Item.h"
+#include "model/service/ItemService.h"
 
 #include <algorithm>
 #include <cmath>
@@ -106,6 +109,36 @@ bool CombatService::try_shoot(game::repo::Level& level,
         }
     }
     return true;
+}
+
+bool CombatService::reload_weapon(game::repo::Level& level,
+                                  game::EntityId user_id) {
+    auto* user = level.get_entity(user_id);
+    if (!user) return false;
+
+    auto* wp_cmp = user->get_component<entity::components::WeaponComponent>();
+    auto* inv = user->get_component<entity::components::InventoryComponent>();
+    if (!wp_cmp || !inv) return false;
+
+    auto* weapon = wp_cmp->get_weapon();
+    if (!weapon) return false;
+
+    game::ItemId ammo_id = 0;
+    bool found = false;
+    for (const auto* item : inv->get_items()) {
+        auto* bag = dynamic_cast<const game::entity::items::AmmoBag*>(item);
+        if (!bag) continue;
+        if (bag->get_ammo_type() != weapon->get_ammo_type()) continue;
+        if (bag->get_current_ammo() <= 0) continue;
+        ammo_id = bag->get_id();
+        found = true;
+        break;
+    }
+
+    if (!found) return false;
+
+    ItemService items;
+    return items.use_item(level, user_id, user_id, ammo_id);
 }
 
 

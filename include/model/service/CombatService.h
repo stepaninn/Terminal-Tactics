@@ -36,7 +36,14 @@ public:
     [[nodiscard]] bool try_shoot(game::repo::Level& level,
                                  game::EntityId attacker_id,
                                  game::EntityId target_id);
-
+    /**
+     * @brief Метод перезарядки оружия
+     * @param level Уровень, на котором происходит перезарядка
+     * @param user_id ID существа, которое перезаряжает оружие
+     * @return bool true, если перезарядка успешна
+     */
+    [[nodiscard]] bool reload_weapon(game::repo::Level& level,
+                                     game::EntityId user_id);
 private:
     [[nodiscard]] int roll_damage(const game::entity::items::Weapon& w) { return w.roll_damage(rng_); }
     // здесь настраивается точность (для баланса)
