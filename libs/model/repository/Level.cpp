@@ -70,6 +70,13 @@ const game::Position* Level::get_entity_position(game::EntityId id) const noexce
     return &it->second;
 }
 
+game::entity::Entity* Level::get_entity_at(Position pos) {
+    for (auto ent : entity_positions_) {
+        if (ent.second == pos) return get_entity(ent.first);
+    }
+    return nullptr;
+}
+
 std::vector<const game::entity::Entity*> Level::get_entities_radius(game::Position pos, int r) const {
     std::vector<const game::entity::Entity*> res;
     if (r < 0) return res;

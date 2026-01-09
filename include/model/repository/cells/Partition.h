@@ -2,11 +2,12 @@
 #define MYGAMEPROJECT_PARTITION_H
 
 #include "Cell.h"
+#include "DestructibleCell.h"
 
 namespace game::repo::cells {
 
 /// @brief Класс перегородки
-class Partition final : public ICell {
+class Partition final : public ICell, public IDestructibleCell {
 public:
     Partition() = default;
 
@@ -25,6 +26,11 @@ public:
      * @return bool true, если перегородка сломана
      */
     [[nodiscard]] bool can_shoot_through() const noexcept override { return broken_; }
+    /**
+     * @brief Метод проверки возможности разрушения выстрелом
+     * @return bool true, если перегородка целая
+     */
+    [[nodiscard]] bool can_be_shot() const noexcept override { return !broken_; }
     /**
      * @brief Метод применения выстрела по перегородке
      * @return bool true, если перегородка была целой и стала сломанной

@@ -5,6 +5,7 @@
 #include "model/entity/components/TimePointsComponent.h"
 #include "model/entity/components/WeaponComponent.h"
 #include "model/entity/entities/items/Item.h"
+#include "model/repository/cells/DestructibleCell.h"
 #include "model/service/ItemService.h"
 
 #include <algorithm>
@@ -13,6 +14,7 @@
 #include <memory>
 #include <utility>
 
+#include "model/service/VisionService.h"
 #include "model/service/events/Event.h"
 
 namespace game::service {
@@ -50,8 +52,8 @@ bool CombatService::can_shoot(const game::entity::Entity& attacker) {
 bool CombatService::try_shoot(game::repo::Level& level,
                              game::EntityId attacker_id,
                              game::EntityId target_id) {
-    auto attacker = level.get_entity(attacker_id);
-    auto target = level.get_entity(target_id);
+    auto* attacker = level.get_entity(attacker_id);
+    auto* target = level.get_entity(target_id);
     if (!attacker || !target) return false;
 
     auto* wp_cmp = attacker->get_component<entity::components::WeaponComponent>();
@@ -68,6 +70,9 @@ bool CombatService::try_shoot(game::repo::Level& level,
     if (!from_pos || !to_pos) return false;
     auto from = *from_pos;
     auto to = *to_pos;
+
+    VisionService vsn;
+    if (!vsn.has_line_of_fire(level, from, to)) return false;
 
     int dx = static_cast<int>(to.x) - static_cast<int>(from.x);
     int dy = static_cast<int>(to.y) - static_cast<int>(from.y);
@@ -87,7 +92,7 @@ bool CombatService::try_shoot(game::repo::Level& level,
             ev->target_id = target_id;
             eb->publish(std::move(ev));
         }
-        return false;
+        return true;
     }
 
     int dmg = roll_damage(*wp);
@@ -109,6 +114,61 @@ bool CombatService::try_shoot(game::repo::Level& level,
         }
     }
     return true;
+}
+
+bool CombatService::try_shoot(game::repo::Level& level,
+                              game::EntityId attacker_id,
+                              game::Position pos) {
+    if (!level.in_bounds(pos)) return false;
+    auto* target = level.get_entity_at(pos);
+    if (target) {
+        return try_shoot(level, attacker_id, target->get_id());
+    }
+
+    auto* attacker = level.get_entity(attacker_id);
+    if (!attacker) return false;
+
+    auto* cell = level.get_cell(pos);
+    auto* destructible = dynamic_cast<game::repo::cells::IDestructibleCell*>(cell);
+    if (!destructible || !destructible->can_be_shot()) return false;
+
+    auto* wp_cmp = attacker->get_component<entity::components::WeaponComponent>();
+    auto* cmb_cmp = attacker->get_component<entity::components::CombatComponent>();
+    auto* tp = attacker->get_component<entity::components::TimePointsComponent>();
+    if (!wp_cmp || !cmb_cmp || !tp) return false;
+
+    auto* wp = wp_cmp->get_weapon();
+    if (!wp) return false;
+
+    const auto* from_pos = level.get_entity_position(attacker_id);
+    if (!from_pos) return false;
+    auto from = *from_pos;
+
+    VisionService vsn;
+    if (!vsn.has_line_of_fire(level, from, pos)) return false;
+
+    int dx = static_cast<int>(pos.x) - static_cast<int>(from.x);
+    int dy = static_cast<int>(pos.y) - static_cast<int>(from.y);
+    int dist = std::max(std::abs(dx), std::abs(dy));
+
+    if (!can_shoot(*attacker)) return false;
+
+    int cost = wp->get_attack_cost();
+    if (tp->reduce_points(cost) != cost) return false;
+
+    if (wp->reduce_ammo(1) != 1) return false;
+
+    if (!roll_hit(*cmb_cmp, *wp, dist)) {
+        if (auto* eb = bus()) {
+            auto ev = std::make_shared<events::ShotMissedAtCellEvent>();
+            ev->attacker_id = attacker_id;
+            ev->pos = pos;
+            eb->publish(std::move(ev));
+        }
+        return true;
+    }
+
+    return level.try_shoot(pos);
 }
 
 bool CombatService::reload_weapon(game::repo::Level& level,

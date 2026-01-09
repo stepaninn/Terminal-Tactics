@@ -32,10 +32,10 @@ enum class EnemyType {
 };
 
 struct Damage {
-    int min_dmg = 0;
-    int max_dmg = 0;
+    int min_dmg = 1;
+    int max_dmg = 1;
 
-    constexpr Damage(int mn, int mx) : min_dmg(std::max(0, mn)), max_dmg(std::max(0, mx)) {
+    constexpr Damage(int mn, int mx) : min_dmg(std::max(1, mn)), max_dmg(std::max(1, mx)) {
         if (min_dmg > max_dmg) std::swap(min_dmg, max_dmg);
     }
 };

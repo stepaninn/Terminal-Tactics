@@ -2,12 +2,13 @@
 #define MYGAMEPROJECT_GLASS_H
 
 #include "Cell.h"
+#include "DestructibleCell.h"
 #include "ItemContainer.h"
 
 namespace game::repo::cells {
 
 /// @brief Класс стеклянной клетки
-class Glass final : public ICell, public IItemContainer  {
+class Glass final : public ICell, public IItemContainer, public IDestructibleCell {
 public:
     Glass() = default;
 
@@ -26,6 +27,11 @@ public:
      * @return bool true, если стекло разбито
      */
     [[nodiscard]] bool can_shoot_through() const noexcept override { return broken_; }
+    /**
+     * @brief Метод проверки возможности разрушения выстрелом
+     * @return bool true, если стекло целое
+     */
+    [[nodiscard]] bool can_be_shot() const noexcept override { return !broken_; }
     /**
      * @brief Метод применения выстрела по стеклу
      * @return bool true, если стекло было целым и стало разбитым

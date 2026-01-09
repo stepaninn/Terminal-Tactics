@@ -4,6 +4,8 @@
 #include "../../types.h"
 #include "../entity/entities/Entity.h"
 #include "cells/Cell.h"
+#include "cells/DestructibleCell.h"
+#include "cells/Floor.h"
 #include "cells/ItemContainer.h"
 #include "Matrix.h"
 #include <unordered_map>
@@ -58,6 +60,13 @@ public:
      * @return Position* указатель на позицию или nullptr
      */
     [[nodiscard]] const game::Position* get_entity_position(game::EntityId id) const noexcept;
+
+    /**
+     * @brief Метод получения сущности из позиции
+     * @param pos Позиция, на которой мы ищем сущность
+     * @return Entity* указатель если есть, nullptr иначе
+     */
+    [[nodiscard]] game::entity::Entity* get_entity_at(Position pos);
 
     /**
      * @brief Метод получения клетки по позиции
@@ -233,7 +242,14 @@ public:
      */
     [[nodiscard]] bool try_shoot(int x, int y) noexcept {
         if (!in_bounds(x, y)) return false;
-        return operator()(x, y)->apply_shot();
+        auto* cell = operator()(x, y);
+        auto* destructible = dynamic_cast<cells::IDestructibleCell*>(cell);
+        if (!destructible || !destructible->can_be_shot()) return false;
+        bool changed = destructible->apply_shot();
+        if (changed) {
+            set_cell({x, y}, std::make_unique<cells::Floor>());
+        }
+        return changed;
     }
 
     /**

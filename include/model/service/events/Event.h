@@ -30,6 +30,11 @@ struct ShotMissedEvent final : EventBase {
     game::id_t target_id;
 };
 
+struct ShotMissedAtCellEvent final : EventBase {
+    game::id_t attacker_id;
+    game::Position pos;
+};
+
 struct ItemPickedEvent final : EventBase {
     game::id_t entity_id;
     game::id_t item_id;
@@ -48,6 +53,10 @@ struct ItemUsedEvent final : EventBase {
     game::id_t user_id;
     game::id_t target_id;
     game::id_t item_id;
+};
+
+struct WallBrokenEvent final : EventBase {
+    game::Position pos;
 };
 
 }

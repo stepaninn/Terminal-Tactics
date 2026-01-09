@@ -25,12 +25,6 @@ public:
      */
     [[nodiscard]] virtual bool can_shoot_through() const noexcept = 0;
     /**
-     * @brief Метод применения выстрела по клетке
-     * @return bool true, если состояние клетки изменилось
-     */
-    [[nodiscard]] virtual bool apply_shot() noexcept { return false; }
-
-    /**
      * @brief Метод получения отображаемого имени клетки
      * @return std::string_view имя клетки
      */

@@ -36,6 +36,18 @@ public:
     [[nodiscard]] bool try_shoot(game::repo::Level& level,
                                  game::EntityId attacker_id,
                                  game::EntityId target_id);
+
+    /**
+     * @brief Метод атаки
+     * @param level Уровень, на котором происходит попытка атаки
+     * @param attacker_id ID атакующего существа
+     * @param pos Атакуемая позиция
+     * @return bool true, если выстрел успешен
+     */
+    [[nodiscard]] bool try_shoot(game::repo::Level& level,
+                                 game::EntityId attacker_id,
+                                 game::Position pos);
+
     /**
      * @brief Метод перезарядки оружия
      * @param level Уровень, на котором происходит перезарядка
