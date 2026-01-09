@@ -1,11 +1,12 @@
 #ifndef MYGAMEPROJECT_FLOOR_H
 #define MYGAMEPROJECT_FLOOR_H
 #include "Cell.h"
+#include "ItemContainer.h"
 
 namespace game::repo::cells {
 
 /// @brief Класс клетки пола
-class Floor : public ICell {
+class Floor : public ICell, public IItemContainer {
 public:
     Floor() = default;
 
@@ -55,9 +56,13 @@ public:
     /**
      * @brief Метод добавления предмета
      * @param item предмет
+     * @return unique_ptr на предмет при неуспехе, либо nullptr при успехе
      */
-    void add(std::unique_ptr<game::entity::items::Item> item) override {
+    std::unique_ptr<game::entity::items::Item> add(
+        std::unique_ptr<game::entity::items::Item> item) override {
+        if (!item) return item;
         items_.add(std::move(item));
+        return nullptr;
     }
     /**
      * @brief Метод удаления предмета по идентификатору
