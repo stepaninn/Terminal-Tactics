@@ -4,6 +4,7 @@
 #include "../../types.h"
 #include "../entity/entities/Entity.h"
 #include "cells/Cell.h"
+#include "cells/ItemContainer.h"
 #include "Matrix.h"
 #include <unordered_map>
 #include <vector>
@@ -64,6 +65,14 @@ public:
      * @return ICell* указатель на клетку или nullptr при выходе за границы
      */
     [[nodiscard]] cells::ICell* get_cell(game::Position pos) const noexcept;
+    /**
+     * @brief Метод добавления предмета в клетку
+     * @param pos позиция клетки
+     * @param item предмет
+     * @return unique_ptr на предмет при неуспехе, либо nullptr при успехе
+     */
+    std::unique_ptr<game::entity::items::Item> add(game::Position pos,
+                                                   std::unique_ptr<game::entity::items::Item> item);
     /**
      * @brief Метод установки клетки по позиции
      * @param pos позиция клетки
@@ -206,7 +215,36 @@ public:
     */
     [[nodiscard]] bool can_shoot_through(int x, int y) const noexcept {
         if (!in_bounds(x, y)) return false;
-        return field_(static_cast<size_t>(x), static_cast<size_t>(y))->can_shoot_through();
+        return operator()(x, y)->can_shoot_through();
+    }
+
+    /**
+     * @brief Метод применения выстрела по клетке
+     * @param pos позиция клетки
+     * @return bool true, если состояние клетки изменилось
+     */
+    [[nodiscard]] bool try_shoot(Position pos) noexcept { return try_shoot(pos.x, pos.y); }
+
+    /**
+     * @brief Метод применения выстрела по клетке
+     * @param x координата по x
+     * @param y координата по y
+     * @return bool true, если состояние клетки изменилось
+     */
+    [[nodiscard]] bool try_shoot(int x, int y) noexcept {
+        if (!in_bounds(x, y)) return false;
+        return operator()(x, y)->apply_shot();
+    }
+
+    /**
+     * @brief Оператор доступа к клетке по координатам
+     * @param x координата по x
+     * @param y координата по y
+     * @return ICell* указатель на клетку или nullptr при выходе за границы
+     */
+    game::repo::cells::ICell* operator() (int x, int y) const {
+        if (!in_bounds(x, y)) return nullptr;
+        return field_(static_cast<size_t>(x), static_cast<size_t>(y)).get();
     }
 
 private:

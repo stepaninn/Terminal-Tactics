@@ -3,15 +3,22 @@
 
 #include "model/repository/Level.h"
 #include "model/repository/cells/Floor.h"
+#include "model/repository/cells/Glass.h"
+#include "model/repository/cells/ItemContainer.h"
 #include "model/entity/entities/Entity.h"
+#include "model/entity/entities/items/Item.h"
 
 #include <memory>
 
 namespace game {
 
 using entity::Entity;
+using entity::items::Item;
+using entity::items::Medkit;
 using repo::Level;
 using repo::cells::Floor;
+using repo::cells::Glass;
+using repo::cells::IItemContainer;
 
 TEST_CASE("Level spawns entities with provided ids") {
   Level level(1, "L1");
@@ -124,6 +131,28 @@ TEST_CASE("Level move_entity updates position") {
   REQUIRE(level.get_entities_radius(Position{2, 2}, 0).size() == 1);
   REQUIRE_FALSE(level.move_entity(5, Position{3, 3}));
   REQUIRE_FALSE(level.move_entity(999, Position{1, 1}));
+}
+
+TEST_CASE("Level add puts items into cell containers") {
+  Level level(1, "L1");
+  level.resize_field(2, 1);
+  level.set_cell(Position{0, 0}, std::make_unique<Glass>());
+  level.set_cell(Position{1, 0}, std::make_unique<Floor>());
+
+  auto* cell = level.get_cell(Position{0, 0});
+  auto* container = dynamic_cast<IItemContainer*>(cell);
+  REQUIRE(container != nullptr);
+  REQUIRE(container->size() == 0);
+
+  std::unique_ptr<Item> item = std::make_unique<Medkit>(1, 1, 0, 1);
+  auto returned = level.add(Position{0, 0}, std::move(item));
+  REQUIRE(returned != nullptr);
+  REQUIRE(container->size() == 0);
+
+  REQUIRE(level.try_shoot(Position{0, 0}));
+  returned = level.add(Position{0, 0}, std::move(returned));
+  REQUIRE(returned == nullptr);
+  REQUIRE(container->size() == 1);
 }
 
 }

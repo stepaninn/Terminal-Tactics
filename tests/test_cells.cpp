@@ -6,6 +6,7 @@
 #include "model/repository/cells/Glass.h"
 #include "model/repository/cells/Stash.h"
 #include "model/repository/cells/Partition.h"
+#include "model/repository/cells/ItemContainer.h"
 #include "model/entity/entities/items/Item.h"
 #include "types.h"
 
@@ -19,6 +20,7 @@ using entity::items::AmmoBag;
 using entity::items::Medkit;
 using repo::cells::Floor;
 using repo::cells::Glass;
+using repo::cells::IItemContainer;
 using repo::cells::ItemStorage;
 using repo::cells::Partition;
 using repo::cells::Stash;
@@ -73,8 +75,8 @@ TEST_CASE("Floor cell stores items and reports properties") {
   auto medkit = std::make_unique<Medkit>(10, 1, 0, 3);
   auto ammo = std::make_unique<AmmoBag>(11, 5, 0, 2, AmmoType::PISTOL);
 
-  floor.add(std::move(medkit));
-  floor.add(std::move(ammo));
+  REQUIRE(floor.add(std::move(medkit)) == nullptr);
+  REQUIRE(floor.add(std::move(ammo)) == nullptr);
   REQUIRE(floor.size() == 2);
   REQUIRE(floor.get_item(10) != nullptr);
   REQUIRE(floor.get_item(11) != nullptr);
@@ -91,12 +93,9 @@ TEST_CASE("Wall cell blocks walking and vision") {
   REQUIRE_FALSE(wall.is_walkable());
   REQUIRE(wall.is_blocks_vision());
   REQUIRE_FALSE(wall.can_shoot_through());
-  REQUIRE_FALSE(wall.can_place_items());
   REQUIRE(wall.view_name() == std::string_view("Wall"));
-  REQUIRE(wall.size() == 0);
-  wall.add(std::make_unique<Medkit>(1, 1, 0, 1));
-  REQUIRE(wall.size() == 0);
-  REQUIRE(wall.remove_by_id(1) == nullptr);
+  auto* container = dynamic_cast<IItemContainer*>(&wall);
+  REQUIRE(container == nullptr);
 }
 
 TEST_CASE("Glass cell blocks walking but not vision") {
@@ -134,7 +133,8 @@ TEST_CASE("Stash behaves like a floor with different name") {
   REQUIRE(stash.can_place_items());
   REQUIRE(stash.view_name() == std::string_view("Stash"));
 
-  stash.add(std::make_unique<Medkit>(5, 1, 0, 4));
+  std::unique_ptr<game::entity::items::Item> stash_item = std::make_unique<Medkit>(5, 1, 0, 4);
+  REQUIRE(stash.add(std::move(stash_item)) == nullptr);
   REQUIRE(stash.size() == 1);
   REQUIRE(stash.get_item(5) != nullptr);
 }

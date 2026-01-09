@@ -18,6 +18,16 @@ cells::ICell* Level::get_cell(game::Position pos) const noexcept {
     return field_(static_cast<size_t>(pos.x), static_cast<size_t>(pos.y)).get();
 }
 
+std::unique_ptr<game::entity::items::Item> Level::add(game::Position pos,
+                                                      std::unique_ptr<game::entity::items::Item> item) {
+    if (!item) return item;
+    auto* cell = get_cell(pos);
+    if (!cell) return item;
+    auto* container = dynamic_cast<cells::IItemContainer*>(cell);
+    if (!container) return item;
+    return container->add(std::move(item));
+}
+
 std::unique_ptr<cells::ICell> Level::set_cell(game::Position pos, std::unique_ptr<cells::ICell> cell) {
     if (!in_bounds(pos)) return cell;
     return std::exchange(field_(static_cast<size_t>(pos.x), static_cast<size_t>(pos.y)), std::move(cell));
