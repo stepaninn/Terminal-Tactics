@@ -92,4 +92,16 @@ std::vector<const game::entity::Entity*> Level::get_entities_radius(game::Positi
     return res;
 }
 
+bool Level::try_shoot(int x, int y) noexcept {
+    if (!in_bounds(x, y)) return false;
+    auto* cell = operator()(x, y);
+    auto* destructible = dynamic_cast<cells::IDestructibleCell*>(cell);
+    if (!destructible || !destructible->can_be_shot()) return false;
+    bool changed = destructible->apply_shot();
+    if (changed) {
+        set_cell({x, y}, std::make_unique<cells::Floor>());
+    }
+    return changed;
+}
+
 }

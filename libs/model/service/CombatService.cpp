@@ -120,13 +120,13 @@ bool CombatService::try_shoot(game::repo::Level& level,
                               game::EntityId attacker_id,
                               game::Position pos) {
     if (!level.in_bounds(pos)) return false;
+    auto* attacker = level.get_entity(attacker_id);
+    if (!attacker) return false;
+
     auto* target = level.get_entity_at(pos);
     if (target) {
         return try_shoot(level, attacker_id, target->get_id());
     }
-
-    auto* attacker = level.get_entity(attacker_id);
-    if (!attacker) return false;
 
     auto* cell = level.get_cell(pos);
     auto* destructible = dynamic_cast<game::repo::cells::IDestructibleCell*>(cell);

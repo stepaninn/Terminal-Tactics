@@ -45,20 +45,20 @@ public:
      * @param id ID выбираемого существа
      * @return bool true, если выбор успешен
      */
-    bool select_entity(game::repo::Level& level, game::EntityId id);
+    [[nodiscard]] bool select_entity(game::repo::Level& level, game::EntityId id);
 
     /**
      * @brief Метод досрочного самостоятельного окончания хода
      * @return bool true, если ход закончен, false если существо не выбрано
      */
-    bool end_entity_turn() noexcept;
+    [[nodiscard]] bool end_entity_turn() noexcept;
 
     /**
      * @brief Метод смены действующей команды
      * @param level Уровень, на котором выбирается следующая команда
      * @return bool true, если смена команды успешна
      */
-    bool next_team(game::repo::Level& level);
+    [[nodiscard]] bool next_team(game::repo::Level& level);
 
     /**
      * @brief Метод, обновляющий очки действия каждому члену команды
