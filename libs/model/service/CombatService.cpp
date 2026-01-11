@@ -23,13 +23,16 @@ bool CombatService::roll_hit(const game::entity::components::CombatComponent& co
                              const game::entity::items::Weapon& weapon,
                              int distance) {
     int range = weapon.get_range();
-    if (range <= 0 || distance > range) return false;
+    if (range <= 0) return false;
+    if (distance == 0) return true;
 
     double base_accuracy = combat.get_base_accuracy();
 
-    double d = std::clamp(distance / static_cast<double>(range), 0.0, 1.0);
-    double coef = (1.0 - d) * (1.0 - d);
-    double chance = std::clamp(base_accuracy * coef, 0.0, 1.0);
+    double d = std::abs(distance - 1) / static_cast<double>(range);
+    d = std::clamp(d, 0.0, 1.0);
+    double coef = (1.0 - d * d);
+    double capped = std::min(0.95, base_accuracy);
+    double chance = std::clamp(capped * coef, 0.05, 1.0);
 
     std::uniform_real_distribution dist(0.0, 1.0);
     return dist(rng_) < chance;
@@ -168,7 +171,15 @@ bool CombatService::try_shoot(game::repo::Level& level,
         return true;
     }
 
-    return level.try_shoot(pos);
+    bool destroyed = level.try_shoot(pos);
+    if (destroyed) {
+        if (auto* eb = bus()) {
+            auto ev = std::make_shared<events::WallBrokenEvent>();
+            ev->pos = pos;
+            eb->publish(std::move(ev));
+        }
+    }
+    return destroyed;
 }
 
 bool CombatService::reload_weapon(game::repo::Level& level,

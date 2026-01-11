@@ -75,8 +75,8 @@ bool VisionService::has_line_of_fire(const game::repo::Level& lvl, game::Positio
 
     int dx = to.x - from.x, dy = to.y - from.y;
     int nx = std::abs(dx), ny = std::abs(dy);
-    int sx = (dx >=0) ? 1 : -1;
-    int sy = (dy >=0) ? 1 : -1;
+    int sx = (dx >= 0) ? 1 : -1;
+    int sy = (dy >= 0) ? 1 : -1;
 
     int x = from.x, y = from.y;
     int ix = 0, iy = 0;
@@ -97,10 +97,11 @@ bool VisionService::has_line_of_fire(const game::repo::Level& lvl, game::Positio
 
         if (!lvl.in_bounds(x, y)) return false;
 
-        if (!(x == to.x && y == to.y) && !lvl.can_shoot_through(x, y)) return false;
+        if (x == to.x && y == to.y) return true;
+        if (!lvl.can_shoot_through(x, y)) return false;
     }
 
-    return true;
+    return false;
 }
 
 }
