@@ -82,6 +82,14 @@ bool Controller::handle_action(InputAction action) {
     return true;
 }
 
+std::vector<game::Position> Controller::get_move_path() const {
+    auto* level = world_.get_level();
+    if (!level) return {};
+    if (mode_ != Mode::MOVE) return {};
+    if (selected_ == game::service::TurnService::kNoEntity) return {};
+    return move_.find_path(*level, selected_, cursor_);
+}
+
 void Controller::move_cursor(int dx, int dy) {
     auto* level = world_.get_level();
     if (!level) return;

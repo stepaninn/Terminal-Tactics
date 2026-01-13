@@ -4,6 +4,8 @@
 #include "model/service/services.h"
 #include "types.h"
 
+#include <vector>
+
 namespace game::controller {
 
 enum class InputAction {
@@ -63,7 +65,16 @@ public:
      * @return Текущий режим курсора
      */
     [[nodiscard]] Mode get_mode() const noexcept { return mode_; }
+    /**
+     * @brief Метод получения ID текущей команды
+     * @return ID теущей команды
+     */
     [[nodiscard]] game::TeamId active_team() const noexcept { return turn_.active_team(); }
+    /**
+     * @brief Метод получения пути перемещения
+     * @return Массив пути
+     */
+    [[nodiscard]] std::vector<game::Position> get_move_path() const;
 
 private:
     void move_cursor(int dx, int dy);
