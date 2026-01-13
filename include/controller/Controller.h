@@ -14,6 +14,7 @@ enum class InputAction {
     MOVE_RIGHT,
     CONFIRM,
     CANCEL,
+    RELOAD,
     END_TURN,
     TOGGLE_MODE,
     QUIT
@@ -62,6 +63,7 @@ public:
      * @return Текущий режим курсора
      */
     [[nodiscard]] Mode get_mode() const noexcept { return mode_; }
+    [[nodiscard]] game::TeamId active_team() const noexcept { return turn_.active_team(); }
 
 private:
     void move_cursor(int dx, int dy);

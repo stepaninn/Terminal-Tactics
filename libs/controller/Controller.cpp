@@ -1,4 +1,5 @@
 #include "controller/Controller.h"
+#include "model/entity/components/HealthComponent.h"
 
 namespace game::controller {
 
@@ -58,6 +59,11 @@ bool Controller::handle_action(InputAction action) {
                 (void)turn_.next_team(*level);
             }
             break;
+        case InputAction::RELOAD:
+            if (selected_ != game::service::TurnService::kNoEntity) {
+                (void)combat_.reload_weapon(*level, selected_);
+            }
+            break;
         case InputAction::QUIT:
             return false;
         case InputAction::NONE:
@@ -65,6 +71,14 @@ bool Controller::handle_action(InputAction action) {
             break;
     }
 
+    auto entities = level->get_entities();
+    for (auto* entity : entities) {
+        if (!entity) continue;
+        auto* hp = entity->get_component<game::entity::components::HealthComponent>();
+        if (hp && hp->get_current_hp() == 0) {
+            world_.remove_entity(entity);
+        }
+    }
     return true;
 }
 
