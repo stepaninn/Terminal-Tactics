@@ -2,6 +2,33 @@
 
 namespace game::service {
 
+VisibilityMap* World::unit_visibility(game::EntityId entity_id) {
+    if (!level_) return nullptr;
+    auto it = unit_fov_.find(entity_id);
+    if (it != unit_fov_.end()) return it->second.get();
+    auto map = std::make_unique<VisibilityMap>(level_->get_width(), level_->get_height());
+    unit_fov_[entity_id] = std::move(map);
+    return unit_fov_[entity_id].get();
+}
+
+VisibilityMap* World::team_visibility(game::TeamId team_id) {
+    if (!level_) return nullptr;
+    auto it = team_visible_.find(team_id);
+    if (it != team_visible_.end()) return it->second.get();
+    auto map = std::make_unique<VisibilityMap>(level_->get_width(), level_->get_height());
+    team_visible_[team_id] = std::move(map);
+    return team_visible_[team_id].get();
+}
+
+VisibilityMap* World::team_exploration(game::TeamId team_id) {
+    if (!level_) return nullptr;
+    auto it = team_explored_.find(team_id);
+    if (it != team_explored_.end()) return it->second.get();
+    auto map = std::make_unique<VisibilityMap>(level_->get_width(), level_->get_height());
+    team_explored_[team_id] = std::move(map);
+    return team_explored_[team_id].get();
+}
+
 void World::make_teams() {
     if (!level_) return;
     auto ent = level_->get_entities();

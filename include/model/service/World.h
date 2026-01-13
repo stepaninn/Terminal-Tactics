@@ -62,6 +62,27 @@ public:
         if (!in_bounds(pos)) return;
         set_visible(static_cast<size_t>(pos.x), static_cast<size_t>(pos.y), visible);
     }
+    /**
+     * @brief Метод установки флага исследованности клетки
+     * @param x Координата x
+     * @param y Координата y
+     * @param explored Флаг исследованности клетки
+     */
+    void set_explored(size_t x, size_t y, bool explored = true) {
+        if (!in_bounds(x, y)) return;
+        auto& cell = cells_(x, y);
+        if (explored) cell |= static_cast<uint8_t>(kExplored);
+        else cell &= static_cast<uint8_t>(~kExplored);
+    }
+    /**
+     * @brief Метод установки флага исследованности позиции
+     * @param pos Позиция
+     * @param explored Флаг исследованности клетки
+     */
+    void set_explored(game::Position pos, bool explored = true) {
+        if (!in_bounds(pos)) return;
+        set_explored(static_cast<size_t>(pos.x), static_cast<size_t>(pos.y), explored);
+    }
 
     /**
      * @brief Метод проверки видимости клетки
@@ -144,6 +165,7 @@ public:
         if (auto it = unit_fov_.find(entity_id); it != unit_fov_.end()) return it->second.get();
         return nullptr;
     }
+    [[nodiscard]] VisibilityMap* unit_visibility(game::EntityId entity_id);
 
     /**
      * @brief Метод получения видимых клеток для команды
@@ -154,6 +176,7 @@ public:
         if (auto it = team_visible_.find(team_id); it != team_visible_.end()) return it->second.get();
         return nullptr;
     }
+    [[nodiscard]] VisibilityMap* team_visibility(game::TeamId team_id);
 
     /**
      * @brief Метод получения исследованных клеток для команды
@@ -164,6 +187,7 @@ public:
         if (auto it = team_explored_.find(team_id); it != team_explored_.end()) return it->second.get();
         return nullptr;
     }
+    [[nodiscard]] VisibilityMap* team_exploration(game::TeamId team_id);
 
     /**
      * @brief Метод изменения размера карты
