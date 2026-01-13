@@ -42,7 +42,7 @@ bool MovementService::move(game::repo::Level& level, game::EntityId id, game::Po
 
 std::vector<game::Position> MovementService::find_path(const game::repo::Level& level,
                                                        game::EntityId id,
-                                                       game::Position to) {
+                                                       game::Position to) const {
     if (!level.check_entity(id)) return {};
 
     auto* from = level.get_entity_position(id);
@@ -78,10 +78,9 @@ std::vector<game::Position> MovementService::find_path(const game::repo::Level& 
     visited[static_cast<size_t>(from->x)][static_cast<size_t>(from->y)] = true;
     q.push(*from);
 
-    const int dirs[8][2] = {
-        {-1, -1}, {-1, 0}, {-1, 1},
-        { 0, -1},             { 0, 1},
-        { 1, -1}, { 1, 0}, { 1, 1}
+    const int dirs[8][2] ={
+        {-1, 0}, {0, 1}, {1, 0}, {0, -1},
+        {-1, -1}, {-1, 1}, {1, -1}, {1, 1}
     };
 
     while (!q.empty()) {

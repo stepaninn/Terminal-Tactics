@@ -5,6 +5,7 @@
 #include "ServiceBase.h"
 
 #include <memory>
+#include <vector>
 
 namespace game::service {
 
@@ -20,11 +21,16 @@ public:
      * @return bool true, если перемещение успешно
      */
     [[nodiscard]] bool move(game::repo::Level& level, game::EntityId id, game::Position to) const;
-
-private:
-    [[nodiscard]] static std::vector<game::Position> find_path(const game::repo::Level& level,
-                                                               game::EntityId id,
-                                                               game::Position to);
+    /**
+     * @brief Метод расчета пути до выбранной позиции
+     * @param level Уровень, на котором происходит поиск пути
+     * @param id ID существа
+     * @param to Конечная позиция
+     * @return std::vector<Position> путь (без стартовой клетки)
+     */
+    [[nodiscard]] std::vector<game::Position> find_path(const game::repo::Level& level,
+                                                           game::EntityId id,
+                                                           game::Position to) const;
 };
 
 }
