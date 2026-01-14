@@ -11,6 +11,7 @@ class Level;
 
 namespace game::service {
 
+/// @brief Сервис видимости
 class VisionService : public ServiceBase {
 public:
     explicit VisionService(std::shared_ptr<events::EventBus> bus = nullptr)

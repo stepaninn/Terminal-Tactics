@@ -9,6 +9,7 @@
 
 namespace game::service {
 
+/// @brief Сервис передвижения
 class MovementService : public ServiceBase {
 public:
     explicit MovementService(std::shared_ptr<events::EventBus> bus = nullptr) : ServiceBase(std::move(bus)) {}

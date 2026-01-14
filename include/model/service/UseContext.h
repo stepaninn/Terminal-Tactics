@@ -12,6 +12,7 @@ class WeaponComponent;
 
 namespace game::service {
 
+/// @brief Стурктура контекст для использования предметов
 struct UseContext {
     game::EntityId user{};
     game::EntityId target{};

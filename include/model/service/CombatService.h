@@ -12,6 +12,7 @@
 
 namespace game::service {
 
+/// @brief Сервис боя
 class CombatService : public ServiceBase {
 public:
     explicit CombatService(std::shared_ptr<events::EventBus> bus = nullptr)

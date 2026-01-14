@@ -9,6 +9,7 @@
 
 namespace game::service {
 
+/// @brief Сервис смены ходов
 class TurnService {
 public:
     static constexpr game::EntityId kNoEntity = 0;
