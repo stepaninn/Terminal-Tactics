@@ -226,7 +226,9 @@ public:
      * @return Массив ID существ команды
      */
     [[nodiscard]] std::vector<game::EntityId> get_team_entities(game::TeamId team_id) const {
-        if (auto it = teams_.find(team_id); it != teams_.end()) return it->second;
+        if (auto it = teams_.find(team_id); it != teams_.end()) {
+            return {it->second.begin(), it->second.end()};
+        }
         return {};
     }
 
