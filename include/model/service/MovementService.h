@@ -32,6 +32,16 @@ public:
     [[nodiscard]] std::vector<game::Position> find_path(const game::repo::Level& level,
                                                            game::EntityId id,
                                                            game::Position to) const;
+    /**
+     * @brief Метод расчета пути до клетки перед целью
+     * @param level Уровень, на котором происходит поиск пути
+     * @param id ID существа
+     * @param to Конечная позиция
+     * @return std::vector<Position> путь (без стартовой и без конечной клетки)
+     */
+    [[nodiscard]] std::vector<game::Position> find_path_without_target(const game::repo::Level& level,
+                                                                       game::EntityId id,
+                                                                       game::Position to) const;
 };
 
 }
