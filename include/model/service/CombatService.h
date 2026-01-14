@@ -4,6 +4,7 @@
 #include "model/repository/Level.h"
 #include "model/entity/components/CombatComponent.h"
 #include "model/entity/components/InventoryComponent.h"
+#include "model/entity/components/MeleeComponent.h"
 #include "model/entity/entities/items/Weapon.h"
 #include "ServiceBase.h"
 
@@ -48,6 +49,17 @@ public:
     [[nodiscard]] bool try_shoot(game::repo::Level& level,
                                  game::EntityId attacker_id,
                                  game::Position pos);
+
+    /**
+     * @brief Метод ближней атаки
+     * @param level Уровень, на котором происходит атака
+     * @param attacker_id ID атакующего существа
+     * @param target_id ID атакуемого существа
+     * @return bool true, если атака успешна
+     */
+    [[nodiscard]] bool melee_attack(game::repo::Level& level,
+                                    game::EntityId attacker_id,
+                                    game::EntityId target_id);
 
     /**
      * @brief Метод перезарядки оружия

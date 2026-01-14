@@ -2,6 +2,7 @@
 
 #include "model/entity/components/HealthComponent.h"
 #include "model/entity/components/InventoryComponent.h"
+#include "model/entity/components/MeleeComponent.h"
 #include "model/entity/components/TimePointsComponent.h"
 #include "model/entity/components/WeaponComponent.h"
 #include "model/entity/entities/items/Item.h"
@@ -180,6 +181,51 @@ bool CombatService::try_shoot(game::repo::Level& level,
         }
     }
     return destroyed;
+}
+
+bool CombatService::melee_attack(game::repo::Level& level,
+                                 game::EntityId attacker_id,
+                                 game::EntityId target_id) {
+    auto* attacker = level.get_entity(attacker_id);
+    auto* target = level.get_entity(target_id);
+    if (!attacker || !target) return false;
+
+    const auto* from_pos = level.get_entity_position(attacker_id);
+    const auto* to_pos = level.get_entity_position(target_id);
+    if (!from_pos || !to_pos) return false;
+
+    int dx = std::abs(to_pos->x - from_pos->x);
+    int dy = std::abs(to_pos->y - from_pos->y);
+    if (std::max(dx, dy) > 1) return false;
+
+    auto* melee = attacker->get_component<entity::components::MeleeComponent>();
+    auto* tp = attacker->get_component<entity::components::TimePointsComponent>();
+    auto* hp = target->get_component<entity::components::HealthComponent>();
+    if (!melee || !tp || !hp) return false;
+
+    int cost = melee->get_attack_cost();
+    if (tp->get_current_points() < cost) return false;
+    if (tp->reduce_points(cost) != cost) return false;
+
+    int dealt = hp->reduce_hp(melee->get_damage());
+    if (auto* eb = bus()) {
+        auto ev = std::make_shared<events::DamageEvent>();
+        ev->attacker_id = attacker_id;
+        ev->target_id = target_id;
+        ev->amount = dealt;
+        eb->publish(std::move(ev));
+    }
+
+    if (hp->get_current_hp() == 0) {
+        if (auto* eb = bus()) {
+            auto ev = std::make_shared<events::EntityDiedEvent>();
+            ev->entity_id = target_id;
+            ev->killer_id = attacker_id;
+            eb->publish(std::move(ev));
+        }
+    }
+
+    return true;
 }
 
 bool CombatService::reload_weapon(game::repo::Level& level,
