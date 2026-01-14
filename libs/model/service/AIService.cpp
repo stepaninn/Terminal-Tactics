@@ -367,7 +367,12 @@ bool AIService::move_one_step(World& w, EntityId id, Position to) const {
     auto* level = w.get_level();
     if (!level) return false;
 
-    auto path = ctx_.move.find_path(*level, id, to);
+    std::vector<Position> path;
+    if (level->get_entity_at(to)) {
+        path = ctx_.move.find_path_without_target(*level, id, to);
+    } else {
+        path = ctx_.move.find_path(*level, id, to);
+    }
     if (path.empty()) return false;
 
     return ctx_.move.move(*level, id, path.front());
