@@ -31,6 +31,7 @@ bool AmmoBag::use(service::UseContext& ctx) noexcept {
 
     auto* wp = wp_cmp->get_weapon();
     if (!wp) return false;
+    if (wp->get_ammo_type() != ammo_type_) return false;
 
     if (tp->get_current_points() < wp->get_reload_cost()) return false;
 
