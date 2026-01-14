@@ -5,8 +5,8 @@ project(MyGameProject VERSION 0.1 LANGUAGES CXX)
 set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-add_compile_options(--coverage)
-add_link_options(--coverage)
+#add_compile_options(--coverage)
+#add_link_options(--coverage)
 
 add_library(project_headers INTERFACE)
 
@@ -29,9 +29,15 @@ add_library(core_lib STATIC ${SRC_FILES}
         libs/model/repository/Level.cpp
         libs/model/entity/entities/items/Medkit.cpp
         libs/model/service/World.cpp
-        libs/model/service/VisionService.cpp)
+        libs/model/service/VisionService.cpp
+        libs/model/service/AIService.cpp)
 
 target_link_libraries(core_lib PUBLIC matrix project_headers)
+
+find_package(Curses REQUIRED)
+add_executable(game_app main.cpp)
+target_include_directories(game_app PRIVATE ${CURSES_INCLUDE_DIRS})
+target_link_libraries(game_app PRIVATE core_lib project_headers ${CURSES_LIBRARIES})
 
 #add_subdirectory(libs)
 add_subdirectory(matrix)
