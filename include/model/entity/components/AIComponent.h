@@ -17,12 +17,12 @@ class AIComponent : public IComponent {
 public:
     /**
      * @brief Метод получения типа поведения ИИ
-     * @return AIBehaviorType тип поведения
+     * @return AIBehavior тип поведения
      */
     [[nodiscard]] virtual AIBehavior get_behavior() const = 0;
     /**
      * @brief Метод задания типа поведения ИИ
-     * @param t тип поведения
+     * @param b тип поведения
      */
     virtual void set_behavior(AIBehavior b) = 0;
     ~AIComponent() override = default;
