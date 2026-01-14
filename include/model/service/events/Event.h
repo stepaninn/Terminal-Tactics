@@ -40,6 +40,11 @@ struct ItemPickedEvent final : EventBase {
     game::id_t item_id;
 };
 
+struct ItemDropEvent final : EventBase {
+    game::id_t entity_id;
+    game::id_t item_id;
+};
+
 struct EntityDiedEvent final : EventBase {
     game::id_t entity_id;
     game::id_t killer_id;
