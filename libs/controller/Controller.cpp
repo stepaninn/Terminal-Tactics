@@ -1,5 +1,6 @@
 #include "controller/Controller.h"
 #include "model/entity/components/HealthComponent.h"
+#include "model/service/VisionService.h"
 
 namespace game::controller {
 
@@ -12,7 +13,13 @@ Controller::Controller(game::service::World& world,
       turn_(turn),
       move_(move),
       combat_(combat),
-      items_(items) {}
+      items_(items) {
+    game::service::VisionService vision;
+    for (auto id : world_.get_team_entities(turn_.active_team())) {
+        vision.update_unit_fov(world_, id);
+    }
+    vision.rebuild_team_visible(world_, turn_.active_team());
+}
 
 bool Controller::handle_action(InputAction action) {
     auto* level = world_.get_level();
@@ -79,6 +86,12 @@ bool Controller::handle_action(InputAction action) {
             world_.remove_entity(entity);
         }
     }
+
+    game::service::VisionService vision;
+    for (auto id : world_.get_team_entities(turn_.active_team())) {
+        vision.update_unit_fov(world_, id);
+    }
+    vision.rebuild_team_visible(world_, turn_.active_team());
     return true;
 }
 
