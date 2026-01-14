@@ -33,14 +33,14 @@ void World::make_teams() {
     if (!level_) return;
     auto ent = level_->get_entities();
     for (const auto* e : ent) {
-        teams_[e->get_team_id()].push_back(e->get_id());
+        teams_[e->get_team_id()].insert(e->get_id());
     }
 }
 
 void World::remove_from_team(game::TeamId team_id, game::EntityId id) {
     if (auto it = teams_.find(team_id); it != teams_.end()) {
         auto& list = it->second;
-        list.erase(std::ranges::remove(list, id).begin(), list.end());
+        list.erase(id);
     }
 }
 
@@ -56,7 +56,7 @@ game::entity::Entity* World::spawn_entity(std::unique_ptr<game::entity::Entity> 
     if (!level_) return nullptr;
     auto* res = level_->spawn_entity(std::move(e), pos);
     if (!res) return nullptr;
-    teams_[res->get_team_id()].push_back(res->get_id());
+    teams_[res->get_team_id()].insert(res->get_id());
     return res;
 }
 
@@ -81,7 +81,7 @@ bool World::set_entity_team(game::EntityId id, game::TeamId team_id) {
     if (e->get_team_id() == team_id) return true;
     remove_from_team(e->get_team_id(), id);
     e->set_team_id(team_id);
-    teams_[team_id].push_back(id);
+    teams_[team_id].insert(id);
     return true;
 }
 

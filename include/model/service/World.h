@@ -10,7 +10,7 @@
 #include <cstdint>
 #include <memory>
 #include <random>
-#include <ranges>
+#include <set>
 #include <unordered_map>
 #include <vector>
 
@@ -311,7 +311,7 @@ private:
 
     void remove_from_team(game::TeamId team_id, game::EntityId id);
 
-    std::unordered_map<game::TeamId, std::vector<game::EntityId>> teams_;
+    std::unordered_map<game::TeamId, std::set<game::EntityId>> teams_;
 };
 
 }
