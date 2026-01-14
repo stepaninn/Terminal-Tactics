@@ -1,7 +1,13 @@
 #ifndef MYGAMEPROJECT_CONTROLLER_H
 #define MYGAMEPROJECT_CONTROLLER_H
 
-#include "model/service/services.h"
+#include "model/service/AIService.h"
+#include "model/service/CombatService.h"
+#include "model/service/InventoryService.h"
+#include "model/service/ItemService.h"
+#include "model/service/MovementService.h"
+#include "model/service/TurnService.h"
+#include "model/service/World.h"
 #include "types.h"
 
 #include <vector>
@@ -16,6 +22,13 @@ enum class InputAction {
     MOVE_RIGHT,
     CONFIRM,
     CANCEL,
+    PICK_ITEM,
+    DROP_ITEM,
+    USE_ITEM,
+    NEXT_CELL_ITEM,
+    PREV_CELL_ITEM,
+    NEXT_INV_ITEM,
+    PREV_INV_ITEM,
     RELOAD,
     END_TURN,
     TOGGLE_MODE,
@@ -35,7 +48,9 @@ public:
                game::service::TurnService& turn,
                game::service::MovementService& move,
                game::service::CombatService& combat,
-               game::service::ItemService& items);
+               game::service::ItemService& items,
+               game::service::InventoryService& inventory,
+               game::service::AIService& ai);
 
     /**
      * @brief Метод обработки действия
@@ -75,6 +90,9 @@ public:
      * @return Массив пути
      */
     [[nodiscard]] std::vector<game::Position> get_move_path() const;
+    [[nodiscard]] bool quit_requested() const noexcept { return quit_requested_; }
+    [[nodiscard]] size_t cell_item_index() const noexcept { return cell_item_index_; }
+    [[nodiscard]] size_t inv_item_index() const noexcept { return inv_item_index_; }
 
 private:
     void move_cursor(int dx, int dy);
@@ -88,10 +106,16 @@ private:
     game::service::MovementService& move_;
     game::service::CombatService& combat_;
     game::service::ItemService& items_;
+    game::service::InventoryService& inventory_;
+    game::service::AIService& ai_;
 
     game::Position cursor_{0, 0};
     game::EntityId selected_{game::service::TurnService::kNoEntity};
     Mode mode_{Mode::SELECT};
+    game::TeamId player_team_{0};
+    bool quit_requested_{false};
+    size_t cell_item_index_{0};
+    size_t inv_item_index_{0};
 };
 
 }
