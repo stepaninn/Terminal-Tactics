@@ -6,31 +6,37 @@
 
 namespace game::entity::components {
 
+enum class AIBehavior {
+    WILD,
+    INTELLIGENT,
+    FORAGER
+};
+
 /// @brief Класс компонента ИИ
 class AIComponent : public IComponent {
 public:
     /**
-     * @brief Метод получения состояния ИИ
-     * @return enum состояние компонента
+     * @brief Метод получения типа поведения ИИ
+     * @return AIBehaviorType тип поведения
      */
-    [[nodiscard]] virtual game::AIState get_state() const = 0;
+    [[nodiscard]] virtual AIBehavior get_behavior() const = 0;
     /**
-     * @brief Метод задания состояния ИИ
-     * @param s Состояние ИИ
+     * @brief Метод задания типа поведения ИИ
+     * @param t тип поведения
      */
-    virtual void set_state(game::AIState s) = 0;
+    virtual void set_behavior(AIBehavior b) = 0;
     ~AIComponent() override = default;
 };
 
 class DefaultAIComp : public AIComponent {
 public:
     DefaultAIComp() = default;
-    explicit DefaultAIComp(game::AIState s) : state_(s) {}
-    [[nodiscard]] game::AIState get_state() const override { return state_; }
-    void set_state(game::AIState s) override { state_ = s; }
+    explicit DefaultAIComp(AIBehavior b = AIBehavior::WILD) : behavior_(b) {}
+    [[nodiscard]] AIBehavior get_behavior() const override { return behavior_; }
+    void set_behavior(AIBehavior b) override { behavior_ = b; }
 
 protected:
-    game::AIState state_ = game::AIState::NEUTRAL;
+    AIBehavior behavior_ = AIBehavior::WILD;
 };
 
 }

@@ -40,12 +40,6 @@ struct Damage {
     }
 };
 
-enum class AIState {
-    NEUTRAL,
-    AGGRESSIVE,
-    PATROLING
-};
-
 enum class AmmoType {
     SHOTGUN,
     RIFLE,
