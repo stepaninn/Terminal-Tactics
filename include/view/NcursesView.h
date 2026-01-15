@@ -26,6 +26,7 @@ private:
                   const game::controller::Controller& controller);
     void draw_hud(const game::service::World& world,
                   const game::controller::Controller& controller);
+    std::string enter_path(const char* label);
 
     std::shared_ptr<game::service::events::EventBus> bus_;
     std::string last_message_{"Ready"};
@@ -33,11 +34,6 @@ private:
     std::optional<game::Position> anim_pos_;
     std::vector<game::Position> anim_path_;
     bool animating_{false};
-};
-
-struct CellChar {
-    chtype ch;
-
 };
 
 }

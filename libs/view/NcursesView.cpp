@@ -135,6 +135,20 @@ game::controller::InputAction NcursesView::poll_input() {
         case 'r':
         case 'R':
             return game::controller::InputAction::RELOAD;
+        case 'p':
+        case 'P': {
+            auto path = enter_path("Save to: ");
+            if (path.empty()) return game::controller::InputAction::NONE;
+            game::controller::set_io_path(std::move(path));
+            return game::controller::InputAction::SAVE_GAME;
+        }
+        case 'l':
+        case 'L': {
+            auto path = enter_path("Load from: ");
+            if (path.empty()) return game::controller::InputAction::NONE;
+            game::controller::set_io_path(std::move(path));
+            return game::controller::InputAction::LOAD_GAME;
+        }
         case 'g':
         case 'G':
             return game::controller::InputAction::PICK_ITEM;
@@ -249,6 +263,28 @@ static void draw_box(int y, int x, int h, int w, const char* title) {
     if (title && w > 4) {
         mvprintw(y, x + 2, "%s", title);
     }
+}
+
+std::string NcursesView::enter_path(const char* label) {
+    int maxy = 0;
+    int maxx = 0;
+    getmaxyx(stdscr, maxy, maxx);
+    int y = std::max(0, maxy - 1);
+    move(y, 0);
+    clrtoeol();
+    mvprintw(y, 0, "%s", label);
+    refresh();
+
+    echo();
+    curs_set(1);
+    char buf[256]{};
+    getnstr(buf, static_cast<int>(sizeof(buf) - 1));
+    noecho();
+    curs_set(0);
+    move(y, 0);
+    clrtoeol();
+    refresh();
+    return std::string(buf);
 }
 
 static double compute_hit_chance(const game::entity::Entity& attacker,
@@ -584,7 +620,7 @@ void NcursesView::draw_hud(const game::service::World& world,
     int hint_y = layout.map_y + layout.map_h;
     if (hint_y < maxy) {
         mvprintw(hint_y, layout.map_x + 1,
-                 "Keys: WASD move  Enter act  M mode  R reload  E end  Q quit");
+                 "Keys: WASD move  Enter act  M mode  R reload  E end  P save  L load  Q quit");
         if (hint_y + 1 < maxy) {
             mvprintw(hint_y + 1, layout.map_x + 1,
                      "Loot: G pick  T drop  U use  [ ] cell  , . inv");
