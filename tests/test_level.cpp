@@ -152,7 +152,10 @@ TEST_CASE("Level add puts items into cell containers") {
   REQUIRE(level.try_shoot(Position{0, 0}));
   returned = level.add(Position{0, 0}, std::move(returned));
   REQUIRE(returned == nullptr);
-  REQUIRE(container->size() == 1);
+  auto* new_cell = level.get_cell(Position{0, 0});
+  auto* new_container = dynamic_cast<IItemContainer*>(new_cell);
+  REQUIRE(new_container != nullptr);
+  REQUIRE(new_container->size() == 1);
 }
 
 }

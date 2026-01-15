@@ -81,11 +81,11 @@ TEST_CASE("DefaultCombatComp clamps accuracy") {
   REQUIRE(cc.get_base_accuracy() == 1);
 }
 
-TEST_CASE("DefaultAIComp stores state") {
-  DefaultAIComp ai;
-  REQUIRE(ai.get_state() == AIState::NEUTRAL);
-  ai.set_state(AIState::AGGRESSIVE);
-  REQUIRE(ai.get_state() == AIState::AGGRESSIVE);
+TEST_CASE("DefaultAIComp stores behavior") {
+  DefaultAIComp ai(entity::components::AIBehavior::WILD);
+  REQUIRE(ai.get_behavior() == entity::components::AIBehavior::WILD);
+  ai.set_behavior(entity::components::AIBehavior::INTELLIGENT);
+  REQUIRE(ai.get_behavior() == entity::components::AIBehavior::INTELLIGENT);
 }
 
 TEST_CASE("DefaultInventoryComp add/remove behavior") {

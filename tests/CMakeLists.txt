@@ -27,3 +27,19 @@ target_link_libraries(test_level PRIVATE core_lib project_headers Catch2::Catch2
 add_executable(test_service test_service.cpp)
 
 target_link_libraries(test_service PRIVATE core_lib project_headers Catch2::Catch2WithMain)
+
+add_executable(test_factory test_factory.cpp)
+
+target_link_libraries(test_factory PRIVATE core_lib project_headers Catch2::Catch2WithMain)
+
+add_executable(test_all
+        test_cells.cpp
+        test_components.cpp
+        test_entities.cpp
+        test_factory.cpp
+        test_items.cpp
+        test_level.cpp
+        test_matrix.cpp
+        test_service.cpp)
+
+target_link_libraries(test_all PRIVATE core_lib project_headers matrix Catch2::Catch2WithMain)

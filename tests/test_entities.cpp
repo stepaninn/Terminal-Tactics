@@ -12,6 +12,7 @@ using entity::components::AIComponent;
 using entity::components::DefaultAIComp;
 using entity::components::DefaultHealthComp;
 using entity::components::HealthComponent;
+using entity::components::AIBehavior;
 
 TEST_CASE("Entity stores id and name") {
   Entity e(7, "unit");
@@ -41,14 +42,14 @@ TEST_CASE("Entity add/get/remove component") {
 
 TEST_CASE("Entity supports multiple component types") {
   Entity e;
-  e.add_component<AIComponent, DefaultAIComp>(AIState::AGGRESSIVE);
+  e.add_component<AIComponent, DefaultAIComp>(AIBehavior::FORAGER);
   e.add_component<HealthComponent, DefaultHealthComp>(3, 5);
 
   auto* ai = e.get_component<AIComponent>();
   auto* hp = e.get_component<HealthComponent>();
   REQUIRE(ai != nullptr);
   REQUIRE(hp != nullptr);
-  REQUIRE(ai->get_state() == AIState::AGGRESSIVE);
+  REQUIRE(ai->get_behavior() == AIBehavior::FORAGER);
   REQUIRE(hp->get_current_hp() == 3);
   REQUIRE(hp->get_max_hp() == 5);
 }
