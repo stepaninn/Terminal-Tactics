@@ -60,10 +60,8 @@ std::vector<game::Position> MovementService::find_path(const game::repo::Level& 
     for (auto& e : level.get_entities()) {
         if (e->get_id() == id) continue;
         auto pos = level.get_entity_position(e->get_id());
-        if (!pos) throw std::logic_error("No position for entity!");
-        if (!level.in_bounds(*pos)) {
-            throw std::logic_error("Entity position out of bounds!");
-        }
+        if (!pos) return {};
+        if (!level.in_bounds(*pos)) return {};
         occupied[static_cast<size_t>(pos->x)][static_cast<size_t>(pos->y)] = true;
     }
 
@@ -144,10 +142,8 @@ std::vector<game::Position> MovementService::find_path_without_target(const game
     for (auto& e : level.get_entities()) {
         if (e->get_id() == id) continue;
         auto pos = level.get_entity_position(e->get_id());
-        if (!pos) throw std::logic_error("No position for entity!");
-        if (!level.in_bounds(*pos)) {
-            throw std::logic_error("Entity position out of bounds!");
-        }
+        if (!pos) return {};
+        if (!level.in_bounds(*pos)) return {};
         occupied[static_cast<size_t>(pos->x)][static_cast<size_t>(pos->y)] = true;
     }
 
