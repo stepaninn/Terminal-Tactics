@@ -31,7 +31,7 @@ bool CombatService::roll_hit(const game::entity::components::CombatComponent& co
 
     double d = std::abs(distance - 1) / static_cast<double>(range);
     d = std::clamp(d, 0.0, 1.0);
-    double coef = (1.0 - d * d);
+    double coef = 1.0 - d * d;
     double capped = std::min(0.95, base_accuracy);
     double chance = std::clamp(capped * coef, 0.05, 1.0);
 
@@ -78,8 +78,8 @@ bool CombatService::try_shoot(game::repo::Level& level,
     VisionService vsn;
     if (!vsn.has_line_of_fire(level, from, to)) return false;
 
-    int dx = static_cast<int>(to.x) - static_cast<int>(from.x);
-    int dy = static_cast<int>(to.y) - static_cast<int>(from.y);
+    int dx = to.x - from.x;
+    int dy = to.y - from.y;
     int dist = std::max(std::abs(dx), std::abs(dy));
 
     if (!can_shoot(*attacker)) return false;
@@ -151,8 +151,8 @@ bool CombatService::try_shoot(game::repo::Level& level,
     VisionService vsn;
     if (!vsn.has_line_of_fire(level, from, pos)) return false;
 
-    int dx = static_cast<int>(pos.x) - static_cast<int>(from.x);
-    int dy = static_cast<int>(pos.y) - static_cast<int>(from.y);
+    int dx = pos.x - from.x;
+    int dy = pos.y - from.y;
     int dist = std::max(std::abs(dx), std::abs(dy));
 
     if (!can_shoot(*attacker)) return false;

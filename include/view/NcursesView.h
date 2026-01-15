@@ -4,7 +4,6 @@
 #include "view/IView.h"
 #include "model/service/events/EventBus.h"
 
-#include <ncurses.h>
 #include <memory>
 #include <optional>
 #include <string>

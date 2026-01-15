@@ -3,7 +3,6 @@
 
 #include <algorithm>
 #include <concepts>
-#include <cstddef>
 #include <iterator>
 #include <memory>
 #include <stdexcept>
@@ -391,7 +390,7 @@ public:
     /// @brief Получение указателя на данные матрицы
     T* data() noexcept { return data_.get(); }
     /// @brief Получение указателя на константные данные матрицы
-    const T* data() const noexcept { return data_.get(); }
+    [[nodiscard]] const T* data() const noexcept { return data_.get(); }
 
     /*!
      * @brief Получения итератора на начало матрицы

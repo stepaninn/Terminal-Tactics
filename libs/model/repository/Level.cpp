@@ -19,7 +19,7 @@ cells::ICell* Level::get_cell(game::Position pos) const noexcept {
 }
 
 std::unique_ptr<game::entity::items::Item> Level::add(game::Position pos,
-                                                      std::unique_ptr<game::entity::items::Item> item) {
+                                                      std::unique_ptr<game::entity::items::Item> item) const {
     if (!item) return item;
     auto* cell = get_cell(pos);
     if (!cell) return item;

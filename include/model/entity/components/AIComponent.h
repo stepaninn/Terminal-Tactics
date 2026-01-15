@@ -2,7 +2,6 @@
 #define MYGAMEPROJECT_AICOMPONENT_H
 
 #include "IComponent.h"
-#include "../../../types.h"
 
 namespace game::entity::components {
 

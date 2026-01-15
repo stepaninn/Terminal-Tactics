@@ -4,8 +4,6 @@
 #include "../../types.h"
 #include "../entity/entities/Entity.h"
 #include "cells/Cell.h"
-#include "cells/DestructibleCell.h"
-#include "cells/Floor.h"
 #include "cells/ItemContainer.h"
 #include "Matrix.h"
 #include <unordered_map>
@@ -81,7 +79,7 @@ public:
      * @return unique_ptr на предмет при неуспехе, либо nullptr при успехе
      */
     std::unique_ptr<game::entity::items::Item> add(game::Position pos,
-                                                   std::unique_ptr<game::entity::items::Item> item);
+                                                   std::unique_ptr<game::entity::items::Item> item) const;
     /**
      * @brief Метод установки клетки по позиции
      * @param pos позиция клетки

@@ -6,7 +6,6 @@
 #include <memory>
 #include <utility>
 #include <queue>
-#include <stdexcept>
 
 namespace game::service {
 
@@ -42,7 +41,7 @@ bool MovementService::move(game::repo::Level& level, game::EntityId id, game::Po
 
 std::vector<game::Position> MovementService::find_path(const game::repo::Level& level,
                                                        game::EntityId id,
-                                                       game::Position to) const {
+                                                       game::Position to) {
     if (!level.check_entity(id)) return {};
 
     auto* from = level.get_entity_position(id);
@@ -124,7 +123,7 @@ std::vector<game::Position> MovementService::find_path(const game::repo::Level& 
 
 std::vector<game::Position> MovementService::find_path_without_target(const game::repo::Level& level,
                                                                       game::EntityId id,
-                                                                      game::Position to) const {
+                                                                      game::Position to) {
     if (!level.check_entity(id)) return {};
 
     auto* from = level.get_entity_position(id);

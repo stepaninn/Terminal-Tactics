@@ -2,7 +2,6 @@
 #include "model/entity/components/HealthComponent.h"
 #include "model/entity/components/InventoryComponent.h"
 #include "model/entity/entities/items/Item.h"
-#include "model/entity/entities/items/Weapon.h"
 #include "model/service/VisionService.h"
 #include "model/repository/cells/ItemContainer.h"
 
@@ -91,7 +90,7 @@ bool Controller::handle_action(InputAction action) {
             auto* ent = level->get_entity(selected_);
             if (!ent) break;
             auto* ent_pos = level->get_entity_position(selected_);
-            if (!ent_pos || !(*ent_pos == cursor_)) break;
+            if (!ent_pos || *ent_pos != cursor_) break;
             auto* cell = level->get_cell(cursor_);
             auto* cont = dynamic_cast<game::repo::cells::IItemContainer*>(cell);
             if (!cont) break;
@@ -136,9 +135,7 @@ bool Controller::handle_action(InputAction action) {
             if (inv_item_index_ >= items.size()) inv_item_index_ = 0;
             auto* item = items[inv_item_index_];
             if (!item) break;
-            if (auto* base = dynamic_cast<const game::entity::items::Item*>(item)) {
-                (void)items_.use_item(*level, selected_, selected_, base->get_id());
-            }
+            (void)items_.use_item(*level, selected_, selected_, item->get_id());
             break;
         }
         case InputAction::NEXT_CELL_ITEM: {

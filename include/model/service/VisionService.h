@@ -21,14 +21,14 @@ public:
      * @param w Мир
      * @param id ID сущности
      */
-    void update_unit_fov(game::service::World& w, game::EntityId id);
+    static void update_unit_fov(game::service::World& w, game::EntityId id);
 
     /**
      * @brief Метод обновления видимых ячеек для команды
      * @param w Мир
      * @param team Команда
      */
-    void rebuild_team_visible(game::service::World& w, game::TeamId team);
+    static void rebuild_team_visible(game::service::World& w, game::TeamId team);
 
     /**
      * @brief Метод обновления исследованных ячеек для команды
@@ -50,7 +50,7 @@ public:
      * @param to Конечная точка стрельбы
      * @return bool true, если попадание возможно
      */
-    [[nodiscard]] bool has_line_of_fire(const game::repo::Level& lvl, game::Position from, game::Position to);
+    [[nodiscard]] static bool has_line_of_fire(const game::repo::Level& lvl, game::Position from, game::Position to);
 
     /**
      * @brief Метод получения видимых существ

@@ -1,8 +1,6 @@
 #ifndef MYGAMEPROJECT_DESTRUCTIBLECELL_H
 #define MYGAMEPROJECT_DESTRUCTIBLECELL_H
 
-#include "Cell.h"
-
 namespace game::repo::cells {
 
 /// @brief Интерфейс разрушаемой клетки

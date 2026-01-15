@@ -7,6 +7,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 #add_compile_options(--coverage)
 #add_link_options(--coverage)
+add_compile_options(-Wall -Wpedantic -Wextra)
 
 add_library(project_headers INTERFACE)
 

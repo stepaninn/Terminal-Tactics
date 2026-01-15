@@ -4,7 +4,6 @@
 #include "model/repository/Level.h"
 #include "model/entity/components/CombatComponent.h"
 #include "model/entity/components/InventoryComponent.h"
-#include "model/entity/components/MeleeComponent.h"
 #include "model/entity/entities/items/Weapon.h"
 #include "ServiceBase.h"
 
@@ -67,7 +66,7 @@ public:
      * @param user_id ID существа, которое перезаряжает оружие
      * @return bool true, если перезарядка успешна
      */
-    [[nodiscard]] bool reload_weapon(game::repo::Level& level,
+    [[nodiscard]] static bool reload_weapon(game::repo::Level& level,
                                      game::EntityId user_id);
 private:
     [[nodiscard]] int roll_damage(const game::entity::items::Weapon& w) { return w.roll_damage(rng_); }
