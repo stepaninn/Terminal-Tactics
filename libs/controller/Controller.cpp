@@ -7,7 +7,11 @@
 #include "model/repository/cells/ItemContainer.h"
 
 #include <algorithm>
+#include <utility>
 namespace game::controller {
+namespace {
+std::string g_io_path;
+}
 
 Controller::Controller(game::service::World& world,
                        game::service::TurnService& turn,
@@ -195,6 +199,20 @@ bool Controller::handle_action(InputAction action) {
                 (void)combat_.reload_weapon(*level, selected_);
             }
             break;
+        case InputAction::SAVE_GAME: {
+            auto path = take_io_path();
+            if (!path.empty()) {
+                (void)save_game(path);
+            }
+            break;
+        }
+        case InputAction::LOAD_GAME: {
+            auto path = take_io_path();
+            if (!path.empty()) {
+                (void)load_game(path);
+            }
+            break;
+        }
         case InputAction::QUIT:
             if (quit_requested_) return false;
             quit_requested_ = true;
@@ -203,6 +221,9 @@ bool Controller::handle_action(InputAction action) {
         default:
             break;
     }
+
+    level = world_.get_level();
+    if (!level) return action != InputAction::QUIT;
 
     auto entities = level->get_entities();
     for (auto* entity : entities) {
@@ -238,6 +259,29 @@ std::vector<game::Position> Controller::get_move_path() const {
     if (mode_ != Mode::MOVE) return {};
     if (selected_ == game::service::TurnService::kNoEntity) return {};
     return move_.find_path(*level, selected_, cursor_);
+}
+
+bool Controller::save_game(const std::string& path) const {
+    return load_save_.save(world_, path);
+}
+
+bool Controller::load_game(const std::string& path) {
+    auto loaded = load_save_.load(path);
+    if (!loaded) return false;
+    auto level = loaded->take_level();
+    if (!level) return false;
+    world_.set_level(std::move(level));
+
+    clear_selection();
+    cursor_ = {0, 0};
+    player_team_ = turn_.active_team();
+
+    game::service::VisionService vision;
+    for (auto id : world_.get_team_entities(turn_.active_team())) {
+        vision.update_unit_fov(world_, id);
+    }
+    vision.rebuild_team_visible(world_, turn_.active_team());
+    return true;
 }
 
 void Controller::move_cursor(int dx, int dy) {
@@ -279,6 +323,14 @@ void Controller::clear_selection() noexcept {
     mode_ = Mode::SELECT;
     inv_item_index_ = 0;
     cell_item_index_ = 0;
+}
+
+void set_io_path(std::string path) {
+    g_io_path = std::move(path);
+}
+
+std::string take_io_path() {
+    return std::exchange(g_io_path, {});
 }
 
 }

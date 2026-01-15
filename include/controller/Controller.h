@@ -6,10 +6,12 @@
 #include "model/service/InventoryService.h"
 #include "model/service/ItemService.h"
 #include "model/service/MovementService.h"
+#include "model/service/LoadSaveService.h"
 #include "model/service/TurnService.h"
 #include "model/service/World.h"
 #include "types.h"
 
+#include <string>
 #include <vector>
 
 namespace game::controller {
@@ -32,6 +34,8 @@ enum class InputAction {
     RELOAD,
     END_TURN,
     TOGGLE_MODE,
+    SAVE_GAME,
+    LOAD_GAME,
     QUIT
 };
 
@@ -93,6 +97,8 @@ public:
     [[nodiscard]] bool quit_requested() const noexcept { return quit_requested_; }
     [[nodiscard]] size_t cell_item_index() const noexcept { return cell_item_index_; }
     [[nodiscard]] size_t inv_item_index() const noexcept { return inv_item_index_; }
+    [[nodiscard]] bool save_game(const std::string& path) const;
+    [[nodiscard]] bool load_game(const std::string& path);
 
 private:
     void move_cursor(int dx, int dy);
@@ -108,6 +114,7 @@ private:
     game::service::ItemService& items_;
     game::service::InventoryService& inventory_;
     game::service::AIService& ai_;
+    game::service::LoadSaveService load_save_;
 
     game::Position cursor_{0, 0};
     game::EntityId selected_{game::service::TurnService::kNoEntity};
@@ -117,6 +124,9 @@ private:
     size_t cell_item_index_{0};
     size_t inv_item_index_{0};
 };
+
+void set_io_path(std::string path);
+std::string take_io_path();
 
 }
 
