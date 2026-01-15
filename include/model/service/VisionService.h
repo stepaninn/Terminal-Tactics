@@ -2,7 +2,6 @@
 #define MYGAMEPROJECT_VISIONSERVICE_H
 
 #include "ServiceBase.h"
-#include "model/entity/components/VisionComponent.h"
 #include "model/service/World.h"
 
 namespace game::repo {
@@ -36,7 +35,7 @@ public:
      * @param w Мир
      * @param team Команда
      */
-    void update_team_explored(game::service::World& w, game::TeamId team);
+    static void update_team_explored(game::service::World& w, game::TeamId team);
 
     /**
      * @brief Метод перестройки видимости всех существ на карте
@@ -59,7 +58,7 @@ public:
      * @param observer_id ID наблюдателя
      * @return Массив сущностей, которые видно радиус
      */
-    [[nodiscard]] std::vector<EntityId> visible_entities(game::service::World& w, game::EntityId observer_id);
+    [[nodiscard]] static std::vector<EntityId> visible_entities(game::service::World& w, game::EntityId observer_id);
 
 private:
     static void cast_light(VisibilityMap& map, const game::repo::Level& lvl, int x, int y, int radius, int row,

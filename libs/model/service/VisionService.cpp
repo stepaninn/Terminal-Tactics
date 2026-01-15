@@ -2,6 +2,8 @@
 
 #include <unordered_set>
 
+#include "model/entity/components/VisionComponent.h"
+
 namespace game::service {
 
 void VisionService::cast_light(VisibilityMap& map, const game::repo::Level& lvl, int x, int y, int radius, int row,

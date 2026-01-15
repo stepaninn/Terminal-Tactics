@@ -60,6 +60,23 @@ game::entity::Entity* World::spawn_entity(std::unique_ptr<game::entity::Entity> 
     return res;
 }
 
+void World::set_level(std::unique_ptr<game::repo::Level> level) {
+    level_ = std::move(level);
+    unit_fov_.clear();
+    team_visible_.clear();
+    team_explored_.clear();
+    teams_.clear();
+    make_teams();
+}
+
+std::unique_ptr<game::repo::Level> World::take_level() {
+    unit_fov_.clear();
+    team_visible_.clear();
+    team_explored_.clear();
+    teams_.clear();
+    return std::move(level_);
+}
+
 std::unique_ptr<game::entity::Entity> World::remove_entity(const game::entity::Entity* e) {
     if (!level_ || !e) return nullptr;
     remove_from_team(e->get_team_id(), e->get_id());

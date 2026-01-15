@@ -155,6 +155,16 @@ public:
      * @return Текущий уровень
      */
     [[nodiscard]] game::repo::Level* get_level() const noexcept { return level_.get(); }
+    /**
+     * @brief Метод задания уровня
+     * @param level Новый уровень
+     */
+    void set_level(std::unique_ptr<game::repo::Level> level);
+    /**
+     * @brief Метод удаления и получения текущего уровня
+     * @return unique_ptr указатель на уровень
+     */
+    std::unique_ptr<game::repo::Level> take_level();
 
     /**
      * @brief Метод получения видимых клеток для существа
