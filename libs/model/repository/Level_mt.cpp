@@ -1,4 +1,6 @@
 #include "model/repository/Level_mt.h"
+#include "model/repository/cells/DestructibleCell_mt.h"
+#include "model/repository/cells/Floor_mt.h"
 
 #include <shared_mutex>
 #include <utility>
@@ -7,6 +9,7 @@ namespace game::mt::repo {
 
 std::vector<std::shared_ptr<const game::mt::entity::Entity>> Level::get_entities() const noexcept {
     std::vector<std::shared_ptr<const game::mt::entity::Entity>> res;
+    std::shared_lock<std::shared_mutex> lock(entities_mutex_);
     res.reserve(entities_.size());
     for (const auto& entry : entities_) {
         res.push_back(entry.second);
@@ -81,12 +84,14 @@ std::shared_ptr<game::mt::entity::Entity> Level::remove_entity(game::mt::EntityI
 }
 
 std::optional<game::mt::Position> Level::get_entity_position(game::mt::EntityId id) const noexcept {
+    std::shared_lock<std::shared_mutex> lock(entities_mutex_);
     tbb::concurrent_hash_map<game::mt::EntityId, game::mt::Position>::const_accessor acc;
     if (!entity_positions_.find(acc, id)) return std::nullopt;
     return acc->second;
 }
 
 std::shared_ptr<game::mt::entity::Entity> Level::get_entity_at(Position pos) {
+    std::shared_lock<std::shared_mutex> lock(entities_mutex_);
     for (auto ent : entity_positions_) {
         if (ent.second == pos) return get_entity(ent.first);
     }
@@ -98,6 +103,7 @@ std::vector<std::shared_ptr<const game::mt::entity::Entity>> Level::get_entities
     std::vector<std::shared_ptr<const game::mt::entity::Entity>> res;
     if (r < 0) return res;
     long long rr = static_cast<long long>(r) * r;
+    std::shared_lock<std::shared_mutex> lock(entities_mutex_);
     for (const auto& [id, entity_pos] : entity_positions_) {
         long long dx = static_cast<long long>(entity_pos.x) - static_cast<long long>(pos.x);
         long long dy = static_cast<long long>(entity_pos.y) - static_cast<long long>(pos.y);

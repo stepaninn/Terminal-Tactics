@@ -2,6 +2,9 @@
 
 #include <utility>
 
+#include "model/repository/cells/DestructibleCell.h"
+#include "model/repository/cells/Floor.h"
+
 namespace game::repo {
 
 std::vector<const game::entity::Entity*> Level::get_entities() const noexcept {

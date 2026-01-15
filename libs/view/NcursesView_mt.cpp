@@ -293,7 +293,7 @@ static double compute_hit_chance(const game::mt::entity::Entity& attacker,
     auto* combat = attacker.get_component<game::mt::entity::components::CombatComponent>();
     auto* weapon_cmp = attacker.get_component<game::mt::entity::components::WeaponComponent>();
     if (!combat || !weapon_cmp) return 0.0;
-    auto* weapon = weapon_cmp->get_weapon();
+    auto weapon = weapon_cmp->get_weapon();
     if (!weapon) return 0.0;
 
     int range = weapon->get_range();

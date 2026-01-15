@@ -277,14 +277,14 @@ bool CombatService::reload_weapon(game::mt::repo::Level& level,
     auto weapon = wp_cmp->get_weapon();
     if (!weapon) return false;
 
-    auto items = inv->get_items();
-    if (items.empty()) return false;
+    auto inv_items = inv->get_items();
+    if (inv_items.empty()) return false;
 
     std::atomic<game::mt::ItemId> ammo_id{0};
     std::atomic<bool> found{false};
-    tbb::parallel_for(size_t{0}, items.size(), [&](size_t i) {
+    tbb::parallel_for(size_t{0}, inv_items.size(), [&](size_t i) {
         if (found.load()) return;
-        const auto& item = items[i];
+        const auto& item = inv_items[i];
         auto* bag = item ? dynamic_cast<const game::mt::entity::items::AmmoBag*>(item.get()) : nullptr;
         if (!bag) return;
         if (bag->get_ammo_type() != weapon->get_ammo_type()) return;

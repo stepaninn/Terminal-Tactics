@@ -39,6 +39,7 @@ public:
      * @return bool true, если существо есть на уровне
      */
     bool check_entity(game::mt::EntityId id) const noexcept {
+        std::shared_lock<std::shared_mutex> lock(entities_mutex_);
         tbb::concurrent_hash_map<game::mt::EntityId, std::shared_ptr<game::mt::entity::Entity>>::const_accessor acc;
         return entities_.find(acc, id);
     }
@@ -49,6 +50,7 @@ public:
      * @return Entity* указатель на сущность или nullptr
      */
     [[nodiscard]] std::shared_ptr<game::mt::entity::Entity> get_entity(game::mt::EntityId id) {
+        std::shared_lock<std::shared_mutex> lock(entities_mutex_);
         tbb::concurrent_hash_map<game::mt::EntityId, std::shared_ptr<game::mt::entity::Entity>>::const_accessor acc;
         if (!entities_.find(acc, id)) return nullptr;
         return acc->second;
@@ -199,6 +201,7 @@ public:
     */
     [[nodiscard]] bool is_blocks_vision(int x, int y) const noexcept {
         if (!in_bounds(x, y)) return true;
+        std::shared_lock<std::shared_mutex> lock(field_mutex_);
         return field_(static_cast<size_t>(x), static_cast<size_t>(y))->is_blocks_vision();
     }
     /**
@@ -215,6 +218,7 @@ public:
      */
     [[nodiscard]] bool is_walkable(int x, int y) const noexcept {
         if (!in_bounds(x, y)) return false;
+        std::shared_lock<std::shared_mutex> lock(field_mutex_);
         return field_(static_cast<size_t>(x), static_cast<size_t>(y))->is_walkable();
     }
     /**

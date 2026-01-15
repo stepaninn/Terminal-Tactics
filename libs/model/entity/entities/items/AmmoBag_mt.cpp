@@ -31,7 +31,7 @@ bool AmmoBag::use(service::UseContext& ctx) noexcept {
 
     if (!wp_cmp || !tp || !inv) return false;
 
-    auto* wp = wp_cmp->get_weapon();
+    auto wp = wp_cmp->get_weapon();
     if (!wp) return false;
     if (wp->get_ammo_type() != get_ammo_type()) return false;
 

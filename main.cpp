@@ -1,14 +1,6 @@
 #include "controller/Controller.h"
-#include "model/entity/components/HealthComponent.h"
-#include "model/entity/components/InventoryComponent.h"
-#include "model/entity/components/CombatComponent.h"
 #include "model/entity/components/AIComponent.h"
-#include "model/entity/components/MeleeComponent.h"
-#include "model/entity/components/MoveComponent.h"
-#include "model/entity/components/TimePointsComponent.h"
-#include "model/entity/components/WeaponComponent.h"
-#include "model/entity/components/VisionComponent.h"
-#include "model/entity/entities/Entity.h"
+#include "model/entity/EntityFactory.h"
 #include "model/entity/entities/items/Item.h"
 #include "model/entity/entities/items/Weapon.h"
 #include "model/repository/cells/Floor.h"
@@ -25,6 +17,7 @@
 #include <csignal>
 #include <cstdlib>
 #include <memory>
+#include <ncurses.h>
 
 #include "model/repository/cells/Glass.h"
 #include "model/repository/cells/Partition.h"
@@ -98,28 +91,10 @@ int main() {
     level->set_cell(game::Position{34, 18}, std::make_unique<game::repo::cells::Stash>());
 
     auto add_operative = [&](game::EntityId id, std::string name, game::Position pos, game::AmmoType ammo) {
-        auto ent = std::make_unique<game::entity::Entity>();
-        ent->set_id(id);
-        ent->set_name(std::move(name));
-        ent->set_team_id(0);
-        ent->add_component<game::entity::components::HealthComponent,
-                           game::entity::components::DefaultHealthComp>(12, 12);
-        ent->add_component<game::entity::components::InventoryComponent,
-                           game::entity::components::DefaultInventoryComp>(6, 30);
-        ent->add_component<game::entity::components::MoveComponent,
-                           game::entity::components::DefaultMoveComp>(1);
-        ent->add_component<game::entity::components::TimePointsComponent,
-                           game::entity::components::DefaultTimePointsComp>(100, 100);
-        ent->add_component<game::entity::components::CombatComponent,
-                           game::entity::components::DefaultCombatComp>(0.85);
-        ent->add_component<game::entity::components::MeleeComponent,
-                           game::entity::components::DefaultMeleeComp>(2, 1);
         auto weapon = std::make_unique<game::entity::items::Weapon>(
             id * 10 + 1, 2, game::Damage{1, 4}, 6, 1, 2, ammo, 6, 8);
-        ent->add_component<game::entity::components::WeaponComponent,
-                           game::entity::components::DefaultWeaponComp>(std::move(weapon));
-        ent->add_component<game::entity::components::VisionComponent,
-                           game::entity::components::DefaultVisionComp>(9);
+        auto ent = game::entity::factory::EntityFactory::create_operative(
+            id, std::move(name), std::move(weapon));
         level->spawn_entity(std::move(ent), pos);
     };
 
@@ -128,30 +103,28 @@ int main() {
                          game::Position pos,
                          game::entity::components::AIBehavior behavior,
                          game::AmmoType ammo) {
-        auto ent = std::make_unique<game::entity::Entity>();
-        ent->set_id(id);
-        ent->set_name(std::move(name));
-        ent->set_team_id(1);
-        ent->add_component<game::entity::components::AIComponent,
-                           game::entity::components::DefaultAIComp>(behavior);
-        ent->add_component<game::entity::components::HealthComponent,
-                           game::entity::components::DefaultHealthComp>(9, 9);
-        ent->add_component<game::entity::components::MoveComponent,
-                           game::entity::components::DefaultMoveComp>(1);
-        ent->add_component<game::entity::components::TimePointsComponent,
-                           game::entity::components::DefaultTimePointsComp>(8, 8);
-        ent->add_component<game::entity::components::CombatComponent,
-                           game::entity::components::DefaultCombatComp>(0.75);
-        ent->add_component<game::entity::components::MeleeComponent,
-                           game::entity::components::DefaultMeleeComp>(3, 1);
-        ent->add_component<game::entity::components::InventoryComponent,
-                           game::entity::components::DefaultInventoryComp>(4, 20);
         auto weapon = std::make_unique<game::entity::items::Weapon>(
             id * 10 + 2, 2, game::Damage{1, 3}, 5, 1, 2, ammo, 4, 6);
-        ent->add_component<game::entity::components::WeaponComponent,
-                           game::entity::components::DefaultWeaponComp>(std::move(weapon));
-        ent->add_component<game::entity::components::VisionComponent,
-                           game::entity::components::DefaultVisionComp>(7);
+        std::unique_ptr<game::entity::Entity> ent;
+        using game::entity::components::AIBehavior;
+        switch (behavior) {
+            case AIBehavior::WILD:
+                ent = game::entity::factory::EntityFactory::create_wild(
+                    id, std::move(name), std::move(weapon));
+                break;
+            case AIBehavior::INTELLIGENT:
+                ent = game::entity::factory::EntityFactory::create_intelligent(
+                    id, std::move(name), std::move(weapon));
+                break;
+            case AIBehavior::FORAGER:
+                ent = game::entity::factory::EntityFactory::create_forager(
+                    id, std::move(name), std::move(weapon));
+                break;
+            default:
+                ent = game::entity::factory::EntityFactory::create_wild(
+                    id, std::move(name), std::move(weapon));
+                break;
+        }
         level->spawn_entity(std::move(ent), pos);
     };
 
