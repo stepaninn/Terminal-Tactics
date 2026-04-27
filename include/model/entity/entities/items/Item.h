@@ -37,7 +37,7 @@ public:
      * @param ctx контекст для использования предмета
      * @return bool true, если использование успешно
      */
-    [[nodiscard]] virtual bool use(game::service::UseContext& ctx) noexcept { return false; }
+    [[nodiscard]] virtual bool use(game::service::UseContext&) noexcept { return false; }
 
 protected:
     game::ItemId id_{};

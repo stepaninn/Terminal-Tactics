@@ -47,7 +47,7 @@ public:
      * @param ctx контекст для использования предмета
      * @return bool true, если использование успешно
      */
-    [[nodiscard]] virtual bool use(game::mt::service::UseContext& ctx) noexcept { return false; }
+    [[nodiscard]] virtual bool use(game::mt::service::UseContext&) noexcept { return false; }
 
 protected:
     mutable std::mutex mutex_;

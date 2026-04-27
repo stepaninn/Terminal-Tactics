@@ -7,7 +7,7 @@
 namespace game::entity::components {
 
 bool DefaultInventoryComp::can_add(const game::entity::items::Item& item) const noexcept {
-    if (items_.size() == capacity_) return false;
+    if (items_.size() >= static_cast<size_t>(capacity_)) return false;
     return item.get_weight() + weight_ <= max_weight_;
 }
 

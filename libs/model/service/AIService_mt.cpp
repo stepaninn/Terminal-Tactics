@@ -57,7 +57,8 @@ AIService::Choice AIService::choose_best_action(World& w, EntityId id) {
 
     bool inv_exists = (inv != nullptr);
     bool inv_has_items = inv_exists && (inv->size() > 0);
-    bool inv_full = inv_exists && (inv->size() >= inv->get_capacity() || inv->get_weight() >= inv->get_max_weight());
+    bool inv_full = inv_exists &&
+        (inv->size() >= static_cast<size_t>(inv->get_capacity()) || inv->get_weight() >= inv->get_max_weight());
 
     auto enemy = find_nearest_enemy(w, id);
 

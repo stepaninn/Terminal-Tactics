@@ -20,6 +20,7 @@ using entity::items::AmmoBag;
 using entity::items::Medkit;
 using repo::cells::Floor;
 using repo::cells::Glass;
+using repo::cells::ICell;
 using repo::cells::IItemContainer;
 using repo::cells::ItemStorage;
 using repo::cells::Partition;
@@ -94,7 +95,8 @@ TEST_CASE("Wall cell blocks walking and vision") {
   REQUIRE(wall.is_blocks_vision());
   REQUIRE_FALSE(wall.can_shoot_through());
   REQUIRE(wall.view_name() == std::string_view("Wall"));
-  auto* container = dynamic_cast<IItemContainer*>(&wall);
+  auto* cell = static_cast<ICell*>(&wall);
+  auto* container = dynamic_cast<IItemContainer*>(cell);
   REQUIRE(container == nullptr);
 }
 

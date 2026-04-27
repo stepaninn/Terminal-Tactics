@@ -9,7 +9,7 @@ namespace game::mt::entity::components {
 
 bool DefaultInventoryComp::can_add(const game::mt::entity::items::Item& item) const noexcept {
     std::lock_guard<std::mutex> lock(mutex_);
-    if (items_.size() == capacity_) return false;
+    if (items_.size() >= static_cast<size_t>(capacity_)) return false;
     return item.get_weight() + weight_ <= max_weight_;
 }
 
@@ -17,7 +17,7 @@ void DefaultInventoryComp::add(std::shared_ptr<game::mt::entity::items::Item> it
     if (!item) return;
 
     std::lock_guard<std::mutex> lock(mutex_);
-    if (items_.size() == capacity_) return;
+    if (items_.size() >= static_cast<size_t>(capacity_)) return;
     int w = item->get_weight();
     if (w + weight_ > max_weight_) return;
 
