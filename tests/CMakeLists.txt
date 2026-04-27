@@ -1,38 +1,25 @@
-find_package(Catch2 3 REQUIRED)
+find_package(Catch2 3 QUIET)
 
-add_executable(test_matrix test_matrix.cpp)
+if(NOT Catch2_FOUND)
+    message(WARNING "Catch2 3 was not found; unit tests will not be built")
+    return()
+endif()
 
-target_link_libraries(test_matrix PRIVATE matrix Catch2::Catch2WithMain)
+function(add_terminal_tactics_test name)
+    add_executable(${name} ${ARGN})
+    target_link_libraries(${name} PRIVATE core_lib project_headers matrix Catch2::Catch2WithMain)
+    add_test(NAME ${name} COMMAND ${name})
+endfunction()
 
-add_executable(test_cells test_cells.cpp)
-
-target_link_libraries(test_cells PRIVATE core_lib project_headers Catch2::Catch2WithMain)
-
-add_executable(test_components test_components.cpp)
-
-target_link_libraries(test_components PRIVATE core_lib project_headers Catch2::Catch2WithMain)
-
-add_executable(test_items test_items.cpp)
-
-target_link_libraries(test_items PRIVATE core_lib project_headers Catch2::Catch2WithMain)
-
-add_executable(test_entities test_entities.cpp)
-
-target_link_libraries(test_entities PRIVATE core_lib project_headers Catch2::Catch2WithMain)
-
-add_executable(test_level test_level.cpp)
-
-target_link_libraries(test_level PRIVATE core_lib project_headers Catch2::Catch2WithMain)
-
-add_executable(test_service test_service.cpp)
-
-target_link_libraries(test_service PRIVATE core_lib project_headers Catch2::Catch2WithMain)
-
-add_executable(test_factory test_factory.cpp)
-
-target_link_libraries(test_factory PRIVATE core_lib project_headers Catch2::Catch2WithMain)
-
-add_executable(test_all
+add_terminal_tactics_test(test_matrix test_matrix.cpp)
+add_terminal_tactics_test(test_cells test_cells.cpp)
+add_terminal_tactics_test(test_components test_components.cpp)
+add_terminal_tactics_test(test_items test_items.cpp)
+add_terminal_tactics_test(test_entities test_entities.cpp)
+add_terminal_tactics_test(test_level test_level.cpp)
+add_terminal_tactics_test(test_service test_service.cpp)
+add_terminal_tactics_test(test_factory test_factory.cpp)
+add_terminal_tactics_test(test_all
         test_cells.cpp
         test_components.cpp
         test_entities.cpp
@@ -41,5 +28,3 @@ add_executable(test_all
         test_level.cpp
         test_matrix.cpp
         test_service.cpp)
-
-target_link_libraries(test_all PRIVATE core_lib project_headers matrix Catch2::Catch2WithMain)
