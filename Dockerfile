@@ -15,7 +15,11 @@ RUN apt-get update \
     && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /workspace
-COPY . .
+COPY CMakeLists.txt CMakePresets.json ./
+COPY include include
+COPY libs libs
+COPY matrix matrix
+COPY tests tests
 
 RUN cmake --preset docker-tests
 RUN cmake --build --preset docker-tests
