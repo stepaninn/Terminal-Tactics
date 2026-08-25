@@ -92,8 +92,12 @@ std::optional<game::mt::Position> Level::get_entity_position(game::mt::EntityId 
 
 std::shared_ptr<game::mt::entity::Entity> Level::get_entity_at(Position pos) {
     std::shared_lock<std::shared_mutex> lock(entities_mutex_);
-    for (auto ent : entity_positions_) {
-        if (ent.second == pos) return get_entity(ent.first);
+    for (const auto& ent : entity_positions_) {
+        if (ent.second != pos) continue;
+
+        tbb::concurrent_hash_map<game::mt::EntityId,
+                                 std::shared_ptr<game::mt::entity::Entity>>::const_accessor acc;
+        if (entities_.find(acc, ent.first)) return acc->second;
     }
     return nullptr;
 }
@@ -118,12 +122,13 @@ std::vector<std::shared_ptr<const game::mt::entity::Entity>> Level::get_entities
 bool Level::try_shoot(int x, int y) noexcept {
     if (!in_bounds(x, y)) return false;
     std::unique_lock<std::shared_mutex> lock(field_mutex_);
-    auto* cell = field_(static_cast<size_t>(x), static_cast<size_t>(y)).get();
+    auto& cell_slot = field_(static_cast<size_t>(x), static_cast<size_t>(y));
+    auto* cell = cell_slot.get();
     auto* destructible = dynamic_cast<cells::IDestructibleCell*>(cell);
     if (!destructible || !destructible->can_be_shot()) return false;
     bool changed = destructible->apply_shot();
     if (changed) {
-        set_cell({x, y}, std::make_unique<cells::Floor>());
+        cell_slot = std::make_unique<cells::Floor>();
     }
     return changed;
 }

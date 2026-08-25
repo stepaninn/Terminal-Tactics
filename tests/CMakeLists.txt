@@ -28,3 +28,10 @@ add_terminal_tactics_test(test_all
         test_level.cpp
         test_matrix.cpp
         test_service.cpp)
+
+if(TERMINAL_TACTICS_BUILD_MT)
+    add_executable(test_mt test_mt.cpp)
+    target_link_libraries(test_mt PRIVATE mt_lib project_headers matrix Catch2::Catch2WithMain)
+    add_test(NAME test_mt COMMAND test_mt)
+    set_tests_properties(test_mt PROPERTIES TIMEOUT 30)
+endif()
