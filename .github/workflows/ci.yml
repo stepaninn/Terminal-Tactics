@@ -43,3 +43,16 @@ jobs:
 
       - name: Build
         run: cmake --build build-mt --parallel
+
+      - name: Test
+        run: ctest --test-dir build-mt --output-on-failure
+
+  docker-tests:
+    runs-on: ubuntu-24.04
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Build and run containerized tests
+        run: docker compose run --build --rm tests

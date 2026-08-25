@@ -1,0 +1,15 @@
+.git
+.github
+.idea
+.vscode
+.cache
+.codex
+
+build
+build-*
+cmake-build-*
+
+benchmark.txt
+mt_benchmark.txt
+test_save.txt
+*.save

@@ -1,0 +1,6 @@
+services:
+  tests:
+    build:
+      context: .
+      target: test
+    image: terminal-tactics-tests

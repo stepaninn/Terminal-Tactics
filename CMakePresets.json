@@ -1,0 +1,65 @@
+{
+  "version": 6,
+  "cmakeMinimumRequired": {
+    "major": 3,
+    "minor": 20,
+    "patch": 0
+  },
+  "configurePresets": [
+    {
+      "name": "docker-tests",
+      "displayName": "Docker tests (single-threaded and multithreaded)",
+      "generator": "Ninja",
+      "binaryDir": "${sourceDir}/build/docker-tests",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Release",
+        "TERMINAL_TACTICS_BUILD_APP": "OFF",
+        "TERMINAL_TACTICS_BUILD_BENCHMARKS": "OFF",
+        "TERMINAL_TACTICS_BUILD_MT": "ON",
+        "TERMINAL_TACTICS_BUILD_TESTS": "ON"
+      }
+    },
+    {
+      "name": "thread-sanitizer",
+      "displayName": "ThreadSanitizer tests",
+      "inherits": "docker-tests",
+      "binaryDir": "${sourceDir}/build/thread-sanitizer",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Debug",
+        "CMAKE_CXX_FLAGS": "-fsanitize=thread -fno-omit-frame-pointer -g -O1",
+        "CMAKE_EXE_LINKER_FLAGS": "-fsanitize=thread"
+      }
+    }
+  ],
+  "buildPresets": [
+    {
+      "name": "docker-tests",
+      "configurePreset": "docker-tests",
+      "jobs": 2
+    },
+    {
+      "name": "thread-sanitizer",
+      "configurePreset": "thread-sanitizer",
+      "jobs": 2
+    }
+  ],
+  "testPresets": [
+    {
+      "name": "docker-tests",
+      "configurePreset": "docker-tests",
+      "output": {
+        "outputOnFailure": true
+      }
+    },
+    {
+      "name": "thread-sanitizer",
+      "configurePreset": "thread-sanitizer",
+      "output": {
+        "outputOnFailure": true
+      },
+      "execution": {
+        "timeout": 60
+      }
+    }
+  ]
+}
