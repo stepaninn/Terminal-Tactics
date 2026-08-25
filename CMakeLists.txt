@@ -10,7 +10,7 @@ include(CTest)
 
 option(TERMINAL_TACTICS_BUILD_APP "Build ncurses game executable" ON)
 option(TERMINAL_TACTICS_BUILD_BENCHMARKS "Build benchmark executables" ON)
-option(TERMINAL_TACTICS_BUILD_MT "Build experimental multithreaded executables" OFF)
+option(TERMINAL_TACTICS_BUILD_MT "Build multithreaded executables and tests" OFF)
 option(TERMINAL_TACTICS_BUILD_TESTS "Build unit tests" ${BUILD_TESTING})
 
 add_compile_options(-Wall -Wpedantic -Wextra)
